@@ -20,7 +20,7 @@
         </Grid.ColumnDefinitions>
 
         <Grid Grid.Row="0" Background="#FFF9F8F8">
-            <TextBlock Text="Stockfish: 2000 ELO oder so" Margin="2" Padding="3" FontWeight="Bold" />
+            <TextBlock Text="Stockfish: 9999 ELO" Margin="2" Padding="3" FontWeight="Bold" />
         </Grid>
 
         <Grid Margin="10" Grid.Row="1">
@@ -31,7 +31,7 @@
 
         <Grid Grid.Column="1" Grid.Row="1">
             <StackPanel VerticalAlignment="Bottom" Margin="0,0,5,0">
-                <Button x:Name="ButtonRestart" Click="ButtonRestart_Click" Content="Neustart" Padding="2" Margin="2" FontWeight="Bold" />
+                <Button x:Name="ButtonRestart" Click="ButtonRestart_Click" Content="Restart" Padding="2" Margin="2" FontWeight="Bold" />
             </StackPanel>
         </Grid>
 
