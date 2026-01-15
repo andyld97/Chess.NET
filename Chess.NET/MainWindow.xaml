@@ -1,0 +1,42 @@
+﻿<Window x:Class="Chess.NET.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Chess.NET"
+        xmlns:controls="clr-namespace:Chess.NET.Controls"
+        mc:Ignorable="d"
+        Title="Chess.NET" Height="768" Width="1024">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+
+        <Grid Grid.Row="0" Background="#FFF9F8F8">
+            <TextBlock Text="Stockfish: 2000 ELO oder so" Margin="2" Padding="3" FontWeight="Bold" />
+        </Grid>
+
+        <Grid Margin="10" Grid.Row="1">
+            <Viewbox>
+                <controls:ChessBoard x:Name="Chessboard" />
+            </Viewbox>
+        </Grid>
+
+        <Grid Grid.Column="1" Grid.Row="1">
+            <StackPanel VerticalAlignment="Bottom" Margin="0,0,5,0">
+                <Button x:Name="ButtonRestart" Click="ButtonRestart_Click" Content="Neustart" Padding="2" Margin="2" FontWeight="Bold" />
+            </StackPanel>
+        </Grid>
+
+        <Grid Grid.Row="2" Background="#FFF9F8F8">
+            <TextBlock Margin="2" Padding="3" FontWeight="Bold" Text="Chess.NET Player (Elo: 333)" />
+        </Grid>
+    </Grid>
+</Window>
