@@ -25,7 +25,7 @@ It includes full game rules, a WPF-based GUI, custom bot logic, and even the abi
   - Play directly against Stockfish
   - Difficulty adjustable via search depth / engine options (TODO currently just static in code)
 
-### 🖥️ GUI (WPF)
+### GUI (WPF)
 - Dynamic 8×8 chess board
 - Drag & Drop piece movement
 - Clean layered rendering (board + pieces)
