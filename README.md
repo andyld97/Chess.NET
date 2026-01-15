@@ -1,15 +1,17 @@
 # Chess.NET
 
 **Chess.NET** is a modern chess application game in **C# / .NET 10**, built completely from scratch.  
-It includes full game rules, a WPF-based GUI, custom bot logic, and even the ability to **play against Stockfish** via UCI.
+It includes (almost) full game rules, a WPF-based GUI, custom bot logic, and even the ability to **play against Stockfish** via UCI.
 
 > ⚠️ **ATTENTION**  This game isn't finished yet and it's still very rudimental!
 
 ![Chess.NET Screenshot](Assets/screenshot.png)
 
----
-
 ## Features
+
+### Missing Features
+- EN PASSANT
+- Convert pawn to Queen, Knight, Bishop or The Roooooooook
 
 ###  Game Logic
 - (Almost) full chess rule validation
