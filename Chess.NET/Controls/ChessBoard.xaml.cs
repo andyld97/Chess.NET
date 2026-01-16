@@ -16,6 +16,9 @@ namespace Chess.NET.Controls
         private readonly Game game = new Game();
 
         private readonly IChessBot? chessBot = null;
+        private bool isMirrored = false;
+
+        public Game Game => game;   
 
         public ChessBoard()
         {
@@ -69,6 +72,13 @@ namespace Chess.NET.Controls
             RefreshChessBoard(game.Board);
         }
 
+        public void Mirror()
+        {
+            isMirrored = !isMirrored; // toggle
+            RefreshChessBoard(game.Board);  
+        }
+        
+
         #region Drag & Drop Pieces
         private Piece? _pieceToMove;
         private int clickCounter = 0;
@@ -77,19 +87,21 @@ namespace Chess.NET.Controls
         {
             DraggedImage.Visibility = Visibility.Hidden;
             clickCounter = 0;
-            _pieceToMove = null;    
+            _pieceToMove = null;
         }
 
         private async void Square_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
-        {   
+        {
             var square = (sender as Border);
             var image = square.Child as Image;
 
             if (clickCounter > 0)
             {
-                var destinationSquare = square.Tag as Position;
+                var destinationSquare = (Position)square.Tag;
+                if (isMirrored)
+                    destinationSquare = destinationSquare.Mirror(); 
 
-                bool wasMoveAccepted = game.Move( new NextMove(_pieceToMove, destinationSquare, null));
+                bool wasMoveAccepted = game.Move(new NextMove(_pieceToMove, destinationSquare, null));
 
                 ResetDrag();
                 RefreshChessBoard(game.Board);
@@ -121,7 +133,9 @@ namespace Chess.NET.Controls
             }
             else
             {
-                var currentPosition = square.Tag as Position;
+                var currentPosition = (Position)square.Tag;
+                if (isMirrored)
+                    currentPosition = currentPosition.Mirror();
                 _pieceToMove = game.Board.GetPiece(currentPosition);
 
                 if (_pieceToMove == null)
@@ -137,10 +151,8 @@ namespace Chess.NET.Controls
                 DraggedImage.Visibility = Visibility.Visible;
 
                 clickCounter++;
-            }            
+            }
         }
-
-
 
         private void Square_MouseMove(object sender, System.Windows.Input.MouseEventArgs e)
         {
@@ -154,24 +166,28 @@ namespace Chess.NET.Controls
 
         private void RefreshChessBoard(IBoard board)
         {
+            var lastMove = game.Moves.LastOrDefault();
+
             for (int rank = 8; rank >= 1; rank--)
             {
                 for (int file = 1; file <= 8; file++)
                 {
                     var position = new Position(file, rank);
+                    if (isMirrored)
+                        position = position.Mirror();   
+
                     if (_pieceToMove != null && position == _pieceToMove.Position)
                         continue;
 
-                    Image img = _squares[file - 1, rank - 1].Border.Child as Image;
+                    Image img = (Image)_squares[file - 1, rank - 1].Border.Child;
 
-                    var piece = board.GetPiece(new Position(file, rank));
+                    var piece = board.GetPiece(position);
 
                     if (piece == null)
                         img.Source = null;
                     else
                     {
-                        BitmapImage bi = new BitmapImage();
-                        bi.CacheOption = BitmapCacheOption.OnLoad;
+                        BitmapImage bi = new BitmapImage { CacheOption = BitmapCacheOption.OnLoad };
                         bi.BeginInit();
                         bi.UriSource = new Uri($"pack://application:,,,/Chess.NET;component/resources/icons/{(piece.Color == PieceColor.White ? "white" : "black")}/{piece.Type}.png");
                         bi.EndInit();
@@ -179,11 +195,21 @@ namespace Chess.NET.Controls
 
                         img.Source = bi;
                     }
+
+                    if (lastMove != null && (lastMove.From == position || lastMove.To == position))
+                    {
+                        // Highlight last move squares  
+                        _squares[file - 1, rank - 1].Border.Background = (Brush)FindResource("ChessHighlightSquare");
+                    }
+                    else
+                    {
+                        bool dark = (file + rank) % 2 == 0;
+                        _squares[file - 1, rank - 1].Border.Background = (Brush)FindResource(dark ? "ChessDarkSquare" : "ChessLightSquare");
+                    }
                 }
             }
         }
     }
-
 
     public class BoardSquare
     {

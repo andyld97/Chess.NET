@@ -8,6 +8,9 @@ namespace Chess.NET.Model
     {
         private readonly Board board = new Board();
 
+        public delegate void onMove(Move move);
+        public event onMove? MovedPiece;
+
         public IBoard Board => board;
 
         public List<Move> Moves { get; set; } = [];
@@ -261,7 +264,7 @@ namespace Chess.NET.Model
             if (pieceOnTargetSquare is King)
                 return false; // cannot capture king
 
-            if (IsCastlePosition(position) && CanCastle(PlayersTurn, position))
+            if (IsCastlePosition(position) && CanCastle(PlayersTurn, position) && piece.Type == PieceType.King)
                 return true;
 
             if (!piece.GetPossibleMoves(board).Contains(position))
@@ -289,15 +292,13 @@ namespace Chess.NET.Model
             bool isCapture = false;
             bool isCastle = false;
             bool isPromotion = false;
-            var oldPosition = piece.Position.Clone() as Position;
+            Position oldPosition = (Position)piece.Position.Clone();
             bool willBeCheck = IsCheck(Helper.InvertPieceColor(piece.Color), piece, position);
 
             if (piece.Type == PieceType.Pawn && (position.Rank == 1 || position.Rank == 8))
             {
+                // Remove the pawn 
                 board.Pieces.Remove(piece);
-
-                if (promotionType == null)
-                    promotionType = PieceType.Queen;
 
                 Piece newPiece = null!;
                 switch (promotionType)
@@ -313,12 +314,12 @@ namespace Chess.NET.Model
                         break;
                 }
 
-                newPiece ??= new Queen(position, piece.Color); // Fallback if there is a non valid promotion type
-
+                // Fallback if there is a non valid promotion type
+                newPiece ??= new Queen(position, piece.Color);
                 board.Pieces.Add(newPiece); 
             }
 
-            if (IsCastlePosition(position) && CanCastle(piece.Color, position) && Castle(piece.Color, position))
+            if (IsCastlePosition(position) && CanCastle(piece.Color, position) && piece.Type == PieceType.King && Castle(piece.Color, position))
             {
                 isCastle = true;
                 Sound.Play(Sound.SoundType.Castle);
@@ -338,7 +339,24 @@ namespace Chess.NET.Model
                     Sound.Play(Sound.SoundType.Move);
             }
 
-            var move = new Move() { From = oldPosition, To = position, IsCapture = isCapture, PieceType = piece.Type, PieceColor = piece.Color, IsPromotion = isPromotion, PromotionType = PieceType.Queen };
+            var move = new Move()
+            {
+                From = oldPosition,
+                To = position,
+                IsCapture = isCapture,
+                PieceType = piece.Type,
+                PieceColor = piece.Color,
+                IsPromotion = isPromotion,
+                PromotionType = promotionType,
+                IsCheck = willBeCheck
+            };
+
+            if (Moves.Count > 0)
+            {
+                move.Count = Moves[^1].Count;
+                if (piece.Color == PieceColor.White)
+                    move.Count++;
+            }
 
             if (isCastle)
             {
@@ -357,16 +375,22 @@ namespace Chess.NET.Model
             {
                 IsGameOver = true;
                 Sound.Play(Sound.SoundType.Checkmate);
+                move.IsCheckmate = true;
+                MovedPiece?.Invoke(move);   
                 return true;
             }
             else if (IsStalemate(PieceColor.White) || IsStalemate(PieceColor.Black))
             {
                 IsGameOver = true;
+                move.IsStalemate = true;
+                MovedPiece?.Invoke(move);
                 Sound.Play(Sound.SoundType.Checkmate); // TODO Different sound for stalemate!
                 return true;
             }
             else if (willBeCheck)
                 Sound.Play(Sound.SoundType.Check);
+
+            MovedPiece?.Invoke(move);
 
             // Switch players
             PlayersTurn = Helper.InvertPieceColor(PlayersTurn);

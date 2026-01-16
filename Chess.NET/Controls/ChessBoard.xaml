@@ -7,13 +7,15 @@
              mc:Ignorable="d">
     <UserControl.Resources>
         <SolidColorBrush x:Key="ChessLightSquare" Color="White"/>
-        <LinearGradientBrush x:Key="ChessDarkSquare"
-                     StartPoint="0,0"
-                     EndPoint="0,1">
-            <GradientStop Color="#FF3A6EA5" Offset="0.0"/>
-            <GradientStop Color="#FF2F5F8F" Offset="1.0"/>
+        
+        <LinearGradientBrush x:Key="ChessDarkSquare" StartPoint="0,0" EndPoint="0,1">
+            <GradientStop Color="#FF5695D9" Offset="0.0"/>
+            <GradientStop Color="#FF4E8AC6" Offset="1.0"/>
         </LinearGradientBrush>
+
+        <SolidColorBrush x:Key="ChessHighlightSquare" Color="#54EBEB8C" />
     </UserControl.Resources>
+    
     <Border Width="1000" Height="1000" BorderThickness="3" BorderBrush="LightGray">
         <Grid>
             <Grid x:Name="BoardGrid">

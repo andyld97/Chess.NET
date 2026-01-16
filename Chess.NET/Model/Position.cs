@@ -41,6 +41,11 @@
             return new Position(file, rank);
         }
 
+        public Position Mirror()
+        {
+            return new Position(File, 9 - Rank);
+        }
+
         public override string ToString() => $"{(char)('a' + File - 1)}{Rank}";
 
         public bool Equals(Position other)

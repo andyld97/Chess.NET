@@ -20,7 +20,15 @@ namespace Chess.NET.Model
 
         public bool IsPromotion { get; set; }
 
+        public bool IsCheck { get; set; }
+
+        public bool IsCheckmate { get; set; }
+
+        public bool IsStalemate { get; set; }
+
         public PieceType? PromotionType { get; set; }
+
+        public int Count { get; set; } = 1;
 
         public string ToUci()
         {
@@ -32,7 +40,15 @@ namespace Chess.NET.Model
 
         public override string ToString()
         {
-            string chessNotation = PieceType switch
+            // 1) Rochade
+            if (IsCastleKingSide)
+                return IsCheckmate ? "O-O#" : IsCheck ? "O-O+" : "O-O";
+
+            if (IsCastleQueenSide)
+                return IsCheckmate ? "O-O-O#" : IsCheck ? "O-O-O+" : "O-O-O";
+
+            // 2️) Figurenbuchstabe
+            string piece = PieceType switch
             {
                 PieceType.Pawn => "",
                 PieceType.Knight => "N",
@@ -43,21 +59,31 @@ namespace Chess.NET.Model
                 _ => ""
             };
 
-            string fromNotation = From.ToString();
-            string toNotation = To.ToString();  
+            // 3️) Bauernschlag braucht das File
+            string pawnFile = PieceType == PieceType.Pawn && IsCapture ? From.ToString().Substring(0,1) : "";
 
-            string captureNotation = IsCapture ? "x" : "";
+            // 4️) Schlag
+            string capture = IsCapture ? "x" : "";
 
-            if (IsCastleKingSide)
-                return "O-O";
-            else if (IsCastleQueenSide)
-                return "O-O-O";
+            // 5️) Grundzug
+            string result = $"{piece}{pawnFile}{capture}{To}";
 
-            return $"{chessNotation}{fromNotation}{captureNotation}{toNotation}";
+            // 6️) Promotion
+            if (IsPromotion)
+                result += $"={PromotionType?.ToUciChar().ToString().ToUpper()}"; // später auswählbar
 
+            // 7️ Schach / Matt / Patt
+            if (IsCheckmate)
+                result += "#";
+            else if (IsCheck)
+                result += "+";
+            else if (IsStalemate)
+                result += "$";
+
+            return result;
         }
-
     }
+
 
     public static class PieceTypeExtensions
     {

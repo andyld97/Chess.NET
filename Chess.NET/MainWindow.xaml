@@ -16,27 +16,56 @@
 
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="200" />
         </Grid.ColumnDefinitions>
 
-        <Grid Grid.Row="0" Background="#FFF9F8F8">
-            <TextBlock Text="Stockfish: 9999 ELO" Margin="2" Padding="3" FontWeight="Bold" />
-        </Grid>
+        <Border Grid.Row="0" Grid.ColumnSpan="2" BorderBrush="Gray" BorderThickness="0 0 0 0.5" Background="#FFF3F1F1">
+            <Grid>
+                <StackPanel Margin="5,0,0,0">
+                    <TextBlock Margin="2" Padding="3">
+                        <Run Text="Stockfish (Bot)" FontWeight="Bold" />
+                        <LineBreak />
+                        <Run Text="Elo: 9999" />
+                    </TextBlock>
+                </StackPanel>
+            </Grid>
+        </Border>
 
-        <Grid Margin="10" Grid.Row="1">
-            <Viewbox>
+        <Grid Grid.Row="1" Background="WhiteSmoke">
+            <Viewbox Margin="10" >
                 <controls:ChessBoard x:Name="Chessboard" />
             </Viewbox>
         </Grid>
 
         <Grid Grid.Column="1" Grid.Row="1">
-            <StackPanel VerticalAlignment="Bottom" Margin="0,0,5,0">
-                <Button x:Name="ButtonRestart" Click="ButtonRestart_Click" Content="Restart" Padding="2" Margin="2" FontWeight="Bold" />
-            </StackPanel>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <StackPanel Margin="2">
+                    <TextBlock Text="Moves:" FontWeight="Bold" />
+                    <TextBlock x:Name="TxtMoves" />
+                </StackPanel>
+
+                <StackPanel Margin="0,0,5,0" Grid.Row="1">
+                    <Button x:Name="ButtonRestart" Click="ButtonRestart_Click" Content="Restart" Padding="2" Margin="2" FontWeight="Bold" />
+                    <Button x:Name="ButtonMirror" Content="Mirror" Click="ButtonMirror_Click" Padding="2" Margin="2" />
+                </StackPanel>
+            </Grid>
         </Grid>
 
-        <Grid Grid.Row="2" Background="#FFF9F8F8">
-            <TextBlock Margin="2" Padding="3" FontWeight="Bold" Text="Chess.NET Player (Elo: 333)" />
-        </Grid>
+        <Border Grid.Row="2" Grid.ColumnSpan="2" BorderBrush="Gray" BorderThickness="0 0.5 0 0" Background="#FFF3F1F1">
+            <Grid>
+                <StackPanel Margin="5,0,0,0">
+                    <TextBlock Margin="2" Padding="3">
+                      <Run Text="Player 1" FontWeight="Bold" />
+                      <LineBreak />
+                      <Run Text="Elo: ???" />
+                    </TextBlock>
+                </StackPanel>
+            </Grid>
+        </Border>
     </Grid>
 </Window>
