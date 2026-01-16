@@ -6,9 +6,9 @@ namespace Chess.NET.Model
     {
         public PieceType PieceType { get; set; }
 
-        public Position From { get; set; }
+        public Position From { get; set; } = null!;
 
-        public Position To { get; set; }
+        public Position To { get; set; } = null!;
 
         public bool IsCapture { get; set; }
 
@@ -18,10 +18,14 @@ namespace Chess.NET.Model
 
         public bool IsCastleQueenSide { get; set; }
 
+        public bool IsPromotion { get; set; }
+
+        public PieceType? PromotionType { get; set; }
+
         public string ToUci()
         {
-            if (PieceType == PieceType.Pawn && (To.Rank == 8 || To.Rank == 1)) // IST EH NOCH TODO, weil PROMOTION eh nicht geht.
-                return $"{From}{To}q";
+            if (IsPromotion && PromotionType.HasValue)
+                return $"{From}{To}{PromotionType.Value.ToUciChar()}".ToLower();
 
             return $"{From}{To}".ToLower();
         }
@@ -44,9 +48,26 @@ namespace Chess.NET.Model
 
             string captureNotation = IsCapture ? "x" : "";
 
-           return $"{chessNotation}{fromNotation}{captureNotation}{toNotation}";
+            if (IsCastleKingSide)
+                return "O-O";
+            else if (IsCastleQueenSide)
+                return "O-O-O";
+
+            return $"{chessNotation}{fromNotation}{captureNotation}{toNotation}";
 
         }
 
+    }
+
+    public static class PieceTypeExtensions
+    {
+        public static char ToUciChar(this PieceType type) => type switch
+        {
+            PieceType.Queen => 'q',
+            PieceType.Rook => 'r',
+            PieceType.Bishop => 'b',
+            PieceType.Knight => 'n',
+            _ => throw new InvalidOperationException("Invalid promotion piece")
+        };
     }
 }

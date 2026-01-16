@@ -1,4 +1,6 @@
-﻿using Chess.NET.Model.Pieces;
+﻿using Chess.NET.Bot;
+using Chess.NET.Model.Pieces;
+using System.Net.Http.Headers;
 
 namespace Chess.NET.Model
 {
@@ -34,45 +36,61 @@ namespace Chess.NET.Model
 
         #region Castle
 
-        private void CastleShort(PieceColor color)
+        private bool CastleShort(PieceColor color)
         {
             // Move the king and the rook (short castle)   
-            var king = board.Pieces.First(p => p.Type == PieceType.King && p.Color == color);
-            var rook = board.Pieces.First(p => p.Type == PieceType.Rook && p.Color == color &&
+            var king = board.Pieces.FirstOrDefault(p => p.Type == PieceType.King && p.Color == color);
+            var rook = board.Pieces.FirstOrDefault(p => p.Type == PieceType.Rook && p.Color == color &&
             (
                 (p.Position == new Position(8, 1) && color == PieceColor.White) ||
                 (p.Position == new Position(8, 8) && color == PieceColor.Black)
             ));
 
+            if (king == null || rook == null)
+                return false;
+
             king.Position = new Position(7, color == PieceColor.White ? 1 : 8);
             rook.Position = new Position(6, color == PieceColor.White ? 1 : 8);
+
+            return true;
         }
 
-        private void CastleLong(PieceColor color)
+        private bool CastleLong(PieceColor color)
         {
             // Move the king and the rook (long castle) 
-            var king = board.Pieces.First(p => p.Type == PieceType.King && p.Color == color);
-            var rook = board.Pieces.First(p => p.Type == PieceType.Rook && p.Color == color &&
+            var king = board.Pieces.FirstOrDefault(p => p.Type == PieceType.King && p.Color == color);
+            var rook = board.Pieces.FirstOrDefault(p => p.Type == PieceType.Rook && p.Color == color &&
             (
                 (p.Position == new Position(1, 1) && color == PieceColor.White) ||
                 (p.Position == new Position(1, 8) && color == PieceColor.Black)
             ));
 
+            if (king == null || rook == null)
+                return false;
+
             king.Position = new Position(3, color == PieceColor.White ? 1 : 8);
             rook.Position = new Position(4, color == PieceColor.White ? 1 : 8);
+
+            return true;
         }
 
-        private void Castle(PieceColor color, Position position)
+        private bool Castle(PieceColor color, Position position)
         {
+            bool result;
             if (position.File == 7)
-                CastleShort(color);
+                result = CastleShort(color);
             else
-                CastleLong(color);
+                result = CastleLong(color);
 
-            if (color == PieceColor.White)
-                hasWhiteCastled = true;
-            else
-                hasBlackCastled = true;
+            if (result)
+            {
+                if (color == PieceColor.White)
+                    hasWhiteCastled = true;
+                else
+                    hasBlackCastled = true;
+            }
+
+            return result;
         }
 
         private static bool IsCastlePosition(Position position)
@@ -190,6 +208,20 @@ namespace Chess.NET.Model
             return true;
         }
 
+        public bool IsStalemate(PieceColor color)
+        {
+            // The same as checkmate but without the initial check
+            foreach (var piece in board.Pieces.Where(p => p.Color == color))
+            {
+                foreach (var mv in piece.GetPossibleMoves(board))
+                    if (!IsCheck(color, piece, mv))
+                        return false;
+            }
+
+            // No legal move found it's over.
+            return true;
+        }
+
         public bool IsCheck(PieceColor pieceColor)
         {
             return board.IsCheck(pieceColor);
@@ -241,8 +273,12 @@ namespace Chess.NET.Model
             return true;
         }
 
-        public bool Move(Piece piece, Position position)
+        public bool Move(NextMove nxtMove)
         {
+            var piece = nxtMove.Piece;
+            var position = nxtMove.To;  
+            var promotionType = nxtMove.PromotionType;  
+
             if (IsGameOver)
                 return false;
 
@@ -252,12 +288,38 @@ namespace Chess.NET.Model
             var currentPiece = board.GetPiece(position);
             bool isCapture = false;
             bool isCastle = false;
+            bool isPromotion = false;
             var oldPosition = piece.Position.Clone() as Position;
             bool willBeCheck = IsCheck(Helper.InvertPieceColor(piece.Color), piece, position);
 
-            if (IsCastlePosition(position) && CanCastle(piece.Color, position))
+            if (piece.Type == PieceType.Pawn && (position.Rank == 1 || position.Rank == 8))
             {
-                Castle(piece.Color, position);
+                board.Pieces.Remove(piece);
+
+                if (promotionType == null)
+                    promotionType = PieceType.Queen;
+
+                Piece newPiece = null!;
+                switch (promotionType)
+                {
+                    case PieceType.Rook:
+                        newPiece = new Rook(position, piece.Color);
+                        break;
+                    case PieceType.Bishop:
+                        newPiece = new Bishop(position, piece.Color);
+                        break;
+                    case PieceType.Knight:
+                        newPiece = new Knight(position, piece.Color);
+                        break;
+                }
+
+                newPiece ??= new Queen(position, piece.Color); // Fallback if there is a non valid promotion type
+
+                board.Pieces.Add(newPiece); 
+            }
+
+            if (IsCastlePosition(position) && CanCastle(piece.Color, position) && Castle(piece.Color, position))
+            {
                 isCastle = true;
                 Sound.Play(Sound.SoundType.Castle);
             }
@@ -276,7 +338,7 @@ namespace Chess.NET.Model
                     Sound.Play(Sound.SoundType.Move);
             }
 
-            var move = new Move() { From = oldPosition, To = position, IsCapture = isCapture, PieceType = piece.Type, PieceColor = piece.Color };
+            var move = new Move() { From = oldPosition, To = position, IsCapture = isCapture, PieceType = piece.Type, PieceColor = piece.Color, IsPromotion = isPromotion, PromotionType = PieceType.Queen };
 
             if (isCastle)
             {
@@ -288,13 +350,19 @@ namespace Chess.NET.Model
 
             Moves.Add(move);
 
-            if (!isCastle)
+            if (!isCastle && !isPromotion)
                 piece.Position = position;
 
             if (IsCheckmate(PieceColor.White) || IsCheckmate(PieceColor.Black))
             {
                 IsGameOver = true;
                 Sound.Play(Sound.SoundType.Checkmate);
+                return true;
+            }
+            else if (IsStalemate(PieceColor.White) || IsStalemate(PieceColor.Black))
+            {
+                IsGameOver = true;
+                Sound.Play(Sound.SoundType.Checkmate); // TODO Different sound for stalemate!
                 return true;
             }
             else if (willBeCheck)

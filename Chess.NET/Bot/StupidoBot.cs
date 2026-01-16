@@ -5,7 +5,7 @@ namespace Chess.NET.Bot
 {
     public class StupidoBot : IChessBot
     {
-        public (Piece, Position)? Move(Game game)
+        public NextMove Move(Game game)
         {
             List<SortedMove> sortedMoves = [];
             bool canCapture = false;
@@ -52,7 +52,7 @@ namespace Chess.NET.Bot
                 if (checkOutMoves.Count > 0)
                 {
                     var bestMove = checkOutMoves.OrderByDescending(m => m.Score).First();
-                    return (bestMove.Piece, bestMove.TargetPosition);
+                    return new NextMove(bestMove.Piece, bestMove.TargetPosition);
                 }
             }
             else
@@ -60,12 +60,12 @@ namespace Chess.NET.Bot
                 if (game.CanCastle(PieceColor.Black, new Position(3, 8)))
                 {
                     var king = game.Board.GetPiece(new Position(5, 8));
-                    return (king, new Position(3, 8));
+                    return new NextMove(king, new Position(3, 8));
                 }
                 else if (game.CanCastle(PieceColor.Black, new Position(7, 8)))
                 {
                     var king = game.Board.GetPiece(new Position(5, 8));
-                    return (king, new Position(7, 8));
+                    return new NextMove(king, new Position(7, 8));
                 }
             }
 
@@ -110,14 +110,14 @@ namespace Chess.NET.Bot
             if (canCapture)
             {
                 var result = sortedMoves.OrderByDescending(p => p.Score).FirstOrDefault();
-                return (result.Piece, result.TargetPosition);
+                return new NextMove(result.Piece, result.TargetPosition);
             }
             else
             {
                 var piece = GetRandom(game.Board.Pieces.Where(p => p.Color == PieceColor.Black), p => p.GetPossibleMoves(game.Board).Count > 0);
                 var moves = piece.GetPossibleMoves(game.Board);
 
-                return (piece, moves[Random.Shared.Next(moves.Count)]);
+                return new NextMove(piece, moves[Random.Shared.Next(moves.Count)]);
             }
         }
 
@@ -135,9 +135,9 @@ namespace Chess.NET.Bot
 
     class SortedMove
     {
-        public Piece Piece { get; set; }    
+        public Piece Piece { get; set; }
 
-        public Position TargetPosition { get; set; }    
+        public Position TargetPosition { get; set; }
 
         public int Score { get; set; }
     }

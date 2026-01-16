@@ -42,7 +42,7 @@ namespace Chess.NET.Bot
             Send("setoption name Skill Level value 8");
         }
 
-        public (Piece, Position)? Move(Game game)
+        public NextMove? Move(Game game)
         {
             // 1️ Position setzen (über Moves!)
             var movesUci = string.Join(" ", game.Moves.Select(m => m.ToUci()));
@@ -55,7 +55,7 @@ namespace Chess.NET.Bot
             string? line;
             while ((line = _output.ReadLine()) != null)
             {
-                Debug.WriteLine($"[Stockfish] {line}"); 
+                Debug.WriteLine($"[Stockfish] {line}");
                 if (line.StartsWith("bestmove"))
                 {
                     var parts = line.Split(' ');
@@ -70,7 +70,7 @@ namespace Chess.NET.Bot
             return null;
         }
 
-        private (Piece, Position)? MapUciMoveToGame(string uci, Game game)
+        private NextMove? MapUciMoveToGame(string uci, Game game)
         {
             // e2e4, e7e8q
             var from = Position.Parse(uci.Substring(0, 2));
@@ -80,7 +80,23 @@ namespace Chess.NET.Bot
             if (piece == null)
                 return null;
 
-            return (piece, to);
+            // Promotion
+            PieceType? promotion = null;
+
+            // Promotion?
+            if (uci.Length == 5)
+            {
+                promotion = uci[4] switch
+                {
+                    'q' => PieceType.Queen,
+                    'r' => PieceType.Rook,
+                    'b' => PieceType.Bishop,
+                    'n' => PieceType.Knight,
+                    _ => null
+                };
+            }
+
+            return new NextMove(piece, to, promotion);
         }
 
         private void Send(string command)

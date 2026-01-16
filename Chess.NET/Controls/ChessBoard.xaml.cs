@@ -89,13 +89,14 @@ namespace Chess.NET.Controls
             {
                 var destinationSquare = square.Tag as Position;
 
-                bool wasMoveAccepted = game.Move(_pieceToMove, destinationSquare);
+                bool wasMoveAccepted = game.Move( new NextMove(_pieceToMove, destinationSquare, null));
 
                 ResetDrag();
                 RefreshChessBoard(game.Board);
 
                 if (!wasMoveAccepted)
                     return;
+
 
                 // THE BOOOOT
                 await Task.Delay(1000);
@@ -106,11 +107,14 @@ namespace Chess.NET.Controls
                     if (game.IsCheckmate(PieceColor.Black) || game.IsCheckmate(PieceColor.White))
                         return;
 
+                    if (game.IsStalemate(PieceColor.Black) || game.IsStalemate(PieceColor.White))
+                        return;
+
                     var next = chessBot.Move(game);
                     if (next == null)
                         break;
 
-                    test = game.Move(next.Value.Item1, next.Value.Item2);
+                    test = game.Move(next);
                 }
 
                 RefreshChessBoard(game.Board);
