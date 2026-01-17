@@ -84,7 +84,13 @@ namespace Chess.NET
 
         private void ListMoves_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            Chessboard.ShowMove(ListMoves.SelectedIndex);
+            int n = ListMoves.SelectedIndex;
+
+            int firstMove = 2 * n - 1;
+            int secondMove = 2 * n;
+            
+            // We are currently not able to differentae which one, so we always choose the first one
+            Chessboard.ShowMove(firstMove);
         }
 
         private void RefreshPlayerDisplay()

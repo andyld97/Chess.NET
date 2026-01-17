@@ -41,7 +41,6 @@ namespace Chess.NET.Model
             return new PlayerInfo(whiteCapturePiecesMaterialValue, blackCapturePiecesMaterialValue, [.. whiteCapturedPieces], [.. blackCapturedPieces]);
         }
 
-
         private bool IsEnPassant(PieceColor color, Piece piece, Position position)
         {
             if (piece.Type != PieceType.Pawn)
@@ -220,7 +219,10 @@ namespace Chess.NET.Model
                 return false;
 
             if (isLongCastle)
-            {               
+            {
+                if (king.Position.File - 1 < 1 || king.Position.File - 2 < 1)
+                    return false;
+
                 var position1 = new Position(king.Position.File - 1, king.Position.Rank);
                 var position2 = new Position(king.Position.File - 2, king.Position.Rank);
 
@@ -230,6 +232,9 @@ namespace Chess.NET.Model
             else
             {
                 // Short castle
+                if (king.Position.File + 1 > 8 || king.Position.File + 2 > 8)
+                    return false;
+
                 var position1 = new Position(king.Position.File + 1, king.Position.Rank);
                 var position2 = new Position(king.Position.File + 2, king.Position.Rank);
 
@@ -381,7 +386,9 @@ namespace Chess.NET.Model
 
                 // Fallback if there is a non valid promotion type
                 newPiece ??= new Queen(position, piece.Color);
-                board.Pieces.Add(newPiece); 
+                board.Pieces.Add(newPiece);
+
+                willBeCheck |= IsCheck(Helper.InvertPieceColor(piece.Color));
             }
 
             if (IsEnPassant(piece.Color, piece, position))
