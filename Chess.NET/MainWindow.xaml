@@ -5,8 +5,12 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Chess.NET"
         xmlns:controls="clr-namespace:Chess.NET.Controls"
-        mc:Ignorable="d"
+        mc:Ignorable="d" WindowStartupLocation="CenterScreen"
         Title="Chess.NET" Height="768" Width="1024">
+    <Window.InputBindings>
+        <KeyBinding Key="Left" Command="{Binding MoveLeftCommand}" />
+        <KeyBinding Key="Right" Command="{Binding MoveRightCommand}" />
+    </Window.InputBindings>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -32,7 +36,10 @@
         </Border>
 
         <Grid Grid.Row="1" Background="WhiteSmoke">
-            <Viewbox Margin="10" >
+            <Grid IsHitTestVisible="False">
+                <Image Source="/resources/images/background.jpg" Stretch="UniformToFill" />
+            </Grid>
+            <Viewbox Margin="10">
                 <controls:ChessBoard x:Name="Chessboard" />
             </Viewbox>
         </Grid>
@@ -44,14 +51,18 @@
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
-                <StackPanel Margin="2">
+                <Grid Margin="4">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
                     <TextBlock Text="Moves:" FontWeight="Bold" />
-                    <TextBlock x:Name="TxtMoves" />
-                </StackPanel>
+                    <ListBox x:Name="ListMoves" Margin="0,4,0,0" Grid.Row="1" />
+                </Grid>
 
-                <StackPanel Margin="0,0,5,0" Grid.Row="1">
-                    <Button x:Name="ButtonRestart" Click="ButtonRestart_Click" Content="Restart" Padding="2" Margin="2" FontWeight="Bold" />
-                    <Button x:Name="ButtonMirror" Content="Mirror" Click="ButtonMirror_Click" Padding="2" Margin="2" />
+                <StackPanel Margin="4" Grid.Row="1">
+                    <Button x:Name="ButtonRestart" Click="ButtonRestart_Click" Content="Restart Game" Padding="3" Margin="0" FontWeight="Bold" />
+                    <Button x:Name="ButtonMirror" Content="Mirror Board" Click="ButtonMirror_Click" Padding="3" Margin="0,5,0,0" />
                 </StackPanel>
             </Grid>
         </Grid>

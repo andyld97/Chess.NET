@@ -1,6 +1,6 @@
 ﻿namespace Chess.NET.Model
 {
-    public class Position : IEquatable<Position>, ICloneable 
+    public class Position : IEquatable<Position>, ICloneable
     {
         /// <summary>
         /// The file from A-H
@@ -48,24 +48,19 @@
 
         public override string ToString() => $"{(char)('a' + File - 1)}{Rank}";
 
-        public bool Equals(Position other)
-            => File == other.File && Rank == other.Rank;
+        public bool Equals(Position other) => File == other.File && Rank == other.Rank;
 
-        public override bool Equals(object? obj)
-            => obj is Position p && Equals(p);
+        public override bool Equals(object? obj) => obj is Position p && Equals(p);
 
-        public override int GetHashCode()
-            => HashCode.Combine(File, Rank);
+        public override int GetHashCode() => HashCode.Combine(File, Rank);
 
         public object Clone()
         {
             return (object)new Position(File, Rank);
         }
 
-        public static bool operator ==(Position left, Position right)
-            => left.Equals(right);
+        public static bool operator ==(Position left, Position right) => left.Equals(right);
 
-        public static bool operator !=(Position left, Position right)
-            => !left.Equals(right);
+        public static bool operator !=(Position left, Position right) => !left.Equals(right);
     }
 }

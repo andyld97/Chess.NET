@@ -6,17 +6,20 @@
              xmlns:local="clr-namespace:Chess.NET.Controls"
              mc:Ignorable="d">
     <UserControl.Resources>
-        <SolidColorBrush x:Key="ChessLightSquare" Color="White"/>
-        
-        <LinearGradientBrush x:Key="ChessDarkSquare" StartPoint="0,0" EndPoint="0,1">
+        <SolidColorBrush x:Key="ChessLightSquare" Color="White" Opacity="0.4" />
+
+        <LinearGradientBrush x:Key="ChessDarkSquare" StartPoint="0,0" EndPoint="0,1" Opacity="0.4">
             <GradientStop Color="#FF5695D9" Offset="0.0"/>
             <GradientStop Color="#FF4E8AC6" Offset="1.0"/>
         </LinearGradientBrush>
 
         <SolidColorBrush x:Key="ChessHighlightSquare" Color="#54EBEB8C" />
     </UserControl.Resources>
-    
-    <Border Width="1000" Height="1000" BorderThickness="3" BorderBrush="LightGray">
+
+    <Border Background="Transparent"  Width="1000" Height="1000" BorderThickness="10" CornerRadius="10">
+        <Border.BorderBrush>
+            <SolidColorBrush Color="White" Opacity="0.6" />
+        </Border.BorderBrush>
         <Grid>
             <Grid x:Name="BoardGrid">
                 <Grid.RowDefinitions>

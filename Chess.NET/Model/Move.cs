@@ -1,18 +1,14 @@
-﻿using Chess.NET.Model.Pieces;
-
-namespace Chess.NET.Model
+﻿namespace Chess.NET.Model
 {
     public class Move
     {
-        public PieceType PieceType { get; set; }
+        public Piece Piece { get; set; } = null!;
 
         public Position From { get; set; } = null!;
 
         public Position To { get; set; } = null!;
 
         public bool IsCapture { get; set; }
-
-        public PieceColor PieceColor { get; set; }
 
         public bool IsCastleKingSide { get; set; }
 
@@ -48,7 +44,7 @@ namespace Chess.NET.Model
                 return IsCheckmate ? "O-O-O#" : IsCheck ? "O-O-O+" : "O-O-O";
 
             // 2️) Figurenbuchstabe
-            string piece = PieceType switch
+            string piece = Piece.Type switch
             {
                 PieceType.Pawn => "",
                 PieceType.Knight => "N",
@@ -59,8 +55,11 @@ namespace Chess.NET.Model
                 _ => ""
             };
 
+            // oder emoji:
+            piece = Helper.ToEmoji(Piece);
+
             // 3️) Bauernschlag braucht das File
-            string pawnFile = PieceType == PieceType.Pawn && IsCapture ? From.ToString().Substring(0,1) : "";
+            string pawnFile = Piece.Type == PieceType.Pawn && IsCapture ? From.ToString().Substring(0, 1) : string.Empty;
 
             // 4️) Schlag
             string capture = IsCapture ? "x" : "";
@@ -70,7 +69,7 @@ namespace Chess.NET.Model
 
             // 6️) Promotion
             if (IsPromotion)
-                result += $"={PromotionType?.ToUciChar().ToString().ToUpper()}"; // später auswählbar
+                result += $"={PromotionType?.ToUciChar().ToString().ToUpper()}";
 
             // 7️ Schach / Matt / Patt
             if (IsCheckmate)
@@ -82,18 +81,5 @@ namespace Chess.NET.Model
 
             return result;
         }
-    }
-
-
-    public static class PieceTypeExtensions
-    {
-        public static char ToUciChar(this PieceType type) => type switch
-        {
-            PieceType.Queen => 'q',
-            PieceType.Rook => 'r',
-            PieceType.Bishop => 'b',
-            PieceType.Knight => 'n',
-            _ => throw new InvalidOperationException("Invalid promotion piece")
-        };
     }
 }

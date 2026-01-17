@@ -1,6 +1,4 @@
-﻿using System.Printing;
-
-namespace Chess.NET.Model
+﻿namespace Chess.NET.Model
 {
     public abstract class Piece
     {
@@ -24,7 +22,6 @@ namespace Chess.NET.Model
         }
 
         public abstract List<Position> GetPossibleMoves(IBoard board);
-
 
         #region Helper Methods
 
@@ -56,7 +53,6 @@ namespace Chess.NET.Model
         }
 
         #endregion
-
     }
 
     public enum PieceType

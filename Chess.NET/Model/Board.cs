@@ -89,14 +89,14 @@ namespace Chess.NET.Model
                         if (piece == null)
                             sb.Append("·  ");
                         else
-                            sb.Append(PieceToEmoji(piece) + " ");
+                            sb.Append($"{piece.ToEmoji()} ");
                     }
                     else
                     {
                         if (piece == null)
                             sb.Append("·  ");
                         else
-                            sb.Append(PieceToEmoji(piece) + " ");
+                            sb.Append($"{piece.ToEmoji()} ");
                     }
                 }
                 sb.Append(" │");
@@ -107,35 +107,7 @@ namespace Chess.NET.Model
             sb.AppendLine("    a  b  c  d  e  f  g  h");
 
             return sb.ToString();
-        }
-
-        private static string PieceToEmoji(Piece piece)
-        {
-            return piece.Color switch
-            {
-                PieceColor.White => piece.Type switch
-                {
-                    PieceType.King => "♔",
-                    PieceType.Queen => "♕",
-                    PieceType.Rook => "♖",
-                    PieceType.Bishop => "♗",
-                    PieceType.Knight => "♘",
-                    PieceType.Pawn => "♙",
-                    _ => "?"
-                },
-                PieceColor.Black => piece.Type switch
-                {
-                    PieceType.King => "♚",
-                    PieceType.Queen => "♛",
-                    PieceType.Rook => "♜",
-                    PieceType.Bishop => "♝",
-                    PieceType.Knight => "♞",
-                    PieceType.Pawn => "♟",
-                    _ => "?"
-                },
-                _ => "?"
-            };
-        }
+        }      
 
         public void CapturePiece(Piece piece)
         {

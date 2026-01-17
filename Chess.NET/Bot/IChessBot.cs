@@ -7,7 +7,6 @@ namespace Chess.NET.Bot
         NextMove Move(Game game);
     }
 
-
     public class NextMove
     {
         public Piece Piece { get; set; }
