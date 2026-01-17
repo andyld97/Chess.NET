@@ -10,11 +10,11 @@ It includes (almost) full game rules, a WPF-based GUI, custom bot logic, and eve
 ## Features
 
 ### Missing Features
-- EN PASSANT
-- Convert pawn to Queen, Knight, Bishop or The Roooooooook
+- Choose promotion (currently the pawn always converts to the queen for players)
 
 ###  Game Logic
 - (Almost) full chess rule validation
+- EN PASSANT!
 - Check and checkmate detection
 - **Castling (king-side & queen-side)** fully implemented
 - Illegal moves are reliably prevented

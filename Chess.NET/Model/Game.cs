@@ -1,6 +1,5 @@
 ﻿using Chess.NET.Bot;
 using Chess.NET.Model.Pieces;
-using System.Collections.ObjectModel;
 
 namespace Chess.NET.Model
 {
@@ -40,6 +39,57 @@ namespace Chess.NET.Model
             int blackCapturePiecesMaterialValue = blackCapturedPieces.Sum(p => p.MaterialValue);
 
             return new PlayerInfo(whiteCapturePiecesMaterialValue, blackCapturePiecesMaterialValue, [.. whiteCapturedPieces], [.. blackCapturedPieces]);
+        }
+
+
+        private bool IsEnPassant(PieceColor color, Piece piece, Position position)
+        {
+            if (piece.Type != PieceType.Pawn)
+                return false;            
+
+            // Ideen für Bedinungen um EN PASSANT zu ermitteln:
+            // - Letzter Zug muss ein Bauern-Zug mit 2 Schritten gewesen sein!
+            // - Letzter Zug muss ein Bauern-Zug gewesen sein, der direkt neben dem übergeben Bauern ist.
+            //   Konkret bedeutet dass das File von LastMove.Pos.File == position.File sein muss
+            // - Zielfeld muss leer sein!
+
+            var lastMove = Moves.LastOrDefault();
+            if (lastMove == null)
+                return false;
+            if (lastMove.Piece.Color == piece.Color)
+                return false; // LastMove muss von der anderen Farbe gewesen sein!
+            if (lastMove.Piece.Type != PieceType.Pawn)
+                return false;
+            if (Math.Abs(lastMove.From.Rank - lastMove.To.Rank) != 2)
+                return false;
+            if (lastMove.To.File != position.File)
+                return false;
+
+            // Zielfeld leer?
+            if (board.GetPiece(position) != null)
+                return false;
+
+            // Eigener Bauer muss auf dem richtigen Rank stehen!
+            if (color == PieceColor.White && piece.Position.Rank != 5)
+                return false;
+            if (color == PieceColor.Black && piece.Position.Rank != 4)
+                return false;
+
+            // Gegnerischer Bauer muss direkt neben diesem Bauern stehen
+            if (lastMove.To.Rank != piece.Position.Rank)
+                return false;
+
+            // Gegnerischer Bauer muss direkt links oder rechts neben mir stehen
+            if (Math.Abs(lastMove.To.File - piece.Position.File) != 1)
+                return false;
+
+            // Prüfen ob das Zielfeld korrekt ist
+            if (color == PieceColor.White && position.Rank != piece.Position.Rank + 1)
+                return false;
+            else if (color == PieceColor.Black && position.Rank != piece.Position.Rank - 1)
+                return false;
+
+            return true;
         }
 
         #region Castle
@@ -278,6 +328,9 @@ namespace Chess.NET.Model
             if (IsCastlePosition(position) && CanCastle(PlayersTurn, position) && piece.Type == PieceType.King)
                 return true;
 
+            if (IsEnPassant(piece.Color, piece, position) && !IsCheck(PlayersTurn, piece, position))
+                return true;
+
             if (!piece.GetPossibleMoves(board).Contains(position))
                 return false;
 
@@ -303,6 +356,7 @@ namespace Chess.NET.Model
             bool isCapture = false;
             bool isCastle = false;
             bool isPromotion = false;
+            bool isEnPassant = false;
             Position oldPosition = (Position)piece.Position.Clone();
             bool willBeCheck = IsCheck(Helper.InvertPieceColor(piece.Color), piece, position);
 
@@ -330,7 +384,28 @@ namespace Chess.NET.Model
                 board.Pieces.Add(newPiece); 
             }
 
-            if (IsCastlePosition(position) && CanCastle(piece.Color, position) && piece.Type == PieceType.King && Castle(piece.Color, position))
+            if (IsEnPassant(piece.Color, piece, position))
+            {
+                // Execute EN PASSANT
+
+                // 1) Bauer an Zielposition schieben
+                // 2) gegenerischen Bauern (File, Rank - 1) [Weiß], (File, Rank + 1) schwarz entfernen
+
+                piece.Position = position;
+                Piece? pieceToCapture = null;
+
+                if (piece.Color == PieceColor.White)
+                    pieceToCapture = board.GetPiece(new Position(position.File, position.Rank - 1));
+                else if (piece.Color == PieceColor.Black)
+                    pieceToCapture = board.GetPiece(new Position(position.File, position.Rank + 1));
+
+                board.Pieces.Remove(pieceToCapture!);
+                board.CapturedPieces.Add(pieceToCapture!);
+
+                Sound.Play(Sound.SoundType.Capture);
+                isEnPassant = true;
+            }
+            else if (IsCastlePosition(position) && CanCastle(piece.Color, position) && piece.Type == PieceType.King && Castle(piece.Color, position))
             {
                 isCastle = true;
                 if (playSound)
@@ -362,6 +437,9 @@ namespace Chess.NET.Model
                 IsCheck = willBeCheck
             };
 
+            if (isEnPassant)
+                move.IsCapture = true;
+
             if (Moves.Count > 0)
             {
                 move.Count = Moves[^1].Count;
@@ -379,7 +457,7 @@ namespace Chess.NET.Model
 
             Moves.Add(move);
 
-            if (!isCastle && !isPromotion)
+            if (!isCastle && !isPromotion && !isEnPassant)
                 piece.Position = position;
 
             if (IsCheckmate(PieceColor.White) || IsCheckmate(PieceColor.Black))
