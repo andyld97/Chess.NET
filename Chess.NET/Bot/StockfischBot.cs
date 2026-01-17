@@ -1,5 +1,6 @@
 ﻿using Chess.NET.Model;
 using System.Diagnostics;
+using System.DirectoryServices;
 using System.IO;
 
 namespace Chess.NET.Bot
@@ -10,8 +11,18 @@ namespace Chess.NET.Bot
         private readonly StreamWriter _input;
         private readonly StreamReader _output;
 
-        public StockfischBot(string stockfishPath = "stockfish.exe")
+        private readonly int skill = 0;
+        private readonly int depth = 0;
+
+        public int Elo => 100 + depth * 350 + skill * 80;
+
+        public string Name => "Stockfish";
+
+        public StockfischBot(int skill = 8, int depth = 10, string stockfishPath = "stockfish.exe")
         {
+            this.skill = skill;
+            this.depth = depth;
+
             _process = new Process
             {
                 StartInfo = new ProcessStartInfo
@@ -39,7 +50,8 @@ namespace Chess.NET.Bot
 
             Send("isready");
             WaitFor("readyok");
-            Send("setoption name Skill Level value 8");
+
+            Send($"setoption name Skill Level value {skill}");
         }
 
         public NextMove? Move(Game game)
@@ -49,7 +61,7 @@ namespace Chess.NET.Bot
             Send($"position startpos moves {movesUci}");
 
             // 2️ Engine rechnen lassen
-            Send("go depth 10");
+            Send($"go depth {depth}");
 
             // 3️ bestmove lesen
             string? line;

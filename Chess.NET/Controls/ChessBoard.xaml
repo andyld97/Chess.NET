@@ -16,7 +16,7 @@
         <SolidColorBrush x:Key="ChessHighlightSquare" Color="#54EBEB8C" />
     </UserControl.Resources>
 
-    <Border Background="Transparent"  Width="1000" Height="1000" BorderThickness="10" CornerRadius="10">
+    <Border Background="Transparent" Width="1000" Height="1000" BorderThickness="10" CornerRadius="10">
         <Border.BorderBrush>
             <SolidColorBrush Color="White" Opacity="0.6" />
         </Border.BorderBrush>

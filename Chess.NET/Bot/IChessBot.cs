@@ -5,6 +5,10 @@ namespace Chess.NET.Bot
     public interface IChessBot
     {
         NextMove Move(Game game);
+
+        int Elo { get; }
+
+        string Name { get; }
     }
 
     public class NextMove

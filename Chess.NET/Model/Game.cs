@@ -1,12 +1,14 @@
 ﻿using Chess.NET.Bot;
 using Chess.NET.Model.Pieces;
-using System.Net.Http.Headers;
+using System.Collections.ObjectModel;
 
 namespace Chess.NET.Model
 {
     public class Game
     {
         private readonly Board board = new Board();
+        private bool hasWhiteCastled = false;
+        private bool hasBlackCastled = false;
 
         public delegate void onMove(Move move);
         public event onMove? MovedPiece;
@@ -15,12 +17,9 @@ namespace Chess.NET.Model
 
         public List<Move> Moves { get; set; } = [];
 
-        public PieceColor PlayersTurn { get; set; } = PieceColor.White;
+        public PieceColor PlayersTurn { get; private set; } = PieceColor.White;
 
-        public bool IsGameOver { get; set; }
-
-        private bool hasWhiteCastled = false;   
-        private bool hasBlackCastled = false;
+        public bool IsGameOver { get; private set; }
 
         public void StartNewGame()
         {
@@ -32,9 +31,15 @@ namespace Chess.NET.Model
             hasBlackCastled = false;    
         }
 
-        public string GetStringRepresentation()
+        public PlayerInfo GetPlayerInformation()
         {
-            return board.ToString();
+            var whiteCapturedPieces = board.CapturedPieces.Where(p => p.Color == PieceColor.Black);
+            var blackCapturedPieces = board.CapturedPieces.Where(p => p.Color == PieceColor.White);
+
+            int whiteCapturePiecesMaterialValue = whiteCapturedPieces.Sum(p => p.MaterialValue);
+            int blackCapturePiecesMaterialValue = blackCapturedPieces.Sum(p => p.MaterialValue);
+
+            return new PlayerInfo(whiteCapturePiecesMaterialValue, blackCapturePiecesMaterialValue, [.. whiteCapturedPieces], [.. blackCapturedPieces]);
         }
 
         #region Castle
@@ -194,6 +199,8 @@ namespace Chess.NET.Model
 
         #endregion
 
+        #region Check, Checkmate & Stalemate
+
         public bool IsCheckmate(PieceColor color)
         {
             // 1) Check if there is a check by any of the opposite pieces (except the king cant give a check)
@@ -247,6 +254,10 @@ namespace Chess.NET.Model
 
             return clone.IsCheck(color);
         }
+
+        #endregion
+
+        #region Move
 
         private bool IsMoveValid(Piece piece, Position position)
         {
@@ -398,6 +409,13 @@ namespace Chess.NET.Model
             PlayersTurn = Helper.InvertPieceColor(PlayersTurn);
 
             return true;
+        }
+
+        #endregion
+
+        public override string ToString()
+        {
+            return board.ToString();
         }
     }
 }

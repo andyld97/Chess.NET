@@ -15,7 +15,7 @@ namespace Chess.NET.Controls
         private readonly BoardSquare[,] _squares = new BoardSquare[8, 8];
         private readonly Game game = new Game();
 
-        private readonly IChessBot? chessBot = null;
+        private IChessBot? opponent = null;
         private bool isMirrored = false;
 
         public Game Game => game;
@@ -29,9 +29,6 @@ namespace Chess.NET.Controls
             game.StartNewGame();
 
             RefreshChessBoard(game.Board);
-
-            chessBot = new StockfischBot(@"F:\Eigene Dateien\Downloads\stockfish-windows-x86-64\stockfish\stockfish-windows-x86-64.exe");
-            // chessBot = new StupidoBot();
         }
 
         private void InitializeSquares()
@@ -63,12 +60,13 @@ namespace Chess.NET.Controls
             }
         }
 
-        public void Restart()
+        public void Restart(IChessBot? opponent)
         {
             ResetDrag();
 
             game.StartNewGame();
             RefreshChessBoard(game.Board);
+            this.opponent = opponent;
         }
 
         public void Mirror()
@@ -119,22 +117,25 @@ namespace Chess.NET.Controls
 
 
                 // THE BOOOOT
-                await Task.Delay(1000);
-
-                bool test = false;
-                while (!test)
+                if (opponent != null)
                 {
-                    if (game.IsCheckmate(PieceColor.Black) || game.IsCheckmate(PieceColor.White))
-                        return;
+                    await Task.Delay(1000);
 
-                    if (game.IsStalemate(PieceColor.Black) || game.IsStalemate(PieceColor.White))
-                        return;
+                    bool foundValidMove = false;
+                    while (!foundValidMove)
+                    {
+                        if (game.IsCheckmate(PieceColor.Black) || game.IsCheckmate(PieceColor.White))
+                            return;
 
-                    var next = chessBot.Move(game);
-                    if (next == null)
-                        break;
+                        if (game.IsStalemate(PieceColor.Black) || game.IsStalemate(PieceColor.White))
+                            return;
 
-                    test = game.Move(next);
+                        var next = opponent.Move(game);
+                        if (next == null)
+                            break;
+
+                        foundValidMove = game.Move(next);
+                    }
                 }
 
                 RefreshChessBoard(game.Board);
@@ -223,53 +224,75 @@ namespace Chess.NET.Controls
         private int navigationCurrentMove = -1;
         private bool isInNavigationMode = false;
 
+        public void JumpToStart()
+        {
+            navigationCurrentMove = 0;
+            ShowMove();
+        }
+
+        public void ShowLastMove()
+        {
+            navigationCurrentMove = game.Moves.Count;
+            ShowMove();
+        }
+
         public void ShowPreviousMove()
         {
             if (navigationCurrentMove == -1)
                 navigationCurrentMove = game.Moves.Count;
 
+            if (navigationCurrentMove > game.Moves.Count)
+                navigationCurrentMove = game.Moves.Count;   
+
             if (navigationCurrentMove == 0)
                 return;
+
 
             int removedMoveIndex = navigationCurrentMove - 1;
             var removedMove = game.Moves[removedMoveIndex];
 
             navigationCurrentMove--;
 
-            Game gm = new Game();
-            gm.StartNewGame();
-
-            for (int i = 0; i < navigationCurrentMove; i++)
-            {
-                var move = game.Moves[i];
-                gm.Move(new NextMove(gm.Board.GetPiece(move.From), move.To, move.PromotionType), false);
-            }
+            var gm = ShowMove();
 
             PlayMoveSound(gm, true, removedMove);
             RefreshChessBoard(gm.Board, false);
             isInNavigationMode = true;
         }
 
-        public void ShowNextMove()
+        public void ShowMove(int index)
         {
-            if (navigationCurrentMove == -1)
-                navigationCurrentMove = game.Moves.Count;
-            else
-                navigationCurrentMove++;
+            navigationCurrentMove = index + 1;
+            ShowMove();
+        }
 
-            if (navigationCurrentMove > game.Moves.Count)
-            {
-                navigationCurrentMove = game.Moves.Count;
-                return;
-            }
-
+        private Game ShowMove()
+        {
             Game gm = new Game();
             gm.StartNewGame();
+
             for (int i = 0; i < navigationCurrentMove; i++)
             {
                 var move = game.Moves[i];
                 gm.Move(new NextMove(gm.Board.GetPiece(move.From), move.To, move.PromotionType), false);
             }
+
+            RefreshChessBoard(gm.Board, false);
+            isInNavigationMode = true;
+            return gm;
+        }
+
+        public void ShowNextMove()
+        {
+            if (navigationCurrentMove == -1)
+                navigationCurrentMove = game.Moves.Count;
+
+            if (navigationCurrentMove >= game.Moves.Count)
+                return;
+
+            navigationCurrentMove++;
+
+            var gm = ShowMove();
 
             PlayMoveSound(gm, false);
             RefreshChessBoard(gm.Board, false);

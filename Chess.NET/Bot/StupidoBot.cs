@@ -5,6 +5,10 @@ namespace Chess.NET.Bot
 {
     public class StupidoBot : IChessBot
     {
+        public string Name => "Stupido";
+
+        public int Elo => 42;
+
         public NextMove Move(Game game)
         {
             List<SortedMove> sortedMoves = [];
