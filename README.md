@@ -9,7 +9,7 @@ It includes (almost) full game rules, a WPF-based GUI, custom bot logic, and eve
 
 ## Features
 
-## Missing Features
+### Missing Features
 - Time Control
 
 ###  Game Logic
