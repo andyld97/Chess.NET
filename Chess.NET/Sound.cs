@@ -1,4 +1,4 @@
-﻿using System.Reflection.Emit;
+﻿using Chess.NET.Model;
 using System.Windows.Media;
 
 namespace Chess.NET
@@ -10,6 +10,7 @@ namespace Chess.NET
         private static readonly MediaPlayer _castlePlayer = CreatePlayer("resources/sounds/castle.mp3");
         private static readonly MediaPlayer _checkPlayer = CreatePlayer("resources/sounds/check.mp3");
         private static readonly MediaPlayer _checkMatePlayer = CreatePlayer("resources/sounds/checkmate.mp3");
+        private static readonly MediaPlayer _staleMatePlayer = CreatePlayer("resources/sounds/stalemate.mp3");
 
         private static MediaPlayer CreatePlayer(string relativePath)
         {
@@ -21,13 +22,17 @@ namespace Chess.NET
 
         public static void Play(SoundType type)
         {
+            if (!Settings.Instance.PlaySounds)
+                return;
+
             Dictionary<SoundType, MediaPlayer> soundPlayers = new()
             {
                 { SoundType.Move, _movePlayer },
                 { SoundType.Capture, _capturePlayer },
                 { SoundType.Castle, _castlePlayer },
                 { SoundType.Check, _checkPlayer },
-                { SoundType.Checkmate, _checkMatePlayer }
+                { SoundType.Checkmate, _checkMatePlayer },
+                { SoundType.Stalemate, _staleMatePlayer  }
             };
 
             if (soundPlayers.TryGetValue(type, out MediaPlayer? player))
@@ -50,7 +55,8 @@ namespace Chess.NET
             Capture,
             Castle,
             Check,
-            Checkmate
+            Checkmate,
+            Stalemate
         }
     }
 }

@@ -1,5 +1,7 @@
 ﻿using Chess.NET.Model;
+using System.Windows;
 using System.Windows.Media.Imaging;
+using System.Windows.Shapes;
 
 namespace Chess.NET
 {
@@ -48,6 +50,37 @@ namespace Chess.NET
                 },
                 _ => "?"
             };
+        }
+        public static string GetPlayerName(int player)
+        {
+            if (player == 1)
+            {
+                if (!string.IsNullOrEmpty(Settings.Instance.Player1Name))
+                    return Settings.Instance.Player1Name;
+
+                return Properties.Resources.strPlayer1;
+            }
+            else if (player == 2)
+            {
+                if (!string.IsNullOrEmpty(Settings.Instance.Player2Name))
+                    return Settings.Instance.Player2Name;
+
+                return Properties.Resources.strPlayer2;
+            }
+
+            return Properties.Resources.strPlayer1;
+        }
+
+        public static void OpenHyperlink(string url)
+        {
+            try
+            {
+                System.Diagnostics.Process.Start("explorer.exe", $"\"{url}\"");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(string.Format(Properties.Resources.strFailedToOpenHyperlink, url, ex.Message), Properties.Resources.strError, MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         private static Dictionary<PieceType, BitmapImage> bitmapCacheWhite = [];

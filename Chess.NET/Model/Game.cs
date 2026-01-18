@@ -1,11 +1,13 @@
 ﻿using Chess.NET.Bot;
 using Chess.NET.Model.Pieces;
+using System.Windows;
 
 namespace Chess.NET.Model
 {
     public class Game
     {
         private readonly Board board = new Board();
+        private IChessBot? opponent = null;
         private bool hasWhiteCastled = false;
         private bool hasBlackCastled = false;
 
@@ -20,14 +22,15 @@ namespace Chess.NET.Model
 
         public bool IsGameOver { get; private set; }
 
-        public void StartNewGame()
+        public void StartNewGame(IChessBot? opponent)
         {
             board.Reset();
             IsGameOver = false;
             PlayersTurn = PieceColor.White;
             Moves.Clear();            
             hasWhiteCastled = false;
-            hasBlackCastled = false;    
+            hasBlackCastled = false;
+            this.opponent = opponent;
         }
 
         public PlayerInfo GetPlayerInformation()
@@ -345,7 +348,7 @@ namespace Chess.NET.Model
             return true;
         }
 
-        public bool Move(NextMove nxtMove, bool playSound = true)
+        public bool Move(NextMove nxtMove, bool playSound = true, bool showMsgBox = true)
         {
             var piece = nxtMove.Piece;
             var position = nxtMove.To;  
@@ -389,6 +392,7 @@ namespace Chess.NET.Model
                 board.Pieces.Add(newPiece);
 
                 willBeCheck |= IsCheck(Helper.InvertPieceColor(piece.Color));
+                isPromotion = true;
             }
 
             if (IsEnPassant(piece.Color, piece, position))
@@ -473,7 +477,30 @@ namespace Chess.NET.Model
                 if (playSound)
                     Sound.Play(Sound.SoundType.Checkmate);
                 move.IsCheckmate = true;
-                MovedPiece?.Invoke(move);   
+                MovedPiece?.Invoke(move);
+
+                string playerText = string.Empty;
+
+                if (IsCheckmate(PieceColor.White))
+                {
+                    if (opponent == null)
+                        playerText = $"{Helper.GetPlayerName(1)} ({Properties.Resources.strBlack})";
+                    else
+                        playerText = $"{opponent?.Name} [Bot] ({Properties.Resources.strBlack})";
+                }
+                else if (IsCheckmate(PieceColor.Black))
+                    playerText = $"{Helper.GetPlayerName(1)} ({Properties.Resources.strWhite})";
+
+                if (showMsgBox)
+                {
+                    Task.Delay(750).ContinueWith(t => {
+                        Application.Current.Dispatcher.Invoke(() =>
+                        {
+                            MessageBox.Show(string.Format(Properties.Resources.strGameOver_WinMessage, playerText), Properties.Resources.strGameOver_Win, MessageBoxButton.OK, MessageBoxImage.Information);
+                        });
+                    });
+                }
+
                 return true;
             }
             else if (IsStalemate(PieceColor.White) || IsStalemate(PieceColor.Black))
@@ -481,8 +508,20 @@ namespace Chess.NET.Model
                 IsGameOver = true;
                 move.IsStalemate = true;
                 MovedPiece?.Invoke(move);
+
                 if (playSound)
-                    Sound.Play(Sound.SoundType.Checkmate); // TODO Different sound for stalemate!
+                    Sound.Play(Sound.SoundType.Stalemate);
+
+                if (showMsgBox)
+                {
+                    Task.Delay(750).ContinueWith(t => {
+                        Application.Current.Dispatcher.Invoke(() =>
+                        {
+                            MessageBox.Show(Properties.Resources.strGameOver_StalemateText, Properties.Resources.strGameOver_Stalemate, MessageBoxButton.OK, MessageBoxImage.Information);
+                        });
+                    });
+                }
+
                 return true;
             }
             else if (willBeCheck && playSound)

@@ -1,0 +1,102 @@
+﻿<Window x:Class="Chess.NET.Controls.Dialogs.SettingsDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Chess.NET.Controls.Dialogs"
+        mc:Ignorable="d" WindowStartupLocation="CenterOwner"
+        xmlns:res="clr-namespace:Chess.NET.Properties" ResizeMode="NoResize"
+        Title="{x:Static res:Resources.strSettings}" SizeToContent="Height" Width="400">
+    <Grid Margin="5">
+        <StackPanel Margin="2">
+            <StackPanel.Resources>
+                <Style TargetType="{x:Type TextBlock}">
+                    <Setter Property="Margin" Value="0,2,0,2" />
+                    <Setter Property="Padding" Value="0,3,0,0" />
+                </Style>
+                <Style TargetType="{x:Type TextBox}">
+                    <Setter Property="Margin" Value="0,2,0,2" />
+                    <Setter Property="Padding" Value="3" />
+                </Style>
+            </StackPanel.Resources>
+
+            <GroupBox>
+                <GroupBox.Header>
+                    <TextBlock Margin="0" Padding="0" Text="{x:Static res:Resources.strPlayer1}" FontWeight="Bold" />
+                </GroupBox.Header>
+                
+                <Grid Margin="5,0,5,5">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <StackPanel Grid.Column="0">
+                        <TextBlock Text="{x:Static res:Resources.strPlayerName}"/>
+                        <TextBox x:Name="TextPlayer1Name" TextChanged="TextPlayer1Name_TextChanged" />
+                    </StackPanel>
+
+                    <StackPanel Grid.Column="1" Margin="5,0,0,0">
+                        <TextBlock Text="{x:Static res:Resources.strElo}" />
+                        <TextBox x:Name="TextPlayer1Elo" TextChanged="TextPlayer1Elo_TextChanged" />
+                    </StackPanel>
+                </Grid>
+            </GroupBox>
+
+            <GroupBox>
+                <GroupBox.Header>
+                    <TextBlock Margin="0" Padding="0" Text="{x:Static res:Resources.strPlayer2}" FontWeight="Bold" />
+                </GroupBox.Header>
+                
+                <Grid Margin="5,0,5,5">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <StackPanel Grid.Column="0">
+                        <TextBlock Text="{x:Static res:Resources.strPlayerName}"/>
+                        <TextBox x:Name="TextPlayer2Name" TextChanged="TextPlayer2Name_TextChanged" />
+                    </StackPanel>
+
+                    <StackPanel Grid.Column="1" Margin="5,0,0,0">
+                        <TextBlock Text="{x:Static res:Resources.strElo}" />
+                        <TextBox x:Name="TextPlayer2Elo" TextChanged="TextPlayer2Elo_TextChanged" />
+                    </StackPanel>
+                </Grid>
+            </GroupBox>
+
+            <GroupBox Header="Stockfish">
+                <StackPanel>
+                    <TextBlock Foreground="#FFAFACAC" TextWrapping="Wrap" Margin="2">
+                        <Run Text="{x:Static res:Resources.strStockfish_Explanation}" />
+                        <Hyperlink x:Name="Link" Click="Link_Click" NavigateUri="https://github.com/official-stockfish/Stockfish">
+                            <Run Text="{x:Static res:Resources.strHere}" />
+                        </Hyperlink><Run Text="." />
+                    </TextBlock>
+                    
+                    <TextBlock Text="{x:Static res:Resources.strPath}"/>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        
+                        <TextBox x:Name="TextStockfishPath" IsReadOnly="True" TextChanged="TextStockfishPath_TextChanged" />
+                        <Button x:Name="ButtonOpenFileDialog" Click="ButtonOpenFileDialog_Click" Content="..." FontWeight="Bold" Margin="3" Width="50" Grid.Column="1" />
+                    </Grid>
+
+                    <TextBlock Text="{x:Static res:Resources.strDifficulty}"/>
+                    <ComboBox x:Name="CmbDifficuluty" SelectionChanged="CmbDifficuluty_SelectionChanged">
+                        <ComboBoxItem Content="{x:Static res:Resources.strDifficulty_Easy}"/>
+                        <ComboBoxItem Content="{x:Static res:Resources.strDifficulty_Middle}"/>
+                        <ComboBoxItem Content="{x:Static res:Resources.strDifficulty_Hard}" />
+                    </ComboBox>
+                </StackPanel>
+            </GroupBox>
+
+            <CheckBox x:Name="ChkAutoPromote" Checked="ChkAutoPromote_Checked" Unchecked="ChkAutoPromote_Checked" Content="{x:Static res:Resources.strAutoPromote}" Margin="0,10,0,0" />
+            <CheckBox x:Name="ChkPlaySounds" Checked="ChkPlaySounds_Checked" Unchecked="ChkPlaySounds_Checked" Content="{x:Static res:Resources.strPlaySounds}" Margin="0,3,0,0" />
+        </StackPanel>
+    </Grid>
+</Window>

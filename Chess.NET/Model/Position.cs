@@ -48,7 +48,7 @@
 
         public override string ToString() => $"{(char)('a' + File - 1)}{Rank}";
 
-        public bool Equals(Position other) => File == other.File && Rank == other.Rank;
+        public bool Equals(Position? other) => File == other?.File && Rank == other?.Rank;
 
         public override bool Equals(object? obj) => obj is Position p && Equals(p);
 

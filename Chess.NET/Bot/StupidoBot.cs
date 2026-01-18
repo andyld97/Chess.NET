@@ -9,7 +9,7 @@ namespace Chess.NET.Bot
 
         public int Elo => 42;
 
-        public NextMove Move(Game game)
+        public NextMove? Move(Game game)
         {
             List<SortedMove> sortedMoves = [];
             bool canCapture = false;
@@ -64,12 +64,12 @@ namespace Chess.NET.Bot
                 if (game.CanCastle(PieceColor.Black, new Position(3, 8)))
                 {
                     var king = game.Board.GetPiece(new Position(5, 8));
-                    return new NextMove(king, new Position(3, 8));
+                    return new NextMove(king!, new Position(3, 8));
                 }
                 else if (game.CanCastle(PieceColor.Black, new Position(7, 8)))
                 {
                     var king = game.Board.GetPiece(new Position(5, 8));
-                    return new NextMove(king, new Position(7, 8));
+                    return new NextMove(king!, new Position(7, 8));
                 }
             }
 
@@ -114,7 +114,7 @@ namespace Chess.NET.Bot
             if (canCapture)
             {
                 var result = sortedMoves.OrderByDescending(p => p.Score).FirstOrDefault();
-                return new NextMove(result.Piece, result.TargetPosition);
+                return new NextMove(result!.Piece, result.TargetPosition);
             }
             else
             {
@@ -139,9 +139,9 @@ namespace Chess.NET.Bot
 
     class SortedMove
     {
-        public Piece Piece { get; set; }
+        public Piece Piece { get; set; } = null!;
 
-        public Position TargetPosition { get; set; }
+        public Position TargetPosition { get; set; } = null!;
 
         public int Score { get; set; }
     }

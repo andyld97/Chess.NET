@@ -7,6 +7,11 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
     <ApplicationIcon>icon.ico</ApplicationIcon>
+    <AssemblyVersion>1.0.0</AssemblyVersion>
+    <FileVersion>1.0.0</FileVersion>
+	<Copyright>Chess.NET © 2026</Copyright>
+	<Company>Code A Software</Company>
+	<ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
 
   <ItemGroup>
@@ -23,11 +28,13 @@
     <None Remove="resources\icons\white\Queen.png" />
     <None Remove="resources\icons\white\Rook.png" />
     <None Remove="resources\images\background.jpg" />
+    <None Remove="resources\images\logo.png" />
     <None Remove="resources\sounds\capture.mp3" />
     <None Remove="resources\sounds\castle.mp3" />
     <None Remove="resources\sounds\check.mp3" />
     <None Remove="resources\sounds\checkmate.mp3" />
     <None Remove="resources\sounds\move.mp3" />
+    <None Remove="resources\sounds\stalemate.mp3" />
   </ItemGroup>
 
   <ItemGroup>
@@ -47,6 +54,9 @@
     <Content Include="resources\sounds\move.mp3">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="resources\sounds\stalemate.mp3">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>
@@ -63,6 +73,22 @@
     <Resource Include="resources\icons\white\Queen.png" />
     <Resource Include="resources\icons\white\Rook.png" />
     <Resource Include="resources\images\background.jpg" />
+    <Resource Include="resources\images\logo.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Properties\Resources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Properties\Resources.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
 
 </Project>

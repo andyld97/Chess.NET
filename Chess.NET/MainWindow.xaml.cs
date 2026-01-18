@@ -1,4 +1,6 @@
 ﻿using Chess.NET.Bot;
+using Chess.NET.Controls.Dialogs;
+using Chess.NET.Model;
 using System.Windows;
 using System.Windows.Input;
 
@@ -12,9 +14,17 @@ namespace Chess.NET
         private bool isMirrored = false;
         private IChessBot? opponent = null;
 
+        #region Commands
+
         public ICommand MoveLeftCommand { get; }
 
         public ICommand MoveRightCommand { get; }
+
+        public ICommand NewGameCommand { get; }
+
+        public ICommand MirrorBoardCommand { get; }
+
+        #endregion
 
         public MainWindow()
         {
@@ -23,6 +33,8 @@ namespace Chess.NET
 
             MoveLeftCommand = new RelayCommand(new Action(Chessboard.ShowPreviousMove));
             MoveRightCommand = new RelayCommand(new Action(Chessboard.ShowNextMove));
+            NewGameCommand = new RelayCommand(new Action(StartNewGame));
+            MirrorBoardCommand = new RelayCommand(new Action(Chessboard.Mirror));
             DataContext = this;
 
             RefreshPlayerDisplay();
@@ -40,12 +52,39 @@ namespace Chess.NET
             RefreshPlayerDisplay();
         }
 
-        private void ButtonRestart_Click(object sender, RoutedEventArgs e)
+        private void StartNewGame()
         {
             ListMoves.Items.Clear();
 
             if (CmbOpponent.SelectedIndex == 0)
-                opponent = new StockfischBot(0, 2, @"F:\Eigene Dateien\Downloads\stockfish-windows-x86-64\stockfish\stockfish-windows-x86-64.exe");
+            {
+                if (!System.IO.File.Exists(Settings.Instance.StockfishPath))
+                {
+                    MessageBox.Show(Properties.Resources.strStockfishNotFound, Properties.Resources.strError, MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+
+                int skill = 8;
+                int depth = 10;
+
+                if (Settings.Instance.Difficulty == 0)
+                {
+                    skill = 0;
+                    depth = 2;
+                }
+                else if (Settings.Instance.Difficulty == 1)
+                {
+                    skill = 3;
+                    depth = 4;
+                }
+                else if (Settings.Instance.Difficulty == 2)
+                {
+                    skill = 8;
+                    depth = 10;
+                }
+
+                opponent = new StockfischBot(skill, depth, Settings.Instance.StockfishPath);
+            }
             else if (CmbOpponent.SelectedIndex == 1)
                 opponent = new StupidoBot();
             else
@@ -53,6 +92,11 @@ namespace Chess.NET
 
             Chessboard.Restart(opponent);
             RefreshPlayerDisplay();
+        }
+
+        private void ButtonRestart_Click(object sender, RoutedEventArgs e)
+        {
+            StartNewGame();
         }
 
         private void ButtonMirror_Click(object sender, RoutedEventArgs e)
@@ -98,7 +142,6 @@ namespace Chess.NET
             // TODO: Wenn in NavigationMode muss das auch nochmal aufgerufen werden, aber dann seine Infos von dem "anderen" Game beziehen.
             var playerInfo = Chessboard.Game.GetPlayerInformation();
 
-
             static string formatElo(int? value)
             {
                 if (value == null)
@@ -107,17 +150,25 @@ namespace Chess.NET
                     return $"Elo: {value:D4}";
             }
 
+            static string formatPlayerElo(string? value)
+            {
+                if (string.IsNullOrEmpty(value))
+                    return "Elo: ????";
+
+                return $"Elo: {value}";
+            }
+
             if (opponent is null)
             {
                 if (isMirrored)
                 {
                     // Top:    Player 1 (White)
                     // Bottom: Player 2 (Black)
-                    TextPlayerTopName.Text = "Player 1";
-                    TextPlayerTopElo.Text = formatElo(null);
+                    TextPlayerTopName.Text = Helper.GetPlayerName(1);
+                    TextPlayerTopElo.Text = formatPlayerElo(Settings.Instance.Player1Elo);
 
-                    TextPlayerBottomName.Text = "Player 2";
-                    TextPlayerBottomElo.Text = formatElo(null);
+                    TextPlayerBottomName.Text = Helper.GetPlayerName(2);
+                    TextPlayerBottomElo.Text = formatPlayerElo(Settings.Instance.Player2Elo);
 
                     TextPlayerInfoTop.Text = playerInfo.GetWhite();
                     TextPlayerInfoBottom.Text = playerInfo.GetBlack();
@@ -126,11 +177,11 @@ namespace Chess.NET
                 {
                     // Top:     Player 2 (Black)
                     // Bottom:  Player 1 (White)
-                    TextPlayerTopName.Text = "Player 2";
-                    TextPlayerTopElo.Text = formatElo(null);
+                    TextPlayerTopName.Text = Helper.GetPlayerName(2);
+                    TextPlayerTopElo.Text = formatPlayerElo(Settings.Instance.Player2Elo);
 
-                    TextPlayerBottomName.Text = "Player 1";
-                    TextPlayerBottomElo.Text = formatElo(null);
+                    TextPlayerBottomName.Text = Helper.GetPlayerName(1);
+                    TextPlayerBottomElo.Text = formatPlayerElo(Settings.Instance.Player1Elo);
 
                     TextPlayerInfoTop.Text = playerInfo.GetBlack();
                     TextPlayerInfoBottom.Text = playerInfo.GetWhite();
@@ -142,8 +193,8 @@ namespace Chess.NET
                 {
                     // Top:    Player 1 (White)
                     // Bottom: Bot      (Black)
-                    TextPlayerTopName.Text = "Player 1";
-                    TextPlayerTopElo.Text = formatElo(null);
+                    TextPlayerTopName.Text = Helper.GetPlayerName(1);
+                    TextPlayerTopElo.Text = formatPlayerElo(Settings.Instance.Player1Elo);
 
                     TextPlayerBottomName.Text = $"{opponent.Name} (Bot)";
                     TextPlayerBottomElo.Text = formatElo(opponent.Elo);
@@ -158,14 +209,55 @@ namespace Chess.NET
                     TextPlayerTopName.Text = $"{opponent.Name} (Bot)";
                     TextPlayerTopElo.Text = formatElo(opponent.Elo);
 
-                    TextPlayerBottomName.Text = "Player 1";
-                    TextPlayerBottomElo.Text = formatElo(null);
+                    TextPlayerBottomName.Text = Helper.GetPlayerName(1);
+                    TextPlayerBottomElo.Text = formatPlayerElo(Settings.Instance.Player1Elo);
 
                     TextPlayerInfoTop.Text = playerInfo.GetBlack();
                     TextPlayerInfoBottom.Text = playerInfo.GetWhite();
                 }
             }
         }
+
+        #region Menu
+
+        private void MenuItemExit_Click(object sender, RoutedEventArgs e)
+        {
+            Close();
+        }
+
+        private void MenuItemSettings_Click(object sender, RoutedEventArgs e)
+        {
+            var dialog = new SettingsDialog() { Owner = this };
+            dialog.ShowDialog();
+        }
+
+        private void MenuItemAbout_Click(object sender, RoutedEventArgs e)
+        {
+            var dialog = new AboutDialog() { Owner = this };
+            dialog.ShowDialog();
+        }
+
+        private void MenuNewGame_Click(object sender, RoutedEventArgs e)
+        {
+            StartNewGame();
+        }
+
+        private void MenuMirrorBoard_Click(object sender, RoutedEventArgs e)
+        {
+            Chessboard.Mirror();
+        }
+
+        private void MenuItemJumpToStart_Click(object sender, RoutedEventArgs e)
+        {
+            Chessboard.JumpToStart();
+        }
+
+        private void MenuItemJumpToEnd_Click(object sender, RoutedEventArgs e)
+        {
+            Chessboard.ShowLastMove();
+        }
+
+        #endregion
     }
 
     public class RelayCommand : ICommand

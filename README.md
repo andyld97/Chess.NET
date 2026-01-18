@@ -16,7 +16,7 @@ It includes (almost) full game rules, a WPF-based GUI, custom bot logic, and eve
 - (Almost) full chess rule validation
 - EN PASSANT!
 - Choose promotion!
-- Check and checkmate detection
+- Check, checkmate and stalemate detection
 - **Castling (king-side & queen-side)** fully implemented
 - Illegal moves are reliably prevented
 
@@ -26,13 +26,11 @@ It includes (almost) full game rules, a WPF-based GUI, custom bot logic, and eve
   - This bot is so stupid, it's called Stupido!
 - **Stockfish integration (UCI)**
   - Play directly against Stockfish
-  - Difficulty adjustable via search depth / engine options (TODO currently just static in code)
+  - Difficulty adjustable via search depth / engine options (settings)
 
 ### GUI (WPF)
 - Dynamic 8×8 chess board
 - Drag & Drop piece movement
-- Clean layered rendering (board + pieces)
-- Helpful debug output for development
 
 ### Requirements
 - `stockfish.exe` placed anywhere if you want to play against the engine!

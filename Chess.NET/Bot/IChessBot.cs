@@ -4,7 +4,7 @@ namespace Chess.NET.Bot
 {
     public interface IChessBot
     {
-        NextMove Move(Game game);
+        NextMove? Move(Game game);
 
         int Elo { get; }
 

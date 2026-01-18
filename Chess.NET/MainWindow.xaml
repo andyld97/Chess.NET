@@ -6,13 +6,17 @@
         xmlns:local="clr-namespace:Chess.NET"
         xmlns:controls="clr-namespace:Chess.NET.Controls"
         mc:Ignorable="d" WindowStartupLocation="CenterScreen"
+        xmlns:res="clr-namespace:Chess.NET.Properties"
         Title="Chess.NET" Height="768" Width="1024">
     <Window.InputBindings>
         <KeyBinding Key="Left" Command="{Binding MoveLeftCommand}" />
         <KeyBinding Key="Right" Command="{Binding MoveRightCommand}" />
+        <KeyBinding Key="F2" Command="{Binding NewGameCommand}" />
+        <KeyBinding Key="F3" Command="{Binding MirrorBoardCommand}" />
     </Window.InputBindings>
     <Grid>
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
@@ -23,7 +27,24 @@
             <ColumnDefinition Width="200" />
         </Grid.ColumnDefinitions>
 
-        <Border Grid.Row="0" Grid.ColumnSpan="2" BorderBrush="Gray" BorderThickness="0 0 0 0.5" Background="#FFF3F1F1">
+        <Menu Grid.Row="0" Grid.ColumnSpan="2">
+            <MenuItem Header="{x:Static res:Resources.strMenu_Game}" Height="25">
+                <MenuItem x:Name="MenuNewGame" Click="MenuNewGame_Click" Header="{x:Static res:Resources.strNewGame}" InputGestureText="F2" />
+                <MenuItem x:Name="MenuMirrorBoard" Click="MenuMirrorBoard_Click" Header="{x:Static res:Resources.strMirrorBoard}" InputGestureText="F3" />
+                <MenuItem x:Name="MenuItemSettings" Click="MenuItemSettings_Click" Header="{x:Static res:Resources.strSettings}" />
+                <MenuItem x:Name="MenuItemAbout" Click="MenuItemAbout_Click" Header="{x:Static res:Resources.strMenu_About}" />
+                <Separator />
+                <MenuItem x:Name="MenuItemExit" Click="MenuItemExit_Click" Header="{x:Static res:Resources.strMenu_Exit}" />
+            </MenuItem>
+            <MenuItem Header="{x:Static res:Resources.strMenu_Moves}">
+                <MenuItem x:Name="MenuItemJumpToStart" Click="MenuItemJumpToStart_Click" Header="{x:Static res:Resources.strJumpToStartTooltip}" />
+                <MenuItem Header="{x:Static res:Resources.strShowPreviousMoveTooltip}" InputGestureText="{x:Static res:Resources.strLeft}" Command="{Binding MoveLeftCommand}" />
+                <MenuItem Header="{x:Static res:Resources.strShowNextMoveTooltip}" InputGestureText="{x:Static res:Resources.strRight}" Command="{Binding MoveRightCommand}"/>
+                <MenuItem x:Name="MenuItemJumpToEnd" Click="MenuItemJumpToEnd_Click" Header="{x:Static res:Resources.strJumpToEndTooltip}" />
+            </MenuItem>
+        </Menu>
+
+        <Border Grid.Row="1" Margin="0,-1,0,0" Grid.ColumnSpan="2" BorderBrush="Gray" BorderThickness="0 0 0 0.5" Background="#FFDCDBDB">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
@@ -32,7 +53,7 @@
                 
                 <StackPanel Margin="5,0,0,0">
                     <TextBlock Margin="2" Padding="3">
-                        <Run x:Name="TextPlayerTopName" Text="Player 2" FontWeight="Bold" />
+                        <Run x:Name="TextPlayerTopName" Text="{x:Static res:Resources.strPlayer2}" FontWeight="Bold" />
                         <LineBreak />
                         <Run x:Name="TextPlayerTopElo" Text="Elo: ???" />
                     </TextBlock>
@@ -42,7 +63,7 @@
             </Grid>
         </Border>
 
-        <Grid Grid.Row="1" Background="WhiteSmoke">
+        <Grid Grid.Row="2" Background="WhiteSmoke">
             <Grid IsHitTestVisible="False">
                 <Image Source="/resources/images/background.jpg" Stretch="UniformToFill" />
             </Grid>
@@ -51,7 +72,7 @@
             </Viewbox>
         </Grid>
 
-        <Grid Grid.Column="1" Grid.Row="1">
+        <Grid Grid.Column="1" Grid.Row="2">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*" />
@@ -65,31 +86,31 @@
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
                     
-                    <TextBlock Text="Moves:" FontWeight="Bold" />
+                    <TextBlock Text="{x:Static res:Resources.strMoves}" FontWeight="Bold" />
                     <ListBox x:Name="ListMoves" MouseDoubleClick="ListMoves_MouseDoubleClick" Margin="0,4,0,0" Grid.Row="1" />
                     
                     <StackPanel Grid.Row="2" Margin="0,5,0,0" Orientation="Horizontal" HorizontalAlignment="Center">
-                        <Button x:Name="ButtonJumpToStart" Click="ButtonJumpToStart_Click" Content="⏮" FontWeight="Bold" Padding="3" Width="30" Margin="0,2,5,2" />
-                        <Button x:Name="ButtonJumpToPreviousMove" Click="ButtonJumpToPreviousMove_Click" Content="◀" FontWeight="Bold" Padding="3" Height="30" Width="30" Margin="0,2,5,2" />
-                        <Button x:Name="ButtonJumpToNextMove" Click="ButtonJumpToNextMove_Click" Content="▶" FontWeight="Bold" Padding="3" Width="30" Margin="0,2,5,2" />
-                        <Button x:Name="ButtonJumpToLastMove" Click="ButtonJumpToLastMove_Click" Content="⏭" FontWeight="Bold" Padding="3" Width="30" Margin="0,2,5,2"/>
+                        <Button x:Name="ButtonJumpToStart" Click="ButtonJumpToStart_Click" Content="⏮" FontWeight="Bold" ToolTip="{x:Static res:Resources.strJumpToStartTooltip}" Padding="3" Width="30" Margin="0,2,5,2" />
+                        <Button x:Name="ButtonJumpToPreviousMove" Click="ButtonJumpToPreviousMove_Click" Content="◀" ToolTip="{x:Static res:Resources.strShowPreviousMoveTooltip}" FontWeight="Bold" Padding="3" Height="30" Width="30" Margin="0,2,5,2" />
+                        <Button x:Name="ButtonJumpToNextMove" Click="ButtonJumpToNextMove_Click" Content="▶" FontWeight="Bold"  ToolTip="{x:Static res:Resources.strShowNextMoveTooltip}" Padding="3" Width="30" Margin="0,2,5,2" />
+                        <Button x:Name="ButtonJumpToLastMove" Click="ButtonJumpToLastMove_Click" Content="⏭" FontWeight="Bold" ToolTip="{x:Static res:Resources.strJumpToEndTooltip}" Padding="3" Width="30" Margin="0,2,5,2"/>
                     </StackPanel>
                 </Grid>
 
                 <StackPanel Margin="4" Grid.Row="1">
-                    <TextBlock Text="Opponent:" Margin="2,2,2,0" />
+                    <TextBlock Text="{x:Static res:Resources.strOpponent}" Margin="2,2,2,0" />
                     <ComboBox x:Name="CmbOpponent" Padding="5" Margin="0,2,0,5" SelectedIndex="0">
-                        <ComboBoxItem>Stockfish (Bot)</ComboBoxItem>
-                        <ComboBoxItem>Stupido (Bot)</ComboBoxItem>
-                        <ComboBoxItem>None</ComboBoxItem>
+                        <ComboBoxItem Content="{x:Static res:Resources.strOpponent_Stockfish}" />
+                        <ComboBoxItem Content="{x:Static res:Resources.strOpponent_StupidoBot}" />
+                        <ComboBoxItem Content="{x:Static res:Resources.strOpponent_None}" />
                     </ComboBox>
-                    <Button x:Name="ButtonRestart" Click="ButtonRestart_Click" Content="New Game" Padding="3" Margin="0" FontWeight="Bold" />
-                    <Button x:Name="ButtonMirror" Content="Mirror Board" Click="ButtonMirror_Click" Padding="3" Margin="0,5,0,0" />
+                    <Button x:Name="ButtonRestart" Click="ButtonRestart_Click" Content="{x:Static res:Resources.strNewGame}" Padding="3" Margin="0" FontWeight="Bold" />
+                    <Button x:Name="ButtonMirror" Content="{x:Static res:Resources.strMirrorBoard}" Click="ButtonMirror_Click" Padding="3" Margin="0,5,0,0" />
                 </StackPanel>
             </Grid>
         </Grid>
 
-        <Border Grid.Row="2" Grid.ColumnSpan="2" BorderBrush="Gray" BorderThickness="0 0.5 0 0" Background="#FFF3F1F1">
+        <Border Grid.Row="4" Grid.ColumnSpan="2" BorderBrush="Gray" BorderThickness="0 0.5 0 0" Background="#FFDCDBDB">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
@@ -98,7 +119,7 @@
                 
                 <StackPanel Margin="5,0,0,0">
                     <TextBlock Margin="2" Padding="3">
-                      <Run x:Name="TextPlayerBottomName" Text="Player 1" FontWeight="Bold" />
+                      <Run x:Name="TextPlayerBottomName" Text="{x:Static res:Resources.strPlayer1}" FontWeight="Bold" />
                       <LineBreak />
                       <Run x:Name="TextPlayerBottomElo" Text="Elo: ???" />
                     </TextBlock>

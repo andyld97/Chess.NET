@@ -5,7 +5,6 @@ using Chess.NET.Model.GUI;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
 
 namespace Chess.NET.Controls
 {
@@ -28,7 +27,7 @@ namespace Chess.NET.Controls
             InitializeSquares();
 
             game = new Model.Game();
-            game.StartNewGame();
+            game.StartNewGame(null);
 
             RenderChessBoard(game.Board);
         }
@@ -66,9 +65,10 @@ namespace Chess.NET.Controls
         {
             ResetDrag();
 
-            game.StartNewGame();
+            game.StartNewGame(opponent);
             RenderChessBoard(game.Board);
             this.opponent = opponent;
+            isInNavigationMode = false;
         }
 
         public void Mirror()
@@ -111,7 +111,9 @@ namespace Chess.NET.Controls
 
                 PieceType? promotionType = null;
 
-                if (_pieceToMove?.Type == PieceType.Pawn && (destinationSquare.Rank == 1 || destinationSquare.Rank == 8) && game.IsMoveValid(_pieceToMove!, destinationSquare))
+                if (Settings.Instance.AutoPromoteToQueen)
+                    promotionType = PieceType.Queen;
+                else if (_pieceToMove?.Type == PieceType.Pawn && (destinationSquare.Rank == 1 || destinationSquare.Rank == 8) && game.IsMoveValid(_pieceToMove!, destinationSquare))
                 {
                     // Promotion Dialog
                     var dialog = new PromotionDialog(PieceColor.White) { Owner = Window.GetWindow(this) };
@@ -265,12 +267,12 @@ namespace Chess.NET.Controls
         private Game ShowMove()
         {
             Game gm = new Game();
-            gm.StartNewGame();
+            gm.StartNewGame(null);
 
             for (int i = 0; i < navigationCurrentMove; i++)
             {
                 var move = game.Moves[i];
-                gm.Move(new NextMove(gm.Board.GetPiece(move.From)!, move.To, move.PromotionType), false);
+                gm.Move(new NextMove(gm.Board.GetPiece(move.From)!, move.To, move.PromotionType), false, false);
             }
 
             RenderChessBoard(gm.Board, false);
