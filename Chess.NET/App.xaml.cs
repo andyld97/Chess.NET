@@ -11,9 +11,11 @@ namespace Chess.NET
         private void Application_Startup(object sender, StartupEventArgs e)
         {
 #if DEBUG
-            var cultureInfoTest = new CultureInfo("en-US");
-            Thread.CurrentThread.CurrentCulture =
-            Thread.CurrentThread.CurrentUICulture = cultureInfoTest;
+            // For english screenshots:
+
+            //var cultureInfoTest = new CultureInfo("en-US");
+            //Thread.CurrentThread.CurrentCulture =
+            //Thread.CurrentThread.CurrentUICulture = cultureInfoTest;
 #endif
         }
     }
