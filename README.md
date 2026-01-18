@@ -9,12 +9,13 @@ It includes (almost) full game rules, a WPF-based GUI, custom bot logic, and eve
 
 ## Features
 
-### Missing Features
-- Choose promotion (currently the pawn always converts to the queen for players)
+## Missing Features
+- Time Control
 
 ###  Game Logic
 - (Almost) full chess rule validation
 - EN PASSANT!
+- Choose promotion!
 - Check and checkmate detection
 - **Castling (king-side & queen-side)** fully implemented
 - Illegal moves are reliably prevented

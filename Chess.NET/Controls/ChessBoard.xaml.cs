@@ -1,5 +1,7 @@
 ﻿using Chess.NET.Bot;
+using Chess.NET.Controls.Dialogs;
 using Chess.NET.Model;
+using Chess.NET.Model.GUI;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -28,7 +30,7 @@ namespace Chess.NET.Controls
             game = new Model.Game();
             game.StartNewGame();
 
-            RefreshChessBoard(game.Board);
+            RenderChessBoard(game.Board);
         }
 
         private void InitializeSquares()
@@ -65,14 +67,14 @@ namespace Chess.NET.Controls
             ResetDrag();
 
             game.StartNewGame();
-            RefreshChessBoard(game.Board);
+            RenderChessBoard(game.Board);
             this.opponent = opponent;
         }
 
         public void Mirror()
         {
             isMirrored = !isMirrored; // toggle
-            RefreshChessBoard(game.Board);
+            RenderChessBoard(game.Board);
         }
 
 
@@ -94,12 +96,12 @@ namespace Chess.NET.Controls
                 navigationCurrentMove = -1;
                 isInNavigationMode = false;
                 ResetDrag();
-                RefreshChessBoard(game.Board, true);
+                RenderChessBoard(game.Board, true);
                 return;
             }
 
-            var square = (sender as Border);
-            var image = square.Child as Image;
+            var square = (Border)sender;
+            var image = (Image)square.Child;
 
             if (clickCounter > 0)
             {
@@ -107,16 +109,26 @@ namespace Chess.NET.Controls
                 if (isMirrored)
                     destinationSquare = destinationSquare.Mirror();
 
-                bool wasMoveAccepted = game.Move(new NextMove(_pieceToMove, destinationSquare, null));
+                PieceType? promotionType = null;
+
+                if (_pieceToMove?.Type == PieceType.Pawn && (destinationSquare.Rank == 1 || destinationSquare.Rank == 8) && game.IsMoveValid(_pieceToMove!, destinationSquare))
+                {
+                    // Promotion Dialog
+                    var dialog = new PromotionDialog(PieceColor.White) { Owner = Window.GetWindow(this) };
+                    dialog.ShowDialog();
+
+                    promotionType = dialog.PromotionResult;
+                }
+
+                bool wasMoveAccepted = game.Move(new NextMove(_pieceToMove!, destinationSquare, promotionType));
 
                 ResetDrag();
-                RefreshChessBoard(game.Board);
+                RenderChessBoard(game.Board);
 
                 if (!wasMoveAccepted)
                     return;
 
-
-                // THE BOOOOT
+                // Bot Move
                 if (opponent != null)
                 {
                     await Task.Delay(1000);
@@ -138,7 +150,7 @@ namespace Chess.NET.Controls
                     }
                 }
 
-                RefreshChessBoard(game.Board);
+                RenderChessBoard(game.Board);
             }
             else
             {
@@ -173,7 +185,7 @@ namespace Chess.NET.Controls
 
         #endregion
 
-        private void RefreshChessBoard(IBoard board, bool renderLastMoveSquares = true)
+        private void RenderChessBoard(IBoard board, bool renderLastMoveSquares = true)
         {
             var lastMove = game.Moves.LastOrDefault();
 
@@ -191,19 +203,7 @@ namespace Chess.NET.Controls
                     Image img = (Image)_squares[file - 1, rank - 1].Border.Child;
 
                     var piece = board.GetPiece(position);
-
-                    if (piece == null)
-                        img.Source = null;
-                    else
-                    {
-                        BitmapImage bi = new BitmapImage { CacheOption = BitmapCacheOption.OnLoad };
-                        bi.BeginInit();
-                        bi.UriSource = new Uri($"pack://application:,,,/Chess.NET;component/resources/icons/{(piece.Color == PieceColor.White ? "white" : "black")}/{piece.Type}.png");
-                        bi.EndInit();
-                        bi.Freeze();
-
-                        img.Source = bi;
-                    }
+                    img.Source = (piece != null) ? piece.Type.ToBitmap(piece.Color) : null;
 
                     if (renderLastMoveSquares && (lastMove != null && (lastMove.From == position || lastMove.To == position)))
                     {
@@ -238,15 +238,11 @@ namespace Chess.NET.Controls
 
         public void ShowPreviousMove()
         {
-            if (navigationCurrentMove == -1)
+            if (navigationCurrentMove == -1 || navigationCurrentMove > game.Moves.Count)
                 navigationCurrentMove = game.Moves.Count;
-
-            if (navigationCurrentMove > game.Moves.Count)
-                navigationCurrentMove = game.Moves.Count;   
 
             if (navigationCurrentMove == 0)
                 return;
-
 
             int removedMoveIndex = navigationCurrentMove - 1;
             var removedMove = game.Moves[removedMoveIndex];
@@ -256,7 +252,7 @@ namespace Chess.NET.Controls
             var gm = ShowMove();
 
             PlayMoveSound(gm, true, removedMove);
-            RefreshChessBoard(gm.Board, false);
+            RenderChessBoard(gm.Board, false);
             isInNavigationMode = true;
         }
 
@@ -274,10 +270,10 @@ namespace Chess.NET.Controls
             for (int i = 0; i < navigationCurrentMove; i++)
             {
                 var move = game.Moves[i];
-                gm.Move(new NextMove(gm.Board.GetPiece(move.From), move.To, move.PromotionType), false);
+                gm.Move(new NextMove(gm.Board.GetPiece(move.From)!, move.To, move.PromotionType), false);
             }
 
-            RefreshChessBoard(gm.Board, false);
+            RenderChessBoard(gm.Board, false);
             isInNavigationMode = true;
             return gm;
         }
@@ -295,7 +291,7 @@ namespace Chess.NET.Controls
             var gm = ShowMove();
 
             PlayMoveSound(gm, false);
-            RefreshChessBoard(gm.Board, false);
+            RenderChessBoard(gm.Board, false);
             isInNavigationMode = true;
         }
 
@@ -319,21 +315,5 @@ namespace Chess.NET.Controls
         }
 
         #endregion
-    }
-
-    public class BoardSquare
-    {
-        public int File { get; }
-
-        public int Rank { get; }
-
-        public Border Border { get; }
-
-        public BoardSquare(int file, int rank, Border border)
-        {
-            File = file;
-            Rank = rank;
-            Border = border;
-        }
     }
 }

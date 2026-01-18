@@ -1,0 +1,31 @@
+﻿<Window x:Class="Chess.NET.Controls.Dialogs.PromotionDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Chess.NET.Controls.Dialogs"
+        mc:Ignorable="d" ResizeMode="NoResize" 
+        WindowStartupLocation="CenterOwner"
+        Title="Promote Pawn" SizeToContent="WidthAndHeight">
+    <StackPanel Orientation="Horizontal" Margin="5">
+        <StackPanel.Resources>
+            <Style TargetType="{x:Type RadioButton}">
+                <Setter Property="Height" Value="96" />
+                <Setter Property="Margin" Value="20,5,20,5" />
+                <Setter Property="VerticalContentAlignment" Value="Center" />
+            </Style>
+        </StackPanel.Resources>
+        <RadioButton x:Name="RadioQueen" Checked="RadioQueen_Checked">
+            <Image x:Name="ImgQueen" Source="/resources/icons/black/Queen.png" />
+        </RadioButton>
+        <RadioButton x:Name="RadioRook" Checked="RadioRook_Checked">
+            <Image x:Name="ImgRook" Source="/resources/icons/black/Rook.png" />
+        </RadioButton>
+        <RadioButton x:Name="RadioKnight" Checked="RadioKnight_Checked">
+            <Image x:Name="ImgKnight" Source="/resources/icons/black/Knight.png" />
+        </RadioButton>
+        <RadioButton x:Name="RadioBishop" Checked="RadioBishop_Checked">
+            <Image x:Name="ImgBishop" Source="/resources/icons/black/Bishop.png" />
+        </RadioButton>
+    </StackPanel>
+</Window>

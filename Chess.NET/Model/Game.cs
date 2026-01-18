@@ -314,7 +314,7 @@ namespace Chess.NET.Model
 
         #region Move
 
-        private bool IsMoveValid(Piece piece, Position position)
+        public bool IsMoveValid(Piece piece, Position position)
         {
             if (piece.Color != PlayersTurn)
                 return false;

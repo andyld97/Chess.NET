@@ -1,4 +1,5 @@
 ﻿using Chess.NET.Model;
+using System.Windows.Media.Imaging;
 
 namespace Chess.NET
 {
@@ -47,6 +48,33 @@ namespace Chess.NET
                 },
                 _ => "?"
             };
+        }
+
+        private static Dictionary<PieceType, BitmapImage> bitmapCacheWhite = [];
+        private static Dictionary<PieceType, BitmapImage> bitmapCacheBlack = [];
+
+        public static BitmapImage ToBitmap(this PieceType pieceType, PieceColor color)
+        {
+            if (color == PieceColor.White && bitmapCacheWhite.TryGetValue(pieceType, out BitmapImage? value))
+                return value;
+            else if (color == PieceColor.Black && bitmapCacheBlack.TryGetValue(pieceType, out BitmapImage? value1))
+                return value1;
+
+            string col = (color == PieceColor.White ? "white" : "black");
+
+            BitmapImage bi = new BitmapImage { CacheOption = BitmapCacheOption.OnLoad };
+            bi.BeginInit();
+            bi.UriSource = new Uri($"pack://application:,,,/Chess.NET;component/resources/icons/{col}/{pieceType}.png");
+            bi.EndInit();
+            bi.Freeze();
+
+            // Add to cache
+            if (color == PieceColor.White)
+                bitmapCacheWhite.Add(pieceType, bi);
+            else
+                bitmapCacheBlack.Add(pieceType, bi);
+
+            return bi;
         }
     }
 }
