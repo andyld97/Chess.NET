@@ -38,8 +38,12 @@ namespace Chess.NET.Model
             var whiteCapturedPieces = board.CapturedPieces.Where(p => p.Color == PieceColor.Black);
             var blackCapturedPieces = board.CapturedPieces.Where(p => p.Color == PieceColor.White);
 
-            int whiteCapturePiecesMaterialValue = whiteCapturedPieces.Sum(p => p.MaterialValue);
-            int blackCapturePiecesMaterialValue = blackCapturedPieces.Sum(p => p.MaterialValue);
+            var whitePromotedPieces = board.PromotedPieces.Where(p => p.Color == PieceColor.White);
+            var blackPromotedPieces = board.PromotedPieces.Where(p => p.Color == PieceColor.Black);
+
+            // Promotion: -1 per Piece cause you promoted the pawn, but lost it anyways!
+            int whiteCapturePiecesMaterialValue = whiteCapturedPieces.Sum(p => p.MaterialValue) + whitePromotedPieces.Sum(p => p.MaterialValue - 1);
+            int blackCapturePiecesMaterialValue = blackCapturedPieces.Sum(p => p.MaterialValue) + blackPromotedPieces.Sum(p => p.MaterialValue - 1);
 
             return new PlayerInfo(whiteCapturePiecesMaterialValue, blackCapturePiecesMaterialValue, [.. whiteCapturedPieces], [.. blackCapturedPieces]);
         }
@@ -389,6 +393,7 @@ namespace Chess.NET.Model
 
                 // Fallback if there is a non valid promotion type
                 newPiece ??= new Queen(position, piece.Color);
+                board.PromotedPieces.Add(newPiece);
                 board.Pieces.Add(newPiece);
 
                 willBeCheck |= IsCheck(Helper.InvertPieceColor(piece.Color));

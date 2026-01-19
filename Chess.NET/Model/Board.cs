@@ -18,7 +18,9 @@ namespace Chess.NET.Model
     {
         public List<Piece> Pieces { get; } = [];
 
-        public List<Piece> CapturedPieces { get; set; } = []; // ggf. White/Black differenzieren
+        public List<Piece> CapturedPieces { get; set; } = [];
+
+        public List<Piece> PromotedPieces { get; set; } = [];   
 
         public Piece? GetPiece(string pos)
         {
@@ -33,7 +35,8 @@ namespace Chess.NET.Model
         public void Reset()
         {
             CapturedPieces = [];
-            Pieces.Clear();   
+            Pieces.Clear();
+            PromotedPieces.Clear();
 
             foreach (var color in new List<PieceColor>() { PieceColor.White, PieceColor.Black })
             {
