@@ -29,8 +29,10 @@ It includes (almost) full game rules, a WPF-based GUI, custom bot logic, and eve
   - Difficulty adjustable via search depth / engine options (settings)
 
 ### GUI (WPF)
-- Dynamic 8×8 chess board
-- Drag & Drop piece movement
+- Drag & Drop chess board
+- Localized (DE/EN)
+- Settings
+- Puzzles
 
 ### Requirements
-- `stockfish.exe` placed anywhere if you want to play against the engine!
+- `stockfish.exe` if you want to play against the engine!

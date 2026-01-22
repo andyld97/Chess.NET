@@ -1,6 +1,6 @@
 ﻿namespace Chess.NET.Model
 {
-    public class Move
+    public class MoveNotation
     {
         public Piece Piece { get; set; } = null!;
 

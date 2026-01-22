@@ -54,7 +54,7 @@ namespace Chess.NET.Bot
             Send($"setoption name Skill Level value {skill}");
         }
 
-        public NextMove? Move(Game game)
+        public PendingMove? Move(Game game)
         {
             // 1️ Position setzen (über Moves!)
             var movesUci = string.Join(" ", game.Moves.Select(m => m.ToUci()));
@@ -82,7 +82,7 @@ namespace Chess.NET.Bot
             return null;
         }
 
-        private NextMove? MapUciMoveToGame(string uci, Game game)
+        private PendingMove? MapUciMoveToGame(string uci, Game game)
         {
             // e2e4, e7e8q
             var from = Position.Parse(uci.Substring(0, 2));
@@ -108,7 +108,7 @@ namespace Chess.NET.Bot
                 };
             }
 
-            return new NextMove(piece, to, promotion);
+            return new PendingMove(piece, to, promotion);
         }
 
         private void Send(string command)

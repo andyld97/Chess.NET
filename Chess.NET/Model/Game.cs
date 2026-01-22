@@ -15,12 +15,12 @@ namespace Chess.NET.Model
         private Puzzle? currentPuzzle = null;
         private int currentPuzzleMove = 0;
 
-        public delegate void onMove(Move move);
+        public delegate void onMove(MoveNotation move);
         public event onMove? MovedPiece;
 
         public IBoard Board => board;
 
-        public List<Move> Moves { get; set; } = [];
+        public List<MoveNotation> Moves { get; set; } = [];
 
         public PieceColor PlayersTurn { get; private set; } = PieceColor.White;
 
@@ -356,7 +356,7 @@ namespace Chess.NET.Model
             return true;
         }
 
-        public bool Move(NextMove nxtMove, bool playSound = true, bool showMsgBox = true, bool isAutoMove = false)
+        public bool Move(PendingMove nxtMove, bool playSound = true, bool showMsgBox = true, bool isAutoMove = false)
         {
             var piece = nxtMove.Piece;
             var position = nxtMove.To;
@@ -461,7 +461,7 @@ namespace Chess.NET.Model
                     Sound.Play(Sound.SoundType.Move);
             }
 
-            var move = new Move()
+            var move = new MoveNotation()
             {
                 From = oldPosition,
                 To = position,
@@ -581,7 +581,7 @@ namespace Chess.NET.Model
                 currentPuzzleMove++;
 
                 string nextMove = currentPuzzle!.Moves[currentPuzzleMove];
-                var mv = NextMove.Parse(nextMove, board, Helper.InvertPieceColor(piece.Color));
+                var mv = PendingMove.Parse(nextMove, board, Helper.InvertPieceColor(piece.Color));
 
                 Move(mv, true, true, true);
             }

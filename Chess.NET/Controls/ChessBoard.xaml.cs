@@ -131,7 +131,7 @@ namespace Chess.NET.Controls
                     promotionType = dialog.PromotionResult;
                 }
 
-                bool wasMoveAccepted = game.Move(new NextMove(_pieceToMove!, destinationSquare, promotionType));
+                bool wasMoveAccepted = game.Move(new PendingMove(_pieceToMove!, destinationSquare, promotionType));
 
                 ResetDrag();
                 RenderChessBoard(game.Board);
@@ -281,7 +281,7 @@ namespace Chess.NET.Controls
             for (int i = 0; i < navigationCurrentMove; i++)
             {
                 var move = game.Moves[i];
-                gm.Move(new NextMove(gm.Board.GetPiece(move.From)!, move.To, move.PromotionType), false, false);
+                gm.Move(new PendingMove(gm.Board.GetPiece(move.From)!, move.To, move.PromotionType), false, false);
             }
 
             RenderChessBoard(gm.Board, false);
@@ -306,7 +306,7 @@ namespace Chess.NET.Controls
             isInNavigationMode = true;
         }
 
-        private void PlayMoveSound(Game gm, bool isPreviousMove, Move? move = null)
+        private void PlayMoveSound(Game gm, bool isPreviousMove, MoveNotation? move = null)
         {
             var lastMove = move ?? gm.Moves.LastOrDefault();
 

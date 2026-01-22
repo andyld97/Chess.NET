@@ -40,7 +40,7 @@ namespace Chess.NET
             RefreshPlayerDisplay();
         }
 
-        private void Game_MovedPiece(Model.Move move)
+        private void Game_MovedPiece(Model.MoveNotation move)
         {
             if (move.Piece.Color == Model.PieceColor.White)
                 ListMoves.Items.Add($"{move.Count}. {move}");
