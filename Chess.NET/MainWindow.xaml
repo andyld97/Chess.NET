@@ -31,6 +31,7 @@
             <MenuItem Header="{x:Static res:Resources.strMenu_Game}" Height="25">
                 <MenuItem x:Name="MenuNewGame" Click="MenuNewGame_Click" Header="{x:Static res:Resources.strNewGame}" InputGestureText="F2" />
                 <MenuItem x:Name="MenuMirrorBoard" Click="MenuMirrorBoard_Click" Header="{x:Static res:Resources.strMirrorBoard}" InputGestureText="F3" />
+                <MenuItem x:Name="MenuPuzzle" Click="MenuPuzzle_Click" Header="Puzzle" />
                 <MenuItem x:Name="MenuItemSettings" Click="MenuItemSettings_Click" Header="{x:Static res:Resources.strSettings}" />
                 <MenuItem x:Name="MenuItemAbout" Click="MenuItemAbout_Click" Header="{x:Static res:Resources.strMenu_About}" />
                 <Separator />

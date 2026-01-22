@@ -21,5 +21,10 @@
 
             return moves;
         }
+
+        public override object Clone()
+        {
+            return new Rook((Position)Position.Clone(), Color);
+        }
     }
 }

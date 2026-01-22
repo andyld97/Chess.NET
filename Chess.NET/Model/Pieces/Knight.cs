@@ -38,5 +38,10 @@
             }
             return positions;
         }
+
+        public override object Clone()
+        {
+            return new Knight((Position)Position.Clone(), Color);
+        }
     }
 }

@@ -18,6 +18,7 @@ namespace Chess.NET.Controls
 
         private IChessBot? opponent = null;
         private bool isMirrored = false;
+        private bool isPuzzle = false;
 
         public Game Game => game;
 
@@ -30,6 +31,14 @@ namespace Chess.NET.Controls
             game.StartNewGame(null);
 
             RenderChessBoard(game.Board);
+        }
+
+        public void LoadPuzzle(Puzzle puzzle)
+        {
+            game.LoadPuzzle(puzzle);
+
+            RenderChessBoard(game.Board);
+            isPuzzle = true;
         }
 
         private void InitializeSquares()
@@ -111,7 +120,7 @@ namespace Chess.NET.Controls
 
                 PieceType? promotionType = null;
 
-                if (Settings.Instance.AutoPromoteToQueen)
+                if (Settings.Instance.AutoPromoteToQueen && !isPuzzle)
                     promotionType = PieceType.Queen;
                 else if (_pieceToMove?.Type == PieceType.Pawn && (destinationSquare.Rank == 1 || destinationSquare.Rank == 8) && game.IsMoveValid(_pieceToMove!, destinationSquare))
                 {

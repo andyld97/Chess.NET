@@ -114,5 +114,10 @@
 
             return positions;
         }
+
+        public override object Clone()
+        {
+            return new Pawn((Position)Position.Clone(), Color);
+        }
     }
 }

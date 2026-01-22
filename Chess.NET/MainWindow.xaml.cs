@@ -258,6 +258,11 @@ namespace Chess.NET
         }
 
         #endregion
+
+        private void MenuPuzzle_Click(object sender, RoutedEventArgs e)
+        {
+            new PuzzleDialog().ShowDialog();    
+        }
     }
 
     public class RelayCommand : ICommand

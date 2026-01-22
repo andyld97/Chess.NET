@@ -65,5 +65,10 @@
 
             return positions;
         }
+
+        public override object Clone()
+        {
+            return new King((Position)Position.Clone(), Color);
+        }
     }
 }

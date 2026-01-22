@@ -26,6 +26,8 @@
 
         public int Count { get; set; } = 1;
 
+        public string Disambiguation { get; set; } = string.Empty;
+
         public string ToUci()
         {
             if (IsPromotion && PromotionType.HasValue)
@@ -34,7 +36,7 @@
             return $"{From}{To}".ToLower();
         }
 
-        public override string ToString()
+        public string FormatMove(bool useEmojis)
         {
             // 1) Rochade
             if (IsCastleKingSide)
@@ -56,16 +58,17 @@
             };
 
             // oder emoji:
-            piece = Helper.ToEmoji(Piece);
+            if (useEmojis)
+                piece = Helper.ToEmoji(Piece);
 
             // 3️) Bauernschlag braucht das File
-            string pawnFile = Piece.Type == PieceType.Pawn && IsCapture ? From.ToString().Substring(0, 1) : string.Empty;
+            string pawnFile = Piece.Type == PieceType.Pawn && IsCapture ? From.ToString()[..1] : string.Empty;
 
             // 4️) Schlag
             string capture = IsCapture ? "x" : "";
 
             // 5️) Grundzug
-            string result = $"{piece}{pawnFile}{capture}{To}";
+            string result = $"{piece}{Disambiguation}{pawnFile}{capture}{To}";
 
             // 6️) Promotion
             if (IsPromotion)
@@ -80,6 +83,11 @@
                 result += "$";
 
             return result;
+        }
+
+        public override string ToString()
+        {
+            return FormatMove(true);
         }
     }
 }

@@ -1,6 +1,6 @@
 ﻿namespace Chess.NET.Model
 {
-    public abstract class Piece
+    public abstract class Piece : ICloneable
     {
         public Position Position { get; set; }  
 
@@ -51,6 +51,8 @@
                 return; // blocked
             }
         }
+
+        public abstract object Clone();
 
         #endregion
     }

@@ -10,6 +10,10 @@ namespace Chess.NET.Model
         private IChessBot? opponent = null;
         private bool hasWhiteCastled = false;
         private bool hasBlackCastled = false;
+        private bool isPuzzle = false;
+        
+        private Puzzle? currentPuzzle = null;
+        private int currentPuzzleMove = 0;
 
         public delegate void onMove(Move move);
         public event onMove? MovedPiece;
@@ -352,11 +356,11 @@ namespace Chess.NET.Model
             return true;
         }
 
-        public bool Move(NextMove nxtMove, bool playSound = true, bool showMsgBox = true)
+        public bool Move(NextMove nxtMove, bool playSound = true, bool showMsgBox = true, bool isAutoMove = false)
         {
             var piece = nxtMove.Piece;
-            var position = nxtMove.To;  
-            var promotionType = nxtMove.PromotionType;  
+            var position = nxtMove.To;
+            var promotionType = nxtMove.PromotionType;
 
             if (IsGameOver)
                 return false;
@@ -369,6 +373,7 @@ namespace Chess.NET.Model
             bool isCastle = false;
             bool isPromotion = false;
             bool isEnPassant = false;
+            string disambiguation = string.Empty;
             Position oldPosition = (Position)piece.Position.Clone();
             bool willBeCheck = IsCheck(Helper.InvertPieceColor(piece.Color), piece, position);
 
@@ -433,6 +438,20 @@ namespace Chess.NET.Model
                 {
                     // Capture!!
                     isCapture = true;
+
+                    if (piece.Type != PieceType.Pawn && piece.Type != PieceType.King && board.Pieces.Count(p => p.Color == piece.Color && p.Type == piece.Type) > 1)
+                    {
+                        // Check for Raxc6 or Rhxc6 or R2xc2
+                        var ambiguousPieces = board.Pieces.Where(p => p.Color == piece.Color && p.Type == piece.Type && p != piece && p.GetPossibleMoves(board).Contains(position));
+                        bool sameFile = ambiguousPieces.Any(p => p.Position.File == position.File);
+                        bool sameRank = ambiguousPieces.Any(p => p.Position.Rank == position.Rank);
+
+                        if (!sameFile)
+                            disambiguation = ((char)('a' + piece.Position.File - 1)).ToString();
+                        else if (!sameRank)
+                            disambiguation = piece.Position.Rank.ToString();
+                    }
+
                     board.CapturePiece(currentPiece);
 
                     if (!willBeCheck && playSound)
@@ -450,7 +469,8 @@ namespace Chess.NET.Model
                 Piece = piece,
                 IsPromotion = isPromotion,
                 PromotionType = promotionType,
-                IsCheck = willBeCheck
+                IsCheck = willBeCheck,
+                Disambiguation = disambiguation
             };
 
             if (isEnPassant)
@@ -471,17 +491,32 @@ namespace Chess.NET.Model
                     move.IsCastleQueenSide = true;
             }
 
-            Moves.Add(move);
-
             if (!isCastle && !isPromotion && !isEnPassant)
                 piece.Position = position;
 
-            if (IsCheckmate(PieceColor.White) || IsCheckmate(PieceColor.Black))
+            bool isCheckmate = IsCheckmate(PieceColor.White) || IsCheckmate(PieceColor.Black);
+            if (isCheckmate)
+                move.IsCheckmate = true;
+
+            if (isPuzzle && !isAutoMove)
+            {
+                if (move.FormatMove(false) != currentPuzzle!.Moves[currentPuzzleMove])
+                {
+                    MessageBox.Show("Wrong Move!"); // TODO and also change checkmate msgboxes if it's a puzzle
+
+                    LoadPuzzle(currentPuzzle);
+                    return false;
+                }
+            }
+
+            Moves.Add(move);
+
+            if (isCheckmate)
             {
                 IsGameOver = true;
                 if (playSound)
                     Sound.Play(Sound.SoundType.Checkmate);
-                move.IsCheckmate = true;
+
                 MovedPiece?.Invoke(move);
 
                 string playerText = string.Empty;
@@ -498,7 +533,8 @@ namespace Chess.NET.Model
 
                 if (showMsgBox)
                 {
-                    Task.Delay(750).ContinueWith(t => {
+                    Task.Delay(250).ContinueWith(t =>
+                    {
                         Application.Current.Dispatcher.Invoke(() =>
                         {
                             MessageBox.Show(string.Format(Properties.Resources.strGameOver_WinMessage, playerText), Properties.Resources.strGameOver_Win, MessageBoxButton.OK, MessageBoxImage.Information);
@@ -519,7 +555,8 @@ namespace Chess.NET.Model
 
                 if (showMsgBox)
                 {
-                    Task.Delay(750).ContinueWith(t => {
+                    Task.Delay(250).ContinueWith(t =>
+                    {
                         Application.Current.Dispatcher.Invoke(() =>
                         {
                             MessageBox.Show(Properties.Resources.strGameOver_StalemateText, Properties.Resources.strGameOver_Stalemate, MessageBoxButton.OK, MessageBoxImage.Information);
@@ -537,7 +574,36 @@ namespace Chess.NET.Model
             // Switch players
             PlayersTurn = Helper.InvertPieceColor(PlayersTurn);
 
+
+            if (isPuzzle && !isAutoMove)
+            {
+                // Play next move
+                currentPuzzleMove++;
+
+                string nextMove = currentPuzzle!.Moves[currentPuzzleMove];
+                var mv = NextMove.Parse(nextMove, board, Helper.InvertPieceColor(piece.Color));
+
+                Move(mv, true, true, true);
+            }
+            else if (isPuzzle)
+                currentPuzzleMove++;
+
             return true;
+        }
+
+        #endregion
+
+        #region Puzzle
+        public void LoadPuzzle(Puzzle puzzle)
+        {
+            board.Pieces.Clear();
+            PlayersTurn = puzzle.ColorToMove;
+
+            foreach (var piece in puzzle.Pieces)
+                board.Pieces.Add((Piece)piece.Clone());
+
+            currentPuzzle = puzzle;
+            isPuzzle = true;
         }
 
         #endregion

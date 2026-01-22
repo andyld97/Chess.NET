@@ -25,6 +25,11 @@
             AddRay(moves, board, -1, -1);
 
             return moves;
-        }    
+        }
+
+        public override object Clone()
+        {
+            return new Queen((Position)Position.Clone(), Color);
+        }
     }
 }
