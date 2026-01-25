@@ -253,4 +253,7 @@
   <data name="strAbout" xml:space="preserve">
     <value>Über</value>
   </data>
+  <data name="strPuzzle" xml:space="preserve">
+    <value>Rätsel</value>
+  </data>
 </root>

@@ -13,10 +13,20 @@ namespace Chess.NET.Model
         private bool isPuzzle = false;
         
         private Puzzle? currentPuzzle = null;
-        private int currentPuzzleMove = 0;
+        
 
-        public delegate void onMove(MoveNotation move);
-        public event onMove? MovedPiece;
+        #region Events
+
+        public delegate void onMovedPiece(MoveNotation move);
+        public event onMovedPiece? OnMovedPiece;
+
+        public delegate void onCheckmate(PieceColor pieceColor);
+        public event onCheckmate? OnCheckmate;
+
+        public delegate void onStalemate();
+        public event onStalemate? OnStalemate;
+
+        #endregion
 
         public IBoard Board => board;
 
@@ -51,6 +61,8 @@ namespace Chess.NET.Model
 
             return new PlayerInfo(whiteCapturePiecesMaterialValue, blackCapturePiecesMaterialValue, [.. whiteCapturedPieces], [.. blackCapturedPieces]);
         }
+
+        #region EN PASSANT
 
         private bool IsEnPassant(PieceColor color, Piece piece, Position position)
         {
@@ -101,6 +113,8 @@ namespace Chess.NET.Model
 
             return true;
         }
+
+        #endregion
 
         #region Castle
 
@@ -356,8 +370,10 @@ namespace Chess.NET.Model
             return true;
         }
 
-        public bool Move(PendingMove nxtMove, bool playSound = true, bool showMsgBox = true, bool isAutoMove = false)
+        public async Task<bool> MoveAsync(PendingMove? nxtMove, bool playSound = true)
         {
+            if (nxtMove == null) return false;
+
             var piece = nxtMove.Piece;
             var position = nxtMove.To;
             var promotionType = nxtMove.PromotionType;
@@ -496,18 +512,7 @@ namespace Chess.NET.Model
 
             bool isCheckmate = IsCheckmate(PieceColor.White) || IsCheckmate(PieceColor.Black);
             if (isCheckmate)
-                move.IsCheckmate = true;
-
-            if (isPuzzle && !isAutoMove)
-            {
-                if (move.FormatMove(false) != currentPuzzle!.Moves[currentPuzzleMove])
-                {
-                    MessageBox.Show("Wrong Move!"); // TODO and also change checkmate msgboxes if it's a puzzle
-
-                    LoadPuzzle(currentPuzzle);
-                    return false;
-                }
-            }
+                move.IsCheckmate = true;   
 
             Moves.Add(move);
 
@@ -517,30 +522,8 @@ namespace Chess.NET.Model
                 if (playSound)
                     Sound.Play(Sound.SoundType.Checkmate);
 
-                MovedPiece?.Invoke(move);
-
-                string playerText = string.Empty;
-
-                if (IsCheckmate(PieceColor.White))
-                {
-                    if (opponent == null)
-                        playerText = $"{Helper.GetPlayerName(1)} ({Properties.Resources.strBlack})";
-                    else
-                        playerText = $"{opponent?.Name} [Bot] ({Properties.Resources.strBlack})";
-                }
-                else if (IsCheckmate(PieceColor.Black))
-                    playerText = $"{Helper.GetPlayerName(1)} ({Properties.Resources.strWhite})";
-
-                if (showMsgBox)
-                {
-                    Task.Delay(250).ContinueWith(t =>
-                    {
-                        Application.Current.Dispatcher.Invoke(() =>
-                        {
-                            MessageBox.Show(string.Format(Properties.Resources.strGameOver_WinMessage, playerText), Properties.Resources.strGameOver_Win, MessageBoxButton.OK, MessageBoxImage.Information);
-                        });
-                    });
-                }
+                OnMovedPiece?.Invoke(move);
+                OnCheckmate?.Invoke((IsCheckmate(PieceColor.White) ? PieceColor.White : PieceColor.Black));
 
                 return true;
             }
@@ -548,45 +531,20 @@ namespace Chess.NET.Model
             {
                 IsGameOver = true;
                 move.IsStalemate = true;
-                MovedPiece?.Invoke(move);
+                OnMovedPiece?.Invoke(move);
 
                 if (playSound)
                     Sound.Play(Sound.SoundType.Stalemate);
 
-                if (showMsgBox)
-                {
-                    Task.Delay(250).ContinueWith(t =>
-                    {
-                        Application.Current.Dispatcher.Invoke(() =>
-                        {
-                            MessageBox.Show(Properties.Resources.strGameOver_StalemateText, Properties.Resources.strGameOver_Stalemate, MessageBoxButton.OK, MessageBoxImage.Information);
-                        });
-                    });
-                }
-
+                OnStalemate?.Invoke();
                 return true;
             }
             else if (willBeCheck && playSound)
                 Sound.Play(Sound.SoundType.Check);
 
-            MovedPiece?.Invoke(move);
-
             // Switch players
             PlayersTurn = Helper.InvertPieceColor(PlayersTurn);
-
-
-            if (isPuzzle && !isAutoMove)
-            {
-                // Play next move
-                currentPuzzleMove++;
-
-                string nextMove = currentPuzzle!.Moves[currentPuzzleMove];
-                var mv = PendingMove.Parse(nextMove, board, Helper.InvertPieceColor(piece.Color));
-
-                Move(mv, true, true, true);
-            }
-            else if (isPuzzle)
-                currentPuzzleMove++;
+            OnMovedPiece?.Invoke(move);
 
             return true;
         }

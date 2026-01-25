@@ -11,6 +11,7 @@ namespace Chess.NET.Model
             {
                 ColorToMove = PieceColor.White,
                 Moves = ["Qxg7#"],
+                Name = "Silent Square",
                 Pieces = [new Pawn(Position.Parse("a2"), PieceColor.White),
                           new Pawn(Position.Parse("b2"), PieceColor.White),
                           new Pawn(Position.Parse("c2"), PieceColor.White),
@@ -43,13 +44,12 @@ namespace Chess.NET.Model
                           new Queen(Position.Parse("d8"), PieceColor.Black),
                           new King(Position.Parse("g8"), PieceColor.Black),
                           new Rook(Position.Parse("f8"), PieceColor.Black)
-                         ],
-                Name = "Easy",              
+                         ],             
             },
             new Puzzle()
             {
                 ColorToMove = PieceColor.White,
-                Name = "Test2",
+                Name = "Last Light",
                 Moves = ["Bh6+", "Kxh6", "Qf8#"],
                 Pieces = [
                     new Rook(Position.Parse("a8"), PieceColor.White),

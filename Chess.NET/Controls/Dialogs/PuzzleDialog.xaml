@@ -8,6 +8,9 @@
         mc:Ignorable="d" WindowStartupLocation="CenterScreen"
         Title="Puzzle" Height="768" Width="1024">
     <Grid>
+        <Grid IsHitTestVisible="False">
+            <Image Source="/resources/images/background.jpg" Stretch="UniformToFill" />
+        </Grid>
         <Viewbox>
             <controls:ChessBoard x:Name="Chessboard" />
         </Viewbox>

@@ -403,6 +403,15 @@ namespace Chess.NET.Properties {
         }
         
         /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Puzzle ähnelt.
+        /// </summary>
+        public static string strPuzzle {
+            get {
+                return ResourceManager.GetString("strPuzzle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Sucht eine lokalisierte Zeichenfolge, die Right ähnelt.
         /// </summary>
         public static string strRight {

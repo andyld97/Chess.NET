@@ -4,6 +4,7 @@ using Chess.NET.Model;
 using Chess.NET.Model.GUI;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Media;
 
 namespace Chess.NET.Controls
@@ -19,6 +20,8 @@ namespace Chess.NET.Controls
         private IChessBot? opponent = null;
         private bool isMirrored = false;
         private bool isPuzzle = false;
+        private bool canMove = false;
+        private bool isNavigationAllowed = true;
 
         public Game Game => game;
 
@@ -31,6 +34,7 @@ namespace Chess.NET.Controls
             game.StartNewGame(null);
 
             RenderChessBoard(game.Board);
+            canMove = true;
         }
 
         public void LoadPuzzle(Puzzle puzzle)
@@ -39,6 +43,22 @@ namespace Chess.NET.Controls
 
             RenderChessBoard(game.Board);
             isPuzzle = true;
+            DisableNavigation();
+        }
+
+        public void DisablePieces()
+        {
+            canMove = false;
+        }
+
+        public void DisableNavigation()
+        {
+            isNavigationAllowed = false;
+        }
+
+        public void EnableNavigation()
+        {
+            isNavigationAllowed = true;     
         }
 
         private void InitializeSquares()
@@ -78,6 +98,7 @@ namespace Chess.NET.Controls
             RenderChessBoard(game.Board);
             this.opponent = opponent;
             isInNavigationMode = false;
+            canMove = true;
         }
 
         public void Mirror()
@@ -100,6 +121,8 @@ namespace Chess.NET.Controls
 
         private async void Square_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
+            if (!canMove) return;   
+
             if (isInNavigationMode)
             {
                 navigationCurrentMove = -1;
@@ -131,7 +154,7 @@ namespace Chess.NET.Controls
                     promotionType = dialog.PromotionResult;
                 }
 
-                bool wasMoveAccepted = game.Move(new PendingMove(_pieceToMove!, destinationSquare, promotionType));
+                bool wasMoveAccepted = await game.MoveAsync(new PendingMove(_pieceToMove!, destinationSquare, promotionType));
 
                 ResetDrag();
                 RenderChessBoard(game.Board);
@@ -157,7 +180,7 @@ namespace Chess.NET.Controls
                         if (next == null)
                             break;
 
-                        foundValidMove = game.Move(next);
+                        foundValidMove = await game.MoveAsync(next);
                     }
                 }
 
@@ -196,7 +219,7 @@ namespace Chess.NET.Controls
 
         #endregion
 
-        private void RenderChessBoard(IBoard board, bool renderLastMoveSquares = true)
+        public void RenderChessBoard(IBoard board, bool renderLastMoveSquares = true)
         {
             var lastMove = game.Moves.LastOrDefault();
 
@@ -235,20 +258,29 @@ namespace Chess.NET.Controls
         private int navigationCurrentMove = -1;
         private bool isInNavigationMode = false;
 
-        public void JumpToStart()
+        public async Task JumpToStartAsync()
         {
+            if (!isNavigationAllowed)
+                return;
+
             navigationCurrentMove = 0;
-            ShowMove();
+            await ShowMoveAsync();
         }
 
-        public void ShowLastMove()
+        public async Task ShowLastMoveAsync()
         {
+            if (!isNavigationAllowed)
+                return;
+
             navigationCurrentMove = game.Moves.Count;
-            ShowMove();
+            await ShowMoveAsync();
         }
 
-        public void ShowPreviousMove()
+        public async Task ShowPreviousMoveAsync()
         {
+            if (!isNavigationAllowed)
+                return;
+
             if (navigationCurrentMove == -1 || navigationCurrentMove > game.Moves.Count)
                 navigationCurrentMove = game.Moves.Count;
 
@@ -260,28 +292,34 @@ namespace Chess.NET.Controls
 
             navigationCurrentMove--;
 
-            var gm = ShowMove();
+            var gm = await ShowMoveAsync();
 
             PlayMoveSound(gm, true, removedMove);
             RenderChessBoard(gm.Board, false);
             isInNavigationMode = true;
         }
 
-        public void ShowMove(int index)
+        public async Task ShowMoveAsync(int index)
         {
+            if (!isNavigationAllowed)
+                return;
+
             navigationCurrentMove = index + 1;
-            ShowMove();
+            await ShowMoveAsync();
         }
 
-        private Game ShowMove()
+        private async Task<Game> ShowMoveAsync()
         {
+            if (!isNavigationAllowed)
+                return null!;
+
             Game gm = new Game();
             gm.StartNewGame(null);
 
             for (int i = 0; i < navigationCurrentMove; i++)
             {
                 var move = game.Moves[i];
-                gm.Move(new PendingMove(gm.Board.GetPiece(move.From)!, move.To, move.PromotionType), false, false);
+                await gm.MoveAsync(new PendingMove(gm.Board.GetPiece(move.From)!, move.To, move.PromotionType), false);
             }
 
             RenderChessBoard(gm.Board, false);
@@ -289,8 +327,11 @@ namespace Chess.NET.Controls
             return gm;
         }
 
-        public void ShowNextMove()
+        public async Task ShowNextMoveAsync()
         {
+            if (!isNavigationAllowed)
+                return;
+
             if (navigationCurrentMove == -1)
                 navigationCurrentMove = game.Moves.Count;
 
@@ -299,7 +340,7 @@ namespace Chess.NET.Controls
 
             navigationCurrentMove++;
 
-            var gm = ShowMove();
+            var gm = await ShowMoveAsync();
 
             PlayMoveSound(gm, false);
             RenderChessBoard(gm.Board, false);

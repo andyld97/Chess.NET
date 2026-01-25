@@ -1,7 +1,9 @@
 ﻿using Chess.NET.Bot;
 using Chess.NET.Controls.Dialogs;
 using Chess.NET.Model;
+using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace Chess.NET
@@ -26,18 +28,81 @@ namespace Chess.NET
 
         #endregion
 
+        #region Ctor
         public MainWindow()
         {
             InitializeComponent();
-            Chessboard.Game.MovedPiece += Game_MovedPiece;
 
-            MoveLeftCommand = new RelayCommand(new Action(Chessboard.ShowPreviousMove));
-            MoveRightCommand = new RelayCommand(new Action(Chessboard.ShowNextMove));
+            // Assign events
+            Chessboard.Game.OnMovedPiece += Game_MovedPiece;
+            Chessboard.Game.OnCheckmate += Game_OnCheckmate;
+            Chessboard.Game.OnStalemate += Game_OnStalemate;
+
+            // Assign commands
+            MoveLeftCommand = new RelayCommand(async () => await Chessboard.ShowPreviousMoveAsync());
+            MoveRightCommand = new RelayCommand(async () => await Chessboard.ShowNextMoveAsync());
             NewGameCommand = new RelayCommand(new Action(StartNewGame));
             MirrorBoardCommand = new RelayCommand(new Action(Chessboard.Mirror));
             DataContext = this;
 
             RefreshPlayerDisplay();
+            InitializePuzzleMenu();
+        }
+        #endregion
+
+        private void InitializePuzzleMenu()
+        {
+            foreach (var puzzle in Puzzle.Puzzles)
+            {
+                MenuItem puzzleItem = new MenuItem();
+                puzzleItem.Header = puzzle.Name;
+                puzzleItem.Tag = puzzle;
+                puzzleItem.Click += MenuPuzzle_Click;
+
+
+                MenuPuzzle.Items.Add(puzzleItem);
+            }
+        }
+
+        private void MenuPuzzle_Click(object sender, RoutedEventArgs e)
+        {
+            new PuzzleDialog((sender as MenuItem).Tag as Puzzle).ShowDialog();
+        }
+
+        #region Game Events
+
+        private async void Game_OnCheckmate(PieceColor pieceColor)
+        {
+            string playerText = string.Empty;
+
+            if (pieceColor == PieceColor.White)
+            {
+                if (opponent == null)
+                    playerText = $"{Helper.GetPlayerName(1)} ({Properties.Resources.strBlack})";
+                else
+                    playerText = $"{opponent?.Name} [Bot] ({Properties.Resources.strBlack})";
+            }
+            else if (pieceColor == PieceColor.Black)
+                playerText = $"{Helper.GetPlayerName(1)} ({Properties.Resources.strWhite})";
+
+            await Task.Delay(250).ContinueWith(t =>
+            {
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    MessageBox.Show(string.Format(Properties.Resources.strGameOver_WinMessage, playerText), Properties.Resources.strGameOver_Win, MessageBoxButton.OK, MessageBoxImage.Information);
+                });
+            });
+        }
+
+        private async void Game_OnStalemate()
+        {
+            await Task.Delay(250).ContinueWith(t =>
+            {
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    MessageBox.Show(Properties.Resources.strGameOver_StalemateText, Properties.Resources.strGameOver_Stalemate, MessageBoxButton.OK, MessageBoxImage.Information);
+                });
+            });
         }
 
         private void Game_MovedPiece(Model.MoveNotation move)
@@ -51,6 +116,9 @@ namespace Chess.NET
 
             RefreshPlayerDisplay();
         }
+
+
+        #endregion
 
         private void StartNewGame()
         {
@@ -106,35 +174,35 @@ namespace Chess.NET
             RefreshPlayerDisplay();
         }
 
-        private void ButtonJumpToStart_Click(object sender, RoutedEventArgs e)
+        private async void ButtonJumpToStart_Click(object sender, RoutedEventArgs e)
         {
-            Chessboard.JumpToStart();
+            await Chessboard.JumpToStartAsync();
         }
 
-        private void ButtonJumpToPreviousMove_Click(object sender, RoutedEventArgs e)
+        private async void ButtonJumpToPreviousMove_Click(object sender, RoutedEventArgs e)
         {
-            Chessboard.ShowPreviousMove();
+            await Chessboard.ShowPreviousMoveAsync();
         }
 
-        private void ButtonJumpToNextMove_Click(object sender, RoutedEventArgs e)
+        private async void ButtonJumpToNextMove_Click(object sender, RoutedEventArgs e)
         {
-            Chessboard.ShowNextMove();
+           await Chessboard.ShowNextMoveAsync();
         }
 
-        private void ButtonJumpToLastMove_Click(object sender, RoutedEventArgs e)
+        private async void ButtonJumpToLastMove_Click(object sender, RoutedEventArgs e)
         {
-            Chessboard.ShowLastMove();
+         await   Chessboard.ShowLastMoveAsync();
         }
 
-        private void ListMoves_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        private async void ListMoves_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             int n = ListMoves.SelectedIndex;
 
             int firstMove = 2 * n - 1;
             int secondMove = 2 * n;
-            
+
             // We are currently not able to differentae which one, so we always choose the first one
-            Chessboard.ShowMove(firstMove);
+            await Chessboard.ShowMoveAsync(firstMove);
         }
 
         private void RefreshPlayerDisplay()
@@ -247,22 +315,17 @@ namespace Chess.NET
             Chessboard.Mirror();
         }
 
-        private void MenuItemJumpToStart_Click(object sender, RoutedEventArgs e)
+        private async void MenuItemJumpToStart_Click(object sender, RoutedEventArgs e)
         {
-            Chessboard.JumpToStart();
+            await Chessboard.JumpToStartAsync();
         }
 
-        private void MenuItemJumpToEnd_Click(object sender, RoutedEventArgs e)
+        private async void MenuItemJumpToEnd_Click(object sender, RoutedEventArgs e)
         {
-            Chessboard.ShowLastMove();
+            await Chessboard.ShowLastMoveAsync();
         }
 
         #endregion
-
-        private void MenuPuzzle_Click(object sender, RoutedEventArgs e)
-        {
-            new PuzzleDialog().ShowDialog();    
-        }
     }
 
     public class RelayCommand : ICommand

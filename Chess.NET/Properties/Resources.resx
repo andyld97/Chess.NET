@@ -256,4 +256,7 @@
   <data name="strAbout" xml:space="preserve">
     <value>About</value>
   </data>
+  <data name="strPuzzle" xml:space="preserve">
+    <value>Puzzle</value>
+  </data>
 </root>
