@@ -1,6 +1,8 @@
 ﻿using Chess.NET.Bot;
 using Chess.NET.Model;
+using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Input;
 
 namespace Chess.NET.Controls.Dialogs
 {
@@ -16,17 +18,36 @@ namespace Chess.NET.Controls.Dialogs
 
         private const int NEXT_MOVE_DELAY = 600; // [ms.]
 
+        #region Commands
+
+        public ICommand MoveLeftCommand { get; }
+
+        public ICommand MoveRightCommand { get; }
+
+        public ICommand MirrorBoardCommand { get; }
+
+        #endregion
+
         public PuzzleDialog(Puzzle puzzle)
         {
             InitializeComponent();
+            DataContext = this;
 
             currentPuzzle = puzzle;
             if (currentPuzzle == null)
                 return;
 
+            // Load puuzzle
             Chessboard.LoadPuzzle(currentPuzzle);
+
+            // Assign events
             Chessboard.Game.OnMovedPiece += Game_MovedPiece;
             Chessboard.Game.OnPlaySound += Game_OnPlaySound;
+
+            // Assign commands
+            MoveLeftCommand = new RelayCommand(async () => await Chessboard.ShowPreviousMoveAsync());
+            MoveRightCommand = new RelayCommand(async () => await Chessboard.ShowNextMoveAsync());
+            MirrorBoardCommand = new RelayCommand(new Action(Chessboard.Mirror));
 
             Title = $"{Properties.Resources.strPuzzle} - {currentPuzzle.Name}";
         }
@@ -67,6 +88,7 @@ namespace Chess.NET.Controls.Dialogs
             {
                 // TODO Puzzle successfully done! :)
                 Sound.Play(Sound.SoundType.PuzzleSolved);
+                PanelPuzzleSolved.Visibility = Visibility.Visible;
 
                 Chessboard.EnableNavigation();
                 return;
@@ -109,8 +131,37 @@ namespace Chess.NET.Controls.Dialogs
 
             Chessboard.DisablePieces();
 
-            // TODO Display wrong move!
             Sound.Play(Sound.SoundType.PuzzleFail);
+            PanelPuzzleFailed.Visibility = Visibility.Visible;
+        }
+
+        private void ButtonRetry_Click(object sender, RoutedEventArgs e)
+        {
+            PanelPuzzleFailed.Visibility = Visibility.Collapsed;
+            Chessboard.LoadPuzzle(currentPuzzle);
+            Chessboard.RenderChessBoard(Chessboard.Game.Board, false);
+            Chessboard.DisableNavigation();
+            Chessboard.EnablePieces();
+            currentPuzzleMove = 0;
+        }
+
+        private async void ButtonReplay_Click(object sender, RoutedEventArgs e)
+        {
+            ButtonReplay.IsEnabled = false;
+
+            Chessboard.EnableNavigation();
+            Chessboard.DisablePieces();
+
+            const int delay = 1500;
+
+            await Chessboard.JumpToStartAsync();
+
+            await Task.Delay(delay);
+
+            while (await Chessboard.ShowNextMoveAsync())
+                await Task.Delay(delay);
+
+            ButtonReplay.IsEnabled = true;  
         }
     }
 }

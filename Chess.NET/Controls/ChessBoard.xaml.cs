@@ -4,7 +4,6 @@ using Chess.NET.Model;
 using Chess.NET.Model.GUI;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
 using System.Windows.Media;
 
 namespace Chess.NET.Controls
@@ -18,6 +17,8 @@ namespace Chess.NET.Controls
         private readonly Game game = new Game();
 
         private IChessBot? opponent = null;
+        private Puzzle? currentPuzzle = null;
+
         private bool isMirrored = false;
         private bool isPuzzle = false;
         private bool canMove = false;
@@ -43,12 +44,20 @@ namespace Chess.NET.Controls
 
             RenderChessBoard(game.Board);
             isPuzzle = true;
+            currentPuzzle = puzzle;
             DisableNavigation();
         }
+
+        #region Public Interface / Control Methods
 
         public void DisablePieces()
         {
             canMove = false;
+        }
+
+        public void EnablePieces()
+        {
+            canMove = true;
         }
 
         public void DisableNavigation()
@@ -60,6 +69,8 @@ namespace Chess.NET.Controls
         {
             isNavigationAllowed = true;     
         }
+
+        #endregion
 
         private void InitializeSquares()
         {
@@ -315,6 +326,8 @@ namespace Chess.NET.Controls
 
             Game gm = new Game();
             gm.StartNewGame(null);
+            if (isPuzzle)
+                gm.LoadPuzzle(currentPuzzle!);
 
             for (int i = 0; i < navigationCurrentMove; i++)
             {
@@ -327,16 +340,16 @@ namespace Chess.NET.Controls
             return gm;
         }
 
-        public async Task ShowNextMoveAsync()
+        public async Task<bool> ShowNextMoveAsync()
         {
             if (!isNavigationAllowed)
-                return;
+                return false;
 
             if (navigationCurrentMove == -1)
                 navigationCurrentMove = game.Moves.Count;
 
             if (navigationCurrentMove >= game.Moves.Count)
-                return;
+                return false;
 
             navigationCurrentMove++;
 
@@ -345,6 +358,7 @@ namespace Chess.NET.Controls
             PlayMoveSound(gm, false);
             RenderChessBoard(gm.Board, false);
             isInNavigationMode = true;
+            return true;
         }
 
         private void PlayMoveSound(Game gm, bool isPreviousMove, MoveNotation? move = null)
