@@ -7,8 +7,8 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
     <ApplicationIcon>icon.ico</ApplicationIcon>
-    <AssemblyVersion>1.0.0</AssemblyVersion>
-    <FileVersion>1.0.0</FileVersion>
+    <AssemblyVersion>1.0.1</AssemblyVersion>
+    <FileVersion>1.0.1</FileVersion>
 	<Copyright>Chess.NET © 2026</Copyright>
 	<Company>Code A Software</Company>
 	<ApplicationManifest>app.manifest</ApplicationManifest>
@@ -33,7 +33,9 @@
     <None Remove="resources\sounds\castle.mp3" />
     <None Remove="resources\sounds\check.mp3" />
     <None Remove="resources\sounds\checkmate.mp3" />
+    <None Remove="resources\sounds\fail.mp3" />
     <None Remove="resources\sounds\move.mp3" />
+    <None Remove="resources\sounds\solved.mp3" />
     <None Remove="resources\sounds\stalemate.mp3" />
   </ItemGroup>
 
@@ -51,7 +53,13 @@
     <Content Include="resources\sounds\checkmate.mp3">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="resources\sounds\fail.mp3">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="resources\sounds\move.mp3">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="resources\sounds\solved.mp3">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="resources\sounds\stalemate.mp3">

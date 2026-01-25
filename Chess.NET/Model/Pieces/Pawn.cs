@@ -15,10 +15,7 @@
             List<Position> positions = [];
 
             if (Position.Rank == 8)
-            {
-                return []; // TODO von 7-8 ist Umwandlung
-            }
-
+                return [];
 
             if (Color == PieceColor.White)
             {

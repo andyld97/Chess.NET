@@ -1,19 +1,20 @@
 ﻿using Chess.NET.Bot;
 using Chess.NET.Model.Pieces;
-using System.Windows;
 
 namespace Chess.NET.Model
 {
     public class Game
     {
+        #region Private Members
         private readonly Board board = new Board();
+        private Puzzle? currentPuzzle = null;
         private IChessBot? opponent = null;
+
         private bool hasWhiteCastled = false;
         private bool hasBlackCastled = false;
         private bool isPuzzle = false;
-        
-        private Puzzle? currentPuzzle = null;
-        
+
+        #endregion
 
         #region Events
 
@@ -26,7 +27,12 @@ namespace Chess.NET.Model
         public delegate void onStalemate();
         public event onStalemate? OnStalemate;
 
+        public delegate void onPlaySound(Sound.SoundType type);
+        public event onPlaySound? OnPlaySound;
+
         #endregion
+
+        #region Properties
 
         public IBoard Board => board;
 
@@ -47,20 +53,7 @@ namespace Chess.NET.Model
             this.opponent = opponent;
         }
 
-        public PlayerInfo GetPlayerInformation()
-        {
-            var whiteCapturedPieces = board.CapturedPieces.Where(p => p.Color == PieceColor.Black);
-            var blackCapturedPieces = board.CapturedPieces.Where(p => p.Color == PieceColor.White);
-
-            var whitePromotedPieces = board.PromotedPieces.Where(p => p.Color == PieceColor.White);
-            var blackPromotedPieces = board.PromotedPieces.Where(p => p.Color == PieceColor.Black);
-
-            // Promotion: -1 per Piece cause you promoted the pawn, but lost it anyways!
-            int whiteCapturePiecesMaterialValue = whiteCapturedPieces.Sum(p => p.MaterialValue) + whitePromotedPieces.Sum(p => p.MaterialValue - 1);
-            int blackCapturePiecesMaterialValue = blackCapturedPieces.Sum(p => p.MaterialValue) + blackPromotedPieces.Sum(p => p.MaterialValue - 1);
-
-            return new PlayerInfo(whiteCapturePiecesMaterialValue, blackCapturePiecesMaterialValue, [.. whiteCapturedPieces], [.. blackCapturedPieces]);
-        }
+        #endregion
 
         #region EN PASSANT
 
@@ -372,7 +365,8 @@ namespace Chess.NET.Model
 
         public async Task<bool> MoveAsync(PendingMove? nxtMove, bool playSound = true)
         {
-            if (nxtMove == null) return false;
+            if (nxtMove == null) 
+                return false;
 
             var piece = nxtMove.Piece;
             var position = nxtMove.To;
@@ -439,14 +433,14 @@ namespace Chess.NET.Model
                 board.Pieces.Remove(pieceToCapture!);
                 board.CapturedPieces.Add(pieceToCapture!);
 
-                Sound.Play(Sound.SoundType.Capture);
+                OnPlaySound?.Invoke(Sound.SoundType.Capture);
                 isEnPassant = true;
             }
             else if (IsCastlePosition(position) && CanCastle(piece.Color, position) && piece.Type == PieceType.King && Castle(piece.Color, position))
             {
                 isCastle = true;
                 if (playSound)
-                    Sound.Play(Sound.SoundType.Castle);
+                    OnPlaySound?.Invoke(Sound.SoundType.Castle);
             }
             else
             {
@@ -471,10 +465,10 @@ namespace Chess.NET.Model
                     board.CapturePiece(currentPiece);
 
                     if (!willBeCheck && playSound)
-                        Sound.Play(Sound.SoundType.Capture);
+                        OnPlaySound?.Invoke(Sound.SoundType.Capture);
                 }
                 else if (!willBeCheck && playSound)
-                    Sound.Play(Sound.SoundType.Move);
+                    OnPlaySound?.Invoke(Sound.SoundType.Move);
             }
 
             var move = new MoveNotation()
@@ -512,18 +506,22 @@ namespace Chess.NET.Model
 
             bool isCheckmate = IsCheckmate(PieceColor.White) || IsCheckmate(PieceColor.Black);
             if (isCheckmate)
-                move.IsCheckmate = true;   
+                move.IsCheckmate = true;
 
             Moves.Add(move);
 
             if (isCheckmate)
             {
                 IsGameOver = true;
-                if (playSound)
-                    Sound.Play(Sound.SoundType.Checkmate);
 
                 OnMovedPiece?.Invoke(move);
                 OnCheckmate?.Invoke((IsCheckmate(PieceColor.White) ? PieceColor.White : PieceColor.Black));
+
+                if (playSound)
+                {
+                    OnPlaySound?.Invoke(Sound.SoundType.Move);
+                    _ = DelaySoundPlay(Sound.SoundType.Checkmate);
+                }
 
                 return true;
             }
@@ -531,16 +529,17 @@ namespace Chess.NET.Model
             {
                 IsGameOver = true;
                 move.IsStalemate = true;
+
                 OnMovedPiece?.Invoke(move);
+                OnStalemate?.Invoke();
 
                 if (playSound)
-                    Sound.Play(Sound.SoundType.Stalemate);
+                    OnPlaySound?.Invoke(Sound.SoundType.Stalemate);
 
-                OnStalemate?.Invoke();
                 return true;
             }
             else if (willBeCheck && playSound)
-                Sound.Play(Sound.SoundType.Check);
+                OnPlaySound?.Invoke(Sound.SoundType.Check);
 
             // Switch players
             PlayersTurn = Helper.InvertPieceColor(PlayersTurn);
@@ -566,9 +565,34 @@ namespace Chess.NET.Model
 
         #endregion
 
+        #region Other
+
+        public PlayerInfo GetPlayerInformation()
+        {
+            var whiteCapturedPieces = board.CapturedPieces.Where(p => p.Color == PieceColor.Black);
+            var blackCapturedPieces = board.CapturedPieces.Where(p => p.Color == PieceColor.White);
+
+            var whitePromotedPieces = board.PromotedPieces.Where(p => p.Color == PieceColor.White);
+            var blackPromotedPieces = board.PromotedPieces.Where(p => p.Color == PieceColor.Black);
+
+            // Promotion: -1 per Piece cause you promoted the pawn, but lost it anyways!
+            int whiteCapturePiecesMaterialValue = whiteCapturedPieces.Sum(p => p.MaterialValue) + whitePromotedPieces.Sum(p => p.MaterialValue - 1);
+            int blackCapturePiecesMaterialValue = blackCapturedPieces.Sum(p => p.MaterialValue) + blackPromotedPieces.Sum(p => p.MaterialValue - 1);
+
+            return new PlayerInfo(whiteCapturePiecesMaterialValue, blackCapturePiecesMaterialValue, [.. whiteCapturedPieces], [.. blackCapturedPieces]);
+        }
+
+        private async Task DelaySoundPlay(Sound.SoundType sound, int delayMs = 500)
+        {
+            await Task.Delay(delayMs);
+            OnPlaySound?.Invoke(sound);
+        }
+
         public override string ToString()
         {
             return board.ToString();
         }
+
+        #endregion
     }
 }

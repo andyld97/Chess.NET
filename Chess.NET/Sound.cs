@@ -11,6 +11,8 @@ namespace Chess.NET
         private static readonly MediaPlayer _checkPlayer = CreatePlayer("resources/sounds/check.mp3");
         private static readonly MediaPlayer _checkMatePlayer = CreatePlayer("resources/sounds/checkmate.mp3");
         private static readonly MediaPlayer _staleMatePlayer = CreatePlayer("resources/sounds/stalemate.mp3");
+        private static readonly MediaPlayer _puzzleSolvedPlayer = CreatePlayer("resources/sounds/solved.mp3");
+        private static readonly MediaPlayer _puzzleFailedPlayer = CreatePlayer("resources/sounds/fail.mp3");
 
         private static MediaPlayer CreatePlayer(string relativePath)
         {
@@ -32,15 +34,14 @@ namespace Chess.NET
                 { SoundType.Castle, _castlePlayer },
                 { SoundType.Check, _checkPlayer },
                 { SoundType.Checkmate, _checkMatePlayer },
-                { SoundType.Stalemate, _staleMatePlayer  }
+                { SoundType.Stalemate, _staleMatePlayer  },
+                { SoundType.PuzzleSolved, _puzzleSolvedPlayer  },
+                { SoundType.PuzzleFail, _puzzleFailedPlayer  }  ,
             };
 
             if (soundPlayers.TryGetValue(type, out MediaPlayer? player))
-            {
                 Play(player);
-            }
         }
- 
 
         private static void Play(MediaPlayer player)
         {
@@ -56,7 +57,9 @@ namespace Chess.NET
             Castle,
             Check,
             Checkmate,
-            Stalemate
+            Stalemate,
+            PuzzleFail,
+            PuzzleSolved
         }
     }
 }

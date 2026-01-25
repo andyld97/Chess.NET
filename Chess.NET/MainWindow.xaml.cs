@@ -1,7 +1,6 @@
 ﻿using Chess.NET.Bot;
 using Chess.NET.Controls.Dialogs;
 using Chess.NET.Model;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -37,6 +36,7 @@ namespace Chess.NET
             Chessboard.Game.OnMovedPiece += Game_MovedPiece;
             Chessboard.Game.OnCheckmate += Game_OnCheckmate;
             Chessboard.Game.OnStalemate += Game_OnStalemate;
+            Chessboard.Game.OnPlaySound += Game_OnPlaySound;
 
             // Assign commands
             MoveLeftCommand = new RelayCommand(async () => await Chessboard.ShowPreviousMoveAsync());
@@ -48,17 +48,21 @@ namespace Chess.NET
             RefreshPlayerDisplay();
             InitializePuzzleMenu();
         }
+
         #endregion
+
+        #region Puzzle Menu
 
         private void InitializePuzzleMenu()
         {
             foreach (var puzzle in Puzzle.Puzzles)
             {
-                MenuItem puzzleItem = new MenuItem();
-                puzzleItem.Header = puzzle.Name;
-                puzzleItem.Tag = puzzle;
+                MenuItem puzzleItem = new MenuItem
+                {
+                    Header = puzzle.Name,
+                    Tag = puzzle
+                };
                 puzzleItem.Click += MenuPuzzle_Click;
-
 
                 MenuPuzzle.Items.Add(puzzleItem);
             }
@@ -68,6 +72,8 @@ namespace Chess.NET
         {
             new PuzzleDialog((sender as MenuItem).Tag as Puzzle).ShowDialog();
         }
+
+        #endregion
 
         #region Game Events
 
@@ -92,6 +98,12 @@ namespace Chess.NET
                     MessageBox.Show(string.Format(Properties.Resources.strGameOver_WinMessage, playerText), Properties.Resources.strGameOver_Win, MessageBoxButton.OK, MessageBoxImage.Information);
                 });
             });
+        }
+
+        private void Game_OnPlaySound(Sound.SoundType type)
+        {
+            // Always play
+            Sound.Play(type);
         }
 
         private async void Game_OnStalemate()

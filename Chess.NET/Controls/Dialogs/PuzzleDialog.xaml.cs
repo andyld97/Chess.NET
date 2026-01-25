@@ -26,8 +26,20 @@ namespace Chess.NET.Controls.Dialogs
 
             Chessboard.LoadPuzzle(currentPuzzle);
             Chessboard.Game.OnMovedPiece += Game_MovedPiece;
+            Chessboard.Game.OnPlaySound += Game_OnPlaySound;
 
             Title = $"{Properties.Resources.strPuzzle} - {currentPuzzle.Name}";
+        }
+
+        private void Game_OnPlaySound(Sound.SoundType type)
+        {
+            if (currentPuzzle.SolveType == PuzzleSolved.Checkmate && type == Sound.SoundType.Checkmate)
+                return;
+
+            if (currentPuzzle.SolveType == PuzzleSolved.Stalemate && type == Sound.SoundType.Stalemate)
+                return;
+
+            Sound.Play(type);
         }
 
         private async void Game_MovedPiece(MoveNotation move)
@@ -54,7 +66,7 @@ namespace Chess.NET.Controls.Dialogs
             if (currentPuzzleMove >= currentPuzzle!.Moves.Count)
             {
                 // TODO Puzzle successfully done! :)
-
+                Sound.Play(Sound.SoundType.PuzzleSolved);
 
                 Chessboard.EnableNavigation();
                 return;
@@ -74,8 +86,6 @@ namespace Chess.NET.Controls.Dialogs
             // Let stupido bot execute a move and then notify puzzle failed!!      
             await Task.Delay(NEXT_MOVE_DELAY);
 
-            // TODO: Play a sound that the puzzle is wrong!
-
             var pendingBotMove = stupidoBot.Move(Chessboard.Game);
             int counter = 0;
             while (!Chessboard.Game.IsMoveValid(pendingBotMove!.Piece, pendingBotMove.To))
@@ -92,6 +102,7 @@ namespace Chess.NET.Controls.Dialogs
 
             if (pendingBotMove != null)
             {
+                ignoreMoveEvent = true;
                 await Chessboard.Game.MoveAsync(pendingBotMove, true);
                 Chessboard.RenderChessBoard(Chessboard.Game.Board, true);
             }
@@ -99,6 +110,7 @@ namespace Chess.NET.Controls.Dialogs
             Chessboard.DisablePieces();
 
             // TODO Display wrong move!
+            Sound.Play(Sound.SoundType.PuzzleFail);
         }
     }
 }

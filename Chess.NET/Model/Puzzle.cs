@@ -5,7 +5,7 @@ namespace Chess.NET.Model
     public class Puzzle
     {
         #region Puzzles
-        public static List<Puzzle> Puzzles { get; set; } = 
+        public static List<Puzzle> Puzzles { get; set; } =
         [
             new Puzzle()
             {
@@ -44,7 +44,7 @@ namespace Chess.NET.Model
                           new Queen(Position.Parse("d8"), PieceColor.Black),
                           new King(Position.Parse("g8"), PieceColor.Black),
                           new Rook(Position.Parse("f8"), PieceColor.Black)
-                         ],             
+                         ],
             },
             new Puzzle()
             {
@@ -79,5 +79,12 @@ namespace Chess.NET.Model
 
         public List<Piece> Pieces { get; set; } = [];
 
+        public PuzzleSolved SolveType { get; set; } = PuzzleSolved.Checkmate;
+    }
+
+    public enum PuzzleSolved
+    {
+        Checkmate,
+        Stalemate
     }
 }

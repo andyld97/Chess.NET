@@ -7,8 +7,8 @@
 ; (To generate a new GUID, click Tools | Generate GUID inside the IDE.)
 AppId={{0B6B6EDD-4A0F-4E0C-BCEB-A0C638FF6C8E}
 AppName=Chess.NET
-AppVersion=1.0.0
-;AppVerName=Chess.NET 1.0.0
+AppVersion=1.0.1
+;AppVerName=Chess.NET 1.0.1
 AppPublisher=Code A Software
 AppPublisherURL=https://ca-soft.net/
 AppSupportURL=https://ca-soft.net/
