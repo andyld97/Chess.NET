@@ -3,6 +3,7 @@ using Chess.NET.Model;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using static Chess.NET.Controls.MoveNotationDisplay;
 
 namespace Chess.NET.Controls.Dialogs
 {
@@ -20,11 +21,11 @@ namespace Chess.NET.Controls.Dialogs
 
         #region Commands
 
-        public ICommand MoveLeftCommand { get; }
+        public ICommand MoveLeftCommand { get; } = null!;
 
-        public ICommand MoveRightCommand { get; }
+        public ICommand MoveRightCommand { get; } = null!;
 
-        public ICommand MirrorBoardCommand { get; }
+        public ICommand MirrorBoardCommand { get; } = null!;
 
         #endregion
 
@@ -86,9 +87,34 @@ namespace Chess.NET.Controls.Dialogs
 
             if (currentPuzzleMove >= currentPuzzle!.Moves.Count)
             {
-                // TODO Puzzle successfully done! :)
+                // Puzzle successfully done! :)
                 Sound.Play(Sound.SoundType.PuzzleSolved);
                 PanelPuzzleSolved.Visibility = Visibility.Visible;
+
+                // Render moves
+                ListMoves.Items.Clear();
+
+                MoveNotationDisplay start = new MoveNotationDisplay(true);
+                start.OnJumpToMove += Display_OnJumpToMove;
+                ListMoves.Items.Add(start);
+
+                MoveNotationDisplay display = new MoveNotationDisplay();
+                display.OnJumpToMove += Display_OnJumpToMove;
+                foreach (var move in Chessboard.Game.Moves)
+                {
+                    if (display.Move1 == null)
+                        display.Move1 = move;
+                    else if (display.Move2 == null)
+                    {
+                        display.Move2 = move;
+                        ListMoves.Items.Add(display);
+                        display = new MoveNotationDisplay();
+                        display.OnJumpToMove += Display_OnJumpToMove;
+                    }
+                }
+
+                if (display.Move2 == null)
+                    ListMoves.Items.Add(display);
 
                 Chessboard.EnableNavigation();
                 return;
@@ -101,6 +127,17 @@ namespace Chess.NET.Controls.Dialogs
             await Chessboard.Game.MoveAsync(pendingPuzzleMove);
             Chessboard.RenderChessBoard(Chessboard.Game.Board);
             currentPuzzleMove++;
+        }
+        
+        private async void Display_OnJumpToMove(int index)
+        {
+            if (index == -1)
+            {
+                await Chessboard.JumpToStartAsync();
+                return;
+            }
+
+            await Chessboard.ShowMoveAsync(index);
         }
 
         private async Task HandleWrongMoveAsync()

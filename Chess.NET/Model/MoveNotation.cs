@@ -36,7 +36,7 @@
             return $"{From}{To}".ToLower();
         }
 
-        public string FormatMove(bool useEmojis)
+        public string FormatMove(bool useEmojis, bool noPieceChar = false)
         {
             // 1) Rochade
             if (IsCastleKingSide)
@@ -57,9 +57,13 @@
                 _ => ""
             };
 
-            // oder emoji:
+            // or Emoji:
             if (useEmojis)
                 piece = Helper.ToEmoji(Piece);
+
+            // or nothing
+            if (noPieceChar)
+                piece = string.Empty;
 
             // 3️) Bauernschlag braucht das File
             string pawnFile = Piece.Type == PieceType.Pawn && IsCapture ? From.ToString()[..1] : string.Empty;

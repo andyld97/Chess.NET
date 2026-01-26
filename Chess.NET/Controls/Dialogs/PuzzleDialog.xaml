@@ -31,7 +31,7 @@
         <StackPanel x:Name="PanelPuzzleSolved" Visibility="Collapsed" Width="200" Grid.Column="1" Margin="2,10,2,2">
             <TextBlock Text="Puzzle solved!" Foreground="Green" FontWeight="Bold" FontSize="22"  HorizontalAlignment="Center" />
             <TextBlock Text="Moves:" Margin="5,2" />
-            <ListBox Height="200" />
+            <ListBox x:Name="ListMoves" Height="200" HorizontalContentAlignment="Stretch" />
             <Button x:Name="ButtonReplay" Click="ButtonReplay_Click" Content="Replay" Margin="2" FontWeight="Bold" Padding="3" />
         </StackPanel>
 

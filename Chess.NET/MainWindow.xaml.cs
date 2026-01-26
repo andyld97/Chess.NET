@@ -13,6 +13,7 @@ namespace Chess.NET
     /// </summary>
     public partial class MainWindow : Window
     {
+        private MoveNotationDisplay currentMoveNotationDisplay = null!;
         private bool isMirrored = false;
         private IChessBot? opponent = null;
 
@@ -45,6 +46,11 @@ namespace Chess.NET
             NewGameCommand = new RelayCommand(new Action(StartNewGame));
             MirrorBoardCommand = new RelayCommand(new Action(Chessboard.Mirror));
             DataContext = this;
+
+            // Add start move (always in list)
+            MoveNotationDisplay start = new MoveNotationDisplay(true);
+            start.OnJumpToMove += OnJumpToMove;
+            ListMoves.Items.Add(start);
 
             RefreshPlayerDisplay();
             InitializePuzzleMenu();
@@ -120,22 +126,46 @@ namespace Chess.NET
 
         private void Game_MovedPiece(Model.MoveNotation move)
         {
+            if (currentMoveNotationDisplay == null)
+            {
+                currentMoveNotationDisplay = new MoveNotationDisplay();
+                currentMoveNotationDisplay.OnJumpToMove += OnJumpToMove;
+            }
+
             if (move.Piece.Color == Model.PieceColor.White)
-                ListMoves.Items.Add($"{move.Count}. {move}");
+            {
+                currentMoveNotationDisplay.Move1 = move;
+                ListMoves.Items.Add(currentMoveNotationDisplay);
+            }
             else
-                ListMoves.Items[^1] = $"{ListMoves.Items[^1]} | {move}";
+            {
+                currentMoveNotationDisplay.Move2 = move;
+                currentMoveNotationDisplay = new MoveNotationDisplay();
+                currentMoveNotationDisplay.OnJumpToMove += OnJumpToMove;
+            }
 
             ListMoves.SelectedIndex = ListMoves.Items.Count - 1;
-
             RefreshPlayerDisplay();
         }
 
+        private async void OnJumpToMove(int index)
+        {
+            if (index == -1)
+            {
+                await Chessboard.JumpToStartAsync();
+                return;
+            }
+
+            await Chessboard.ShowMoveAsync(index);
+        }
 
         #endregion
 
         private void StartNewGame()
         {
-            ListMoves.Items.Clear();
+            // First item should always stay in list
+            for (int i = ListMoves.Items.Count - 1; i >= 1; i--)
+                ListMoves.Items.RemoveAt(i);
 
             if (CmbOpponent.SelectedIndex == 0)
             {
@@ -204,18 +234,7 @@ namespace Chess.NET
 
         private async void ButtonJumpToLastMove_Click(object sender, RoutedEventArgs e)
         {
-         await   Chessboard.ShowLastMoveAsync();
-        }
-
-        private async void ListMoves_MouseDoubleClick(object sender, MouseButtonEventArgs e)
-        {
-            int n = ListMoves.SelectedIndex;
-
-            int firstMove = 2 * n - 1;
-            int secondMove = 2 * n;
-
-            // We are currently not able to differentae which one, so we always choose the first one
-            await Chessboard.ShowMoveAsync(firstMove);
+            await Chessboard.ShowLastMoveAsync();
         }
 
         private void RefreshPlayerDisplay()

@@ -489,7 +489,7 @@ namespace Chess.NET.Model
             if (Moves.Count > 0)
             {
                 move.Count = Moves[^1].Count;
-                if (piece.Color == PieceColor.White)
+                //if (piece.Color == PieceColor.White)
                     move.Count++;
             }
 
