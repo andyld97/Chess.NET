@@ -1,9 +1,7 @@
 ﻿using Chess.NET.Bot;
 using Chess.NET.Model;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
-using static Chess.NET.Controls.MoveNotationDisplay;
 
 namespace Chess.NET.Controls.Dialogs
 {
@@ -29,12 +27,12 @@ namespace Chess.NET.Controls.Dialogs
 
         #endregion
 
-        public PuzzleDialog(Puzzle puzzle)
+        public PuzzleDialog(Puzzle? puzzle)
         {
             InitializeComponent();
             DataContext = this;
 
-            currentPuzzle = puzzle;
+            currentPuzzle = puzzle!;
             if (currentPuzzle == null)
                 return;
 
@@ -185,6 +183,7 @@ namespace Chess.NET.Controls.Dialogs
         private async void ButtonReplay_Click(object sender, RoutedEventArgs e)
         {
             ButtonReplay.IsEnabled = false;
+            ListMoves.IsEnabled = false;
 
             Chessboard.EnableNavigation();
             Chessboard.DisablePieces();
@@ -192,13 +191,24 @@ namespace Chess.NET.Controls.Dialogs
             const int delay = 1500;
 
             await Chessboard.JumpToStartAsync();
+            ListMoves.SelectedIndex = 0;
 
             await Task.Delay(delay);
-
+            int counter = 1;
+            int n = 1;
             while (await Chessboard.ShowNextMoveAsync())
-                await Task.Delay(delay);
+            {
+                ListMoves.SelectedIndex = counter;
 
-            ButtonReplay.IsEnabled = true;  
+                if (n % 2 == 0)
+                    counter++;
+                n++;
+
+                await Task.Delay(delay);
+            }
+
+            ButtonReplay.IsEnabled = true;
+            ListMoves.IsEnabled = true;
         }
     }
 }

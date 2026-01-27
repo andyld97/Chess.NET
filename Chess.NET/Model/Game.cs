@@ -456,10 +456,13 @@ namespace Chess.NET.Model
                         bool sameFile = ambiguousPieces.Any(p => p.Position.File == position.File);
                         bool sameRank = ambiguousPieces.Any(p => p.Position.Rank == position.Rank);
 
-                        if (!sameFile)
-                            disambiguation = ((char)('a' + piece.Position.File - 1)).ToString();
-                        else if (!sameRank)
-                            disambiguation = piece.Position.Rank.ToString();
+                        if (ambiguousPieces.Any())
+                        {
+                            if (!sameFile)
+                                disambiguation = ((char)('a' + piece.Position.File - 1)).ToString();
+                            else if (!sameRank)
+                                disambiguation = piece.Position.Rank.ToString();
+                        }
                     }
 
                     board.CapturePiece(currentPiece);

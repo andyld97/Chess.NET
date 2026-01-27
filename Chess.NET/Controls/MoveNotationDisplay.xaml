@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Chess.NET.Controls"
+             xmlns:res="clr-namespace:Chess.NET.Properties"
              mc:Ignorable="d" 
              d:DesignHeight="50" d:DesignWidth="140">
     <Grid>
@@ -18,7 +19,7 @@
         </Grid.ColumnDefinitions>
 
         <StackPanel x:Name="PanelBegin" Visibility="Collapsed" Background="Transparent" MouseDown="PanelBegin_MouseDown" Grid.Column="0" Grid.ColumnSpan="2" Cursor="Hand" Orientation="Horizontal">
-            <TextBlock Text="0. Begin Position" VerticalAlignment="Center" Margin="2" FontSize="14" />
+            <TextBlock Text="{x:Static res:Resources.strBeginPosition}" VerticalAlignment="Center" Margin="2" FontSize="14" />
         </StackPanel>
         
         <StackPanel x:Name="PanelMove1" Background="Transparent" MouseDown="PanelMove1_MouseDown" Cursor="Hand" Orientation="Horizontal" VerticalAlignment="Center">

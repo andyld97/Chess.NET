@@ -259,4 +259,19 @@
   <data name="strPuzzle" xml:space="preserve">
     <value>Puzzle</value>
   </data>
+  <data name="strPuzzle_Solved" xml:space="preserve">
+    <value>Puzzle solved!</value>
+  </data>
+  <data name="strPuzzle_Replay" xml:space="preserve">
+    <value>Replay</value>
+  </data>
+  <data name="strPuzzle_Failed" xml:space="preserve">
+    <value>Puzzle failed!</value>
+  </data>
+  <data name="strPuzzle_Retry" xml:space="preserve">
+    <value>Retry</value>
+  </data>
+  <data name="strBeginPosition" xml:space="preserve">
+    <value>0. Begin Position</value>
+  </data>
 </root>

@@ -88,6 +88,15 @@ namespace Chess.NET.Properties {
         }
         
         /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die 0. Begin Position ähnelt.
+        /// </summary>
+        public static string strBeginPosition {
+            get {
+                return ResourceManager.GetString("strBeginPosition", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Sucht eine lokalisierte Zeichenfolge, die Black ähnelt.
         /// </summary>
         public static string strBlack {
@@ -408,6 +417,42 @@ namespace Chess.NET.Properties {
         public static string strPuzzle {
             get {
                 return ResourceManager.GetString("strPuzzle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Puzzle failed! ähnelt.
+        /// </summary>
+        public static string strPuzzle_Failed {
+            get {
+                return ResourceManager.GetString("strPuzzle_Failed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Replay ähnelt.
+        /// </summary>
+        public static string strPuzzle_Replay {
+            get {
+                return ResourceManager.GetString("strPuzzle_Replay", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Retry ähnelt.
+        /// </summary>
+        public static string strPuzzle_Retry {
+            get {
+                return ResourceManager.GetString("strPuzzle_Retry", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Puzzle solved! ähnelt.
+        /// </summary>
+        public static string strPuzzle_Solved {
+            get {
+                return ResourceManager.GetString("strPuzzle_Solved", resourceCulture);
             }
         }
         

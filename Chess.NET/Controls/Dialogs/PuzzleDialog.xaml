@@ -29,15 +29,15 @@
         </Grid>
 
         <StackPanel x:Name="PanelPuzzleSolved" Visibility="Collapsed" Width="200" Grid.Column="1" Margin="2,10,2,2">
-            <TextBlock Text="Puzzle solved!" Foreground="Green" FontWeight="Bold" FontSize="22"  HorizontalAlignment="Center" />
-            <TextBlock Text="Moves:" Margin="5,2" />
+            <TextBlock Text="{x:Static res:Resources.strPuzzle_Solved}" Foreground="Green" FontWeight="Bold" FontSize="22" HorizontalAlignment="Center" />
+            <TextBlock Text="{x:Static res:Resources.strMoves}" Margin="5,2" />
             <ListBox x:Name="ListMoves" Height="200" HorizontalContentAlignment="Stretch" />
-            <Button x:Name="ButtonReplay" Click="ButtonReplay_Click" Content="Replay" Margin="2" FontWeight="Bold" Padding="3" />
+            <Button x:Name="ButtonReplay" Click="ButtonReplay_Click" Content="{x:Static res:Resources.strPuzzle_Replay}" Margin="2" FontWeight="Bold" Padding="3" />
         </StackPanel>
 
         <StackPanel x:Name="PanelPuzzleFailed" Visibility="Collapsed" Width="200" Grid.Column="1">
-            <TextBlock Text="Puzzle failed!" Foreground="Red" FontWeight="Bold" FontSize="22"  HorizontalAlignment="Center" />
-            <Button x:Name="ButtonRetry" Click="ButtonRetry_Click" Content="Retry" Margin="2,10,0,0" FontWeight="Bold" Padding="3" />
+            <TextBlock Text="{x:Static res:Resources.strPuzzle_Failed}" Foreground="Red" FontWeight="Bold" FontSize="22"  HorizontalAlignment="Center" />
+            <Button x:Name="ButtonRetry" Click="ButtonRetry_Click" Content="{x:Static res:Resources.strPuzzle_Retry}" Margin="2,10,2,2" FontWeight="Bold" Padding="3" />
         </StackPanel>      
     </Grid>
 </Window>

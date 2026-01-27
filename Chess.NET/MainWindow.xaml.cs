@@ -29,6 +29,8 @@ namespace Chess.NET
 
         #endregion
 
+        // TODO: Highlight welcher Spieler gerade dran ist!
+
         #region Ctor
         public MainWindow()
         {
@@ -77,7 +79,7 @@ namespace Chess.NET
 
         private void MenuPuzzle_Click(object sender, RoutedEventArgs e)
         {
-            new PuzzleDialog((sender as MenuItem).Tag as Puzzle).ShowDialog();
+            new PuzzleDialog((sender as MenuItem)!.Tag as Puzzle).ShowDialog();
         }
 
         #endregion

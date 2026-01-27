@@ -140,6 +140,10 @@ namespace Chess.NET.Controls
                 isInNavigationMode = false;
                 ResetDrag();
                 RenderChessBoard(game.Board, true);
+                Sound.Play(Sound.SoundType.Move);
+
+                // TODO: Das ist noch nicht ganz so intuitiv, weil das Problem hier ist, dass man das nicht so wirklich gut mitbekommt, dass
+                // jetzt der Navigationsmodus verlassen wird und das fühlt sich laggy an!
                 return;
             }
 
