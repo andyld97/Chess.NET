@@ -127,7 +127,7 @@ namespace Chess.NET.Controls
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if (value is int n)
-                return (n + 1) / 2;
+                return  ((n + 1) / 2).ToString("D2");
 
             return 0;
         }
