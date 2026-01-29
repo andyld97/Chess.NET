@@ -1,3 +1,5 @@
 <Solution>
+  <Project Path="Chess.NET.Online/Chess.NET.Online.csproj" Id="ae41e955-3749-4874-9a64-69500b579111" />
+  <Project Path="Chess.NET.Shared/Chess.NET.Shared.csproj" Id="2a4744ad-35c1-43d3-a642-ae8cca7d41d5" />
   <Project Path="Chess.NET/Chess.NET.csproj" />
 </Solution>

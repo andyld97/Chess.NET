@@ -1,7 +1,6 @@
-﻿using Chess.NET.Model;
-using Chess.NET.Model.Pieces;
+﻿using Chess.NET.Shared.Model;
 
-namespace Chess.NET.Bot
+namespace Chess.NET.Shared.Model.Bot
 {
     public interface IChessBot
     {

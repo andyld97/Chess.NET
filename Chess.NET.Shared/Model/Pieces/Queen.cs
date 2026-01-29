@@ -1,4 +1,4 @@
-﻿namespace Chess.NET.Model.Pieces
+﻿namespace Chess.NET.Shared.Model.Pieces
 {
     public class Queen : Piece
     {
@@ -6,7 +6,7 @@
 
         public override int MaterialValue => 9;
 
-        public Queen(Position position, PieceColor color) : base(position, color)
+        public Queen(Position position, Color color) : base(position, color)
         {
         }
 

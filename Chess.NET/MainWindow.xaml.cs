@@ -1,7 +1,9 @@
-﻿using Chess.NET.Bot;
-using Chess.NET.Controls;
+﻿using Chess.NET.Controls;
 using Chess.NET.Controls.Dialogs;
 using Chess.NET.Model;
+using Chess.NET.Netcode;
+using Chess.NET.Shared.Model;
+using Chess.NET.Shared.Model.Bot;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -56,6 +58,12 @@ namespace Chess.NET
 
             RefreshPlayerDisplay();
             InitializePuzzleMenu();
+            Loaded += MainWindow_Loaded;
+        }
+
+        private async void MainWindow_Loaded(object sender, RoutedEventArgs e)
+        {
+            await SignalRClient.ConnectAsync(Chessboard);
         }
 
         #endregion
@@ -86,18 +94,18 @@ namespace Chess.NET
 
         #region Game Events
 
-        private async void Game_OnCheckmate(PieceColor pieceColor)
+        private async void Game_OnCheckmate(Color pieceColor)
         {
             string playerText = string.Empty;
 
-            if (pieceColor == PieceColor.White)
+            if (pieceColor == Color.White)
             {
                 if (opponent == null)
                     playerText = $"{Helper.GetPlayerName(1)} ({Properties.Resources.strBlack})";
                 else
                     playerText = $"{opponent?.Name} [Bot] ({Properties.Resources.strBlack})";
             }
-            else if (pieceColor == PieceColor.Black)
+            else if (pieceColor == Color.Black)
                 playerText = $"{Helper.GetPlayerName(1)} ({Properties.Resources.strWhite})";
 
             await Task.Delay(250).ContinueWith(t =>
@@ -109,7 +117,7 @@ namespace Chess.NET
             });
         }
 
-        private void Game_OnPlaySound(Sound.SoundType type)
+        private void Game_OnPlaySound(SoundType type)
         {
             // Always play
             Sound.Play(type);
@@ -126,7 +134,7 @@ namespace Chess.NET
             });
         }
 
-        private void Game_MovedPiece(Model.MoveNotation move)
+        private void Game_MovedPiece(MoveNotation move)
         {
             if (currentMoveNotationDisplay == null)
             {
@@ -134,7 +142,7 @@ namespace Chess.NET
                 currentMoveNotationDisplay.OnJumpToMove += OnJumpToMove;
             }
 
-            if (move.Piece.Color == Model.PieceColor.White)
+            if (move.Piece.Color == Color.White)
             {
                 currentMoveNotationDisplay.Move1 = move;
                 ListMoves.Items.Add(currentMoveNotationDisplay);

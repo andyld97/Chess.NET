@@ -1,56 +1,12 @@
 ﻿using Chess.NET.Model;
+using Chess.NET.Shared.Model;
 using System.Windows;
 using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace Chess.NET
 {
     public static class Helper
     {
-        public static PieceColor InvertPieceColor(PieceColor pieceColor)
-        {
-            if (pieceColor == PieceColor.White)
-                return PieceColor.Black;
-
-            return PieceColor.White;
-        }
-
-        public static char ToUciChar(this PieceType type) => type switch
-        {
-            PieceType.Queen => 'q',
-            PieceType.Rook => 'r',
-            PieceType.Bishop => 'b',
-            PieceType.Knight => 'n',
-            _ => throw new InvalidOperationException("Invalid promotion piece")
-        };
-
-        public static string ToEmoji(this Piece piece)
-        {
-            return piece.Color switch
-            {
-                PieceColor.White => piece.Type switch
-                {
-                    PieceType.King => "♔",
-                    PieceType.Queen => "♕",
-                    PieceType.Rook => "♖",
-                    PieceType.Bishop => "♗",
-                    PieceType.Knight => "♘",
-                    PieceType.Pawn => "♙",
-                    _ => "?"
-                },
-                PieceColor.Black => piece.Type switch
-                {
-                    PieceType.King => "♚",
-                    PieceType.Queen => "♛",
-                    PieceType.Rook => "♜",
-                    PieceType.Bishop => "♝",
-                    PieceType.Knight => "♞",
-                    PieceType.Pawn => "♟",
-                    _ => "?"
-                },
-                _ => "?"
-            };
-        }
         public static string GetPlayerName(int player)
         {
             if (player == 1)
@@ -86,14 +42,14 @@ namespace Chess.NET
         private static Dictionary<PieceType, BitmapImage> bitmapCacheWhite = [];
         private static Dictionary<PieceType, BitmapImage> bitmapCacheBlack = [];
 
-        public static BitmapImage ToBitmap(this PieceType pieceType, PieceColor color)
+        public static BitmapImage ToBitmap(this PieceType pieceType, Color color)
         {
-            if (color == PieceColor.White && bitmapCacheWhite.TryGetValue(pieceType, out BitmapImage? value))
+            if (color == Color.White && bitmapCacheWhite.TryGetValue(pieceType, out BitmapImage? value))
                 return value;
-            else if (color == PieceColor.Black && bitmapCacheBlack.TryGetValue(pieceType, out BitmapImage? value1))
+            else if (color == Color.Black && bitmapCacheBlack.TryGetValue(pieceType, out BitmapImage? value1))
                 return value1;
 
-            string col = (color == PieceColor.White ? "white" : "black");
+            string col = (color == Color.White ? "white" : "black");
 
             BitmapImage bi = new BitmapImage { CacheOption = BitmapCacheOption.OnLoad };
             bi.BeginInit();
@@ -102,7 +58,7 @@ namespace Chess.NET
             bi.Freeze();
 
             // Add to cache
-            if (color == PieceColor.White)
+            if (color == Color.White)
                 bitmapCacheWhite.Add(pieceType, bi);
             else
                 bitmapCacheBlack.Add(pieceType, bi);

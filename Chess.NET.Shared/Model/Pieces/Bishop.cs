@@ -1,4 +1,4 @@
-﻿namespace Chess.NET.Model.Pieces
+﻿namespace Chess.NET.Shared.Model.Pieces
 {
     public class Bishop : Piece
     {
@@ -6,7 +6,7 @@
 
         public override int MaterialValue => 3;
 
-        public Bishop(Position position, PieceColor color) : base(position, color)
+        public Bishop(Position position, Color color) : base(position, color)
         {
 
         }

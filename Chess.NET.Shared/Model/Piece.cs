@@ -1,4 +1,4 @@
-﻿namespace Chess.NET.Model
+﻿namespace Chess.NET.Shared.Model
 {
     public abstract class Piece : ICloneable
     {
@@ -8,9 +8,9 @@
 
         public abstract int MaterialValue { get; }
 
-        public PieceColor Color { get; set; }
+        public Color Color { get; set; }
 
-        public Piece(Position position, PieceColor color)
+        public Piece(Position position, Color color)
         {
             Position = position;
             Color = color;
@@ -67,7 +67,7 @@
         King,
     }
 
-    public enum PieceColor
+    public enum Color
     {
         White,
         Black

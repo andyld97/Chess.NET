@@ -1,4 +1,4 @@
-﻿using Chess.NET.Model;
+﻿using Chess.NET.Shared.Model;
 using System.Windows;
 
 namespace Chess.NET.Controls.Dialogs
@@ -10,7 +10,7 @@ namespace Chess.NET.Controls.Dialogs
     {
         public PieceType? PromotionResult { get; set; } = null;
 
-        public PromotionDialog(PieceColor color)
+        public PromotionDialog(Color color)
         {
             InitializeComponent();
 

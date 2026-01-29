@@ -1,4 +1,4 @@
-﻿namespace Chess.NET.Model.Pieces
+﻿namespace Chess.NET.Shared.Model.Pieces
 {
     public class Pawn : Piece
     {
@@ -6,7 +6,7 @@
 
         public override int MaterialValue => 1;
 
-        public Pawn(Position position, PieceColor color) : base(position, color)
+        public Pawn(Position position, Color color) : base(position, color)
         {
         }   
 
@@ -17,7 +17,7 @@
             if (Position.Rank == 8)
                 return [];
 
-            if (Color == PieceColor.White)
+            if (Color == Color.White)
             {
                 bool mayHopTwice = false;   
                 Position newPos = new Position(Position.File, Position.Rank + 1);
@@ -63,7 +63,7 @@
                         positions.Add(captureLeft);
                 }
             }
-            else if (Color == PieceColor.Black)
+            else if (Color == Color.Black)
             {
                 Position newPos = new Position(Position.File, Position.Rank - 1);
                 bool mayHopTwice = false;

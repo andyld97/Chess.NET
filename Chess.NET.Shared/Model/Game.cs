@@ -1,7 +1,7 @@
-﻿using Chess.NET.Bot;
-using Chess.NET.Model.Pieces;
+﻿using Chess.NET.Shared.Model.Bot;
+using Chess.NET.Shared.Model.Pieces;
 
-namespace Chess.NET.Model
+namespace Chess.NET.Shared.Model
 {
     public class Game
     {
@@ -21,13 +21,13 @@ namespace Chess.NET.Model
         public delegate void onMovedPiece(MoveNotation move);
         public event onMovedPiece? OnMovedPiece;
 
-        public delegate void onCheckmate(PieceColor pieceColor);
+        public delegate void onCheckmate(Color pieceColor);
         public event onCheckmate? OnCheckmate;
 
         public delegate void onStalemate();
         public event onStalemate? OnStalemate;
 
-        public delegate void onPlaySound(Sound.SoundType type);
+        public delegate void onPlaySound(SoundType type);
         public event onPlaySound? OnPlaySound;
 
         #endregion
@@ -38,7 +38,7 @@ namespace Chess.NET.Model
 
         public List<MoveNotation> Moves { get; set; } = [];
 
-        public PieceColor PlayersTurn { get; private set; } = PieceColor.White;
+        public Color PlayersTurn { get; private set; } = Color.White;
 
         public bool IsGameOver { get; private set; }
 
@@ -46,7 +46,7 @@ namespace Chess.NET.Model
         {
             board.Reset();
             IsGameOver = false;
-            PlayersTurn = PieceColor.White;
+            PlayersTurn = Color.White;
             Moves.Clear();            
             hasWhiteCastled = false;
             hasBlackCastled = false;
@@ -57,7 +57,7 @@ namespace Chess.NET.Model
 
         #region EN PASSANT
 
-        private bool IsEnPassant(PieceColor color, Piece piece, Position position)
+        private bool IsEnPassant(Color color, Piece piece, Position position)
         {
             if (piece.Type != PieceType.Pawn)
                 return false;            
@@ -85,9 +85,9 @@ namespace Chess.NET.Model
                 return false;
 
             // Eigener Bauer muss auf dem richtigen Rank stehen!
-            if (color == PieceColor.White && piece.Position.Rank != 5)
+            if (color == Color.White && piece.Position.Rank != 5)
                 return false;
-            if (color == PieceColor.Black && piece.Position.Rank != 4)
+            if (color == Color.Black && piece.Position.Rank != 4)
                 return false;
 
             // Gegnerischer Bauer muss direkt neben diesem Bauern stehen
@@ -99,9 +99,9 @@ namespace Chess.NET.Model
                 return false;
 
             // Prüfen ob das Zielfeld korrekt ist
-            if (color == PieceColor.White && position.Rank != piece.Position.Rank + 1)
+            if (color == Color.White && position.Rank != piece.Position.Rank + 1)
                 return false;
-            else if (color == PieceColor.Black && position.Rank != piece.Position.Rank - 1)
+            else if (color == Color.Black && position.Rank != piece.Position.Rank - 1)
                 return false;
 
             return true;
@@ -111,45 +111,45 @@ namespace Chess.NET.Model
 
         #region Castle
 
-        private bool CastleShort(PieceColor color)
+        private bool CastleShort(Color color)
         {
             // Move the king and the rook (short castle)   
             var king = board.Pieces.FirstOrDefault(p => p.Type == PieceType.King && p.Color == color);
             var rook = board.Pieces.FirstOrDefault(p => p.Type == PieceType.Rook && p.Color == color &&
             (
-                (p.Position == new Position(8, 1) && color == PieceColor.White) ||
-                (p.Position == new Position(8, 8) && color == PieceColor.Black)
+                (p.Position == new Position(8, 1) && color == Color.White) ||
+                (p.Position == new Position(8, 8) && color == Color.Black)
             ));
 
             if (king == null || rook == null)
                 return false;
 
-            king.Position = new Position(7, color == PieceColor.White ? 1 : 8);
-            rook.Position = new Position(6, color == PieceColor.White ? 1 : 8);
+            king.Position = new Position(7, color == Color.White ? 1 : 8);
+            rook.Position = new Position(6, color == Color.White ? 1 : 8);
 
             return true;
         }
 
-        private bool CastleLong(PieceColor color)
+        private bool CastleLong(Color color)
         {
             // Move the king and the rook (long castle) 
             var king = board.Pieces.FirstOrDefault(p => p.Type == PieceType.King && p.Color == color);
             var rook = board.Pieces.FirstOrDefault(p => p.Type == PieceType.Rook && p.Color == color &&
             (
-                (p.Position == new Position(1, 1) && color == PieceColor.White) ||
-                (p.Position == new Position(1, 8) && color == PieceColor.Black)
+                (p.Position == new Position(1, 1) && color == Color.White) ||
+                (p.Position == new Position(1, 8) && color == Color.Black)
             ));
 
             if (king == null || rook == null)
                 return false;
 
-            king.Position = new Position(3, color == PieceColor.White ? 1 : 8);
-            rook.Position = new Position(4, color == PieceColor.White ? 1 : 8);
+            king.Position = new Position(3, color == Color.White ? 1 : 8);
+            rook.Position = new Position(4, color == Color.White ? 1 : 8);
 
             return true;
         }
 
-        private bool Castle(PieceColor color, Position position)
+        private bool Castle(Color color, Position position)
         {
             bool result;
             if (position.File == 7)
@@ -159,7 +159,7 @@ namespace Chess.NET.Model
 
             if (result)
             {
-                if (color == PieceColor.White)
+                if (color == Color.White)
                     hasWhiteCastled = true;
                 else
                     hasBlackCastled = true;
@@ -173,13 +173,13 @@ namespace Chess.NET.Model
             return (position.File == 7 || position.File == 3) && (position.Rank == 1 || position.Rank == 8);
         }
 
-        public bool CanCastle(PieceColor color, Position position)
+        public bool CanCastle(Color color, Position position)
         {
             if (IsCheck(color))
                 return false;
-            else if (color == PieceColor.White && hasWhiteCastled)
+            else if (color == Color.White && hasWhiteCastled)
                 return false;
-            else if (color == PieceColor.Black && hasBlackCastled)
+            else if (color == Color.Black && hasBlackCastled)
                 return false;
 
             bool isLongCastle = position.File == 3;
@@ -187,14 +187,14 @@ namespace Chess.NET.Model
             // Check if the king and rook are in their starting positions
             bool hasLeftRookMoved = Moves.Any(m => m.Piece.Type == PieceType.Rook && m.Piece.Color == color &&
             (
-                (m.From == new Position(1, 1) && color == PieceColor.White) ||
-                (m.From == new Position(1, 8) && color == PieceColor.Black)
+                (m.From == new Position(1, 1) && color == Color.White) ||
+                (m.From == new Position(1, 8) && color == Color.Black)
             ));
             
             bool hasRightRookMoved = Moves.Any(m => m.Piece.Type == PieceType.Rook && m.Piece.Color == color &&
             (
-                (m.From == new Position(8, 1) && color == PieceColor.White) ||
-                (m.From == new Position(8, 8) && color == PieceColor.Black)
+                (m.From == new Position(8, 1) && color == Color.White) ||
+                (m.From == new Position(8, 8) && color == Color.Black)
             ));
 
             bool hasKingMoved = Moves.Any(m => m.Piece.Type == PieceType.King && m.Piece.Color == color);
@@ -202,7 +202,7 @@ namespace Chess.NET.Model
             //  Weiter muss berücksichtigt werden, dass zwischen dem König und dem Turm keine Figuren stehen dürfen
             if (isLongCastle)
             {
-                if (color == PieceColor.White)
+                if (color == Color.White)
                 {
                     if (!(board.GetPiece(new Position(2, 1)) == null && board.GetPiece(new Position(3, 1)) == null && board.GetPiece(new Position(4, 1)) == null))
                         return false;
@@ -215,7 +215,7 @@ namespace Chess.NET.Model
             }
             else
             {
-                if (color == PieceColor.White)
+                if (color == Color.White)
                 {
                     if (!(board.GetPiece(new Position(6, 1)) == null && board.GetPiece(new Position(7, 1)) == null))
                         return false;
@@ -274,7 +274,7 @@ namespace Chess.NET.Model
 
         #region Check, Checkmate & Stalemate
 
-        public bool IsCheckmate(PieceColor color)
+        public bool IsCheckmate(Color color)
         {
             // 1) Check if there is a check by any of the opposite pieces (except the king cant give a check)
             if (!IsCheck(color))
@@ -291,7 +291,7 @@ namespace Chess.NET.Model
             return true;
         }
 
-        public bool IsStalemate(PieceColor color)
+        public bool IsStalemate(Color color)
         {
             // The same as checkmate but without the initial check
             foreach (var piece in board.Pieces.Where(p => p.Color == color))
@@ -305,12 +305,12 @@ namespace Chess.NET.Model
             return true;
         }
 
-        public bool IsCheck(PieceColor pieceColor)
+        public bool IsCheck(Color pieceColor)
         {
             return board.IsCheck(pieceColor);
         }
 
-        public bool IsCheck(PieceColor color, Piece piece, Position target)
+        public bool IsCheck(Color color, Piece piece, Position target)
         {
             var clone = (Board)board.Clone();
 
@@ -425,22 +425,22 @@ namespace Chess.NET.Model
                 piece.Position = position;
                 Piece? pieceToCapture = null;
 
-                if (piece.Color == PieceColor.White)
+                if (piece.Color == Color.White)
                     pieceToCapture = board.GetPiece(new Position(position.File, position.Rank - 1));
-                else if (piece.Color == PieceColor.Black)
+                else if (piece.Color == Color.Black)
                     pieceToCapture = board.GetPiece(new Position(position.File, position.Rank + 1));
 
                 board.Pieces.Remove(pieceToCapture!);
                 board.CapturedPieces.Add(pieceToCapture!);
 
-                OnPlaySound?.Invoke(Sound.SoundType.Capture);
+                OnPlaySound?.Invoke(SoundType.Capture);
                 isEnPassant = true;
             }
             else if (IsCastlePosition(position) && CanCastle(piece.Color, position) && piece.Type == PieceType.King && Castle(piece.Color, position))
             {
                 isCastle = true;
                 if (playSound)
-                    OnPlaySound?.Invoke(Sound.SoundType.Castle);
+                    OnPlaySound?.Invoke(SoundType.Castle);
             }
             else
             {
@@ -468,10 +468,10 @@ namespace Chess.NET.Model
                     board.CapturePiece(currentPiece);
 
                     if (!willBeCheck && playSound)
-                        OnPlaySound?.Invoke(Sound.SoundType.Capture);
+                        OnPlaySound?.Invoke(SoundType.Capture);
                 }
                 else if (!willBeCheck && playSound)
-                    OnPlaySound?.Invoke(Sound.SoundType.Move);
+                    OnPlaySound?.Invoke(SoundType.Move);
             }
 
             var move = new MoveNotation()
@@ -507,7 +507,7 @@ namespace Chess.NET.Model
             if (!isCastle && !isPromotion && !isEnPassant)
                 piece.Position = position;
 
-            bool isCheckmate = IsCheckmate(PieceColor.White) || IsCheckmate(PieceColor.Black);
+            bool isCheckmate = IsCheckmate(Color.White) || IsCheckmate(Color.Black);
             if (isCheckmate)
                 move.IsCheckmate = true;
 
@@ -518,17 +518,17 @@ namespace Chess.NET.Model
                 IsGameOver = true;
 
                 OnMovedPiece?.Invoke(move);
-                OnCheckmate?.Invoke((IsCheckmate(PieceColor.White) ? PieceColor.White : PieceColor.Black));
+                OnCheckmate?.Invoke((IsCheckmate(Color.White) ? Color.White : Color.Black));
 
                 if (playSound)
                 {
-                    OnPlaySound?.Invoke(Sound.SoundType.Move);
-                    _ = DelaySoundPlay(Sound.SoundType.Checkmate);
+                    OnPlaySound?.Invoke(SoundType.Move);
+                    _ = DelaySoundPlay(SoundType.Checkmate);
                 }
 
                 return true;
             }
-            else if (IsStalemate(PieceColor.White) || IsStalemate(PieceColor.Black))
+            else if (IsStalemate(Color.White) || IsStalemate(Color.Black))
             {
                 IsGameOver = true;
                 move.IsStalemate = true;
@@ -537,12 +537,12 @@ namespace Chess.NET.Model
                 OnStalemate?.Invoke();
 
                 if (playSound)
-                    OnPlaySound?.Invoke(Sound.SoundType.Stalemate);
+                    OnPlaySound?.Invoke(SoundType.Stalemate);
 
                 return true;
             }
             else if (willBeCheck && playSound)
-                OnPlaySound?.Invoke(Sound.SoundType.Check);
+                OnPlaySound?.Invoke(SoundType.Check);
 
             // Switch players
             PlayersTurn = Helper.InvertPieceColor(PlayersTurn);
@@ -572,11 +572,11 @@ namespace Chess.NET.Model
 
         public PlayerInfo GetPlayerInformation()
         {
-            var whiteCapturedPieces = board.CapturedPieces.Where(p => p.Color == PieceColor.Black);
-            var blackCapturedPieces = board.CapturedPieces.Where(p => p.Color == PieceColor.White);
+            var whiteCapturedPieces = board.CapturedPieces.Where(p => p.Color == Color.Black);
+            var blackCapturedPieces = board.CapturedPieces.Where(p => p.Color == Color.White);
 
-            var whitePromotedPieces = board.PromotedPieces.Where(p => p.Color == PieceColor.White);
-            var blackPromotedPieces = board.PromotedPieces.Where(p => p.Color == PieceColor.Black);
+            var whitePromotedPieces = board.PromotedPieces.Where(p => p.Color == Color.White);
+            var blackPromotedPieces = board.PromotedPieces.Where(p => p.Color == Color.Black);
 
             // Promotion: -1 per Piece cause you promoted the pawn, but lost it anyways!
             int whiteCapturePiecesMaterialValue = whiteCapturedPieces.Sum(p => p.MaterialValue) + whitePromotedPieces.Sum(p => p.MaterialValue - 1);
@@ -585,7 +585,7 @@ namespace Chess.NET.Model
             return new PlayerInfo(whiteCapturePiecesMaterialValue, blackCapturePiecesMaterialValue, [.. whiteCapturedPieces], [.. blackCapturedPieces]);
         }
 
-        private async Task DelaySoundPlay(Sound.SoundType sound, int delayMs = 500)
+        private async Task DelaySoundPlay(SoundType sound, int delayMs = 500)
         {
             await Task.Delay(delayMs);
             OnPlaySound?.Invoke(sound);

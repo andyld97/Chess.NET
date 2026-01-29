@@ -1,5 +1,6 @@
 ﻿using System.Globalization;
 using System.Windows;
+using System.Windows.Threading;
 
 namespace Chess.NET
 {
@@ -8,8 +9,11 @@ namespace Chess.NET
     /// </summary>
     public partial class App : Application
     {
+        public static Dispatcher UiDispatcher { get; private set; } = null!;
+
         private void Application_Startup(object sender, StartupEventArgs e)
         {
+            UiDispatcher = Dispatcher.CurrentDispatcher;
 #if DEBUG
             // For english screenshots:
 

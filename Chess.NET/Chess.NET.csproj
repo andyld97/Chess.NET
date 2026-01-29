@@ -68,6 +68,15 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="10.0.2" />
+    <PackageReference Include="System.Text.Json" Version="10.0.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Chess.NET.Shared\Chess.NET.Shared.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Resource Include="resources\icons\black\Bishop.png" />
     <Resource Include="resources\icons\black\King.png" />
     <Resource Include="resources\icons\black\Knight.png" />

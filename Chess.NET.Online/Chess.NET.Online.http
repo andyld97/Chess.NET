@@ -1,0 +1,6 @@
+@Chess.NET.Online_HostAddress = http://localhost:5010
+
+GET {{Chess.NET.Online_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

@@ -1,7 +1,7 @@
-﻿using Chess.NET.Model.Pieces;
+﻿using Chess.NET.Shared.Model.Pieces;
 using System.Text;
 
-namespace Chess.NET.Model
+namespace Chess.NET.Shared.Model
 {
     public interface IBoard : ICloneable
     {
@@ -38,14 +38,14 @@ namespace Chess.NET.Model
             Pieces.Clear();
             PromotedPieces.Clear();
 
-            foreach (var color in new List<PieceColor>() { PieceColor.White, PieceColor.Black })
+            foreach (var color in new List<Color>() { Color.White, Color.Black })
             {
                 int fileForPawns = 2;
-                if (color == PieceColor.Black)
+                if (color == Color.Black)
                     fileForPawns = 7;
 
                 int fileForOtherFigures = 1;
-                if (color == PieceColor.Black)
+                if (color == Color.Black)
                     fileForOtherFigures = 8;
 
                 // Add the pawns
@@ -118,7 +118,7 @@ namespace Chess.NET.Model
             Pieces.Remove(piece);   
         }
 
-        public bool IsCheck(PieceColor pieceColor)
+        public bool IsCheck(Color pieceColor)
         {
             var king = Pieces.First(p => p.Type == PieceType.King && p.Color == pieceColor);
             var opponentColor = Helper.InvertPieceColor(pieceColor);

@@ -1,5 +1,5 @@
-﻿using Chess.NET.Bot;
-using Chess.NET.Model;
+﻿using Chess.NET.Shared.Model;
+using Chess.NET.Shared.Model.Bot;
 using System.Windows;
 using System.Windows.Input;
 
@@ -51,12 +51,12 @@ namespace Chess.NET.Controls.Dialogs
             Title = $"{Properties.Resources.strPuzzle} - {currentPuzzle.Name}";
         }
 
-        private void Game_OnPlaySound(Sound.SoundType type)
+        private void Game_OnPlaySound(SoundType type)
         {
-            if (currentPuzzle.SolveType == PuzzleSolved.Checkmate && type == Sound.SoundType.Checkmate)
+            if (currentPuzzle.SolveType == PuzzleSolved.Checkmate && type == SoundType.Checkmate)
                 return;
 
-            if (currentPuzzle.SolveType == PuzzleSolved.Stalemate && type == Sound.SoundType.Stalemate)
+            if (currentPuzzle.SolveType == PuzzleSolved.Stalemate && type == SoundType.Stalemate)
                 return;
 
             Sound.Play(type);
@@ -86,7 +86,7 @@ namespace Chess.NET.Controls.Dialogs
             if (currentPuzzleMove >= currentPuzzle!.Moves.Count)
             {
                 // Puzzle successfully done! :)
-                Sound.Play(Sound.SoundType.PuzzleSolved);
+                Sound.Play(SoundType.PuzzleSolved);
                 PanelPuzzleSolved.Visibility = Visibility.Visible;
 
                 // Render moves
@@ -119,7 +119,7 @@ namespace Chess.NET.Controls.Dialogs
             }
 
             string nextMove = currentPuzzle.Moves[currentPuzzleMove];
-            var pendingPuzzleMove = PendingMove.Parse(nextMove, (Board)Chessboard.Game.Board, Helper.InvertPieceColor(lastMove.Piece.Color));
+            var pendingPuzzleMove = PendingMove.Parse(nextMove, (Board)Chessboard.Game.Board, Chess.NET.Shared.Helper.InvertPieceColor(lastMove.Piece.Color));
 
             ignoreMoveEvent = true;
             await Chessboard.Game.MoveAsync(pendingPuzzleMove);
@@ -166,7 +166,7 @@ namespace Chess.NET.Controls.Dialogs
 
             Chessboard.DisablePieces();
 
-            Sound.Play(Sound.SoundType.PuzzleFail);
+            Sound.Play(SoundType.PuzzleFail);
             PanelPuzzleFailed.Visibility = Visibility.Visible;
         }
 

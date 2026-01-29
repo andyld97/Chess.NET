@@ -1,4 +1,4 @@
-﻿namespace Chess.NET.Model
+﻿namespace Chess.NET.Shared.Model
 {
     public class PendingMove
     {
@@ -15,10 +15,32 @@
             PromotionType = promotionType;
         }
 
-        public static PendingMove? Parse(string san, Board board, PieceColor color)
+        public static PendingMove? Parse(string san, Board board, Color color)
         {
             // 1) Remove check / checkmate markers
             san = san.TrimEnd('+', '#');
+
+            // 1.2) Check for castles
+            if (san.Equals("o-o", StringComparison.CurrentCultureIgnoreCase))
+            {
+                // Short castle
+                var king = board.Pieces.FirstOrDefault(p => p.Color == color && p.Type == PieceType.King);
+
+                if (color == Color.White)
+                    return new PendingMove(king, Position.Parse("g1"));
+                else
+                    return new PendingMove(king, Position.Parse("g8"));
+            }
+            else if (san.Equals("o-o-o", StringComparison.CurrentCultureIgnoreCase))
+            {
+                // Long castle
+                var king = board.Pieces.FirstOrDefault(p => p.Color == color && p.Type == PieceType.King);
+
+                if (color == Color.White)
+                    return new PendingMove(king, Position.Parse("c1"));
+                else
+                    return new PendingMove(king, Position.Parse("c8"));
+            }
 
             // 2) Promotion handling (e8=Q)
             PieceType? promotionType = null;
@@ -94,12 +116,12 @@
                 if (d >= 'a' && d <= 'h')
                 {
                     int file = d - 'a' + 1;
-                    candidates = candidates.Where(p => p.Position.File == file).ToList();
+                    candidates = [.. candidates.Where(p => p.Position.File == file)];
                 }
                 else if (d >= '1' && d <= '8')
                 {
                     int rank = d - '0';
-                    candidates = candidates.Where(p => p.Position.Rank == rank).ToList();
+                    candidates = [.. candidates.Where(p => p.Position.Rank == rank)];
                 }
             }
 

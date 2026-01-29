@@ -1,7 +1,9 @@
-﻿using Chess.NET.Bot;
-using Chess.NET.Controls.Dialogs;
+﻿using Chess.NET.Controls.Dialogs;
 using Chess.NET.Model;
 using Chess.NET.Model.GUI;
+using Chess.NET.Netcode;
+using Chess.NET.Shared.Model;
+using Chess.NET.Shared.Model.Bot;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -23,6 +25,8 @@ namespace Chess.NET.Controls
         private bool isPuzzle = false;
         private bool canMove = false;
         private bool isNavigationAllowed = true;
+        private bool isOnline = false;
+        private Shared.Model.Color playerOnlineColor = Shared.Model.Color.White;
 
         public Game Game => game;
 
@@ -31,7 +35,7 @@ namespace Chess.NET.Controls
             InitializeComponent();
             InitializeSquares();
 
-            game = new Model.Game();
+            game = new Game();
             game.StartNewGame(null);
 
             RenderChessBoard(game.Board);
@@ -112,6 +116,12 @@ namespace Chess.NET.Controls
             canMove = true;
         }
 
+        public void SetOnline(Shared.Model.Color pieceColor)
+        {
+            isOnline = true;
+            playerOnlineColor = pieceColor;
+        }
+
         public void Mirror()
         {
             isMirrored = !isMirrored; // toggle
@@ -140,7 +150,7 @@ namespace Chess.NET.Controls
                 isInNavigationMode = false;
                 ResetDrag();
                 RenderChessBoard(game.Board, true);
-                Sound.Play(Sound.SoundType.Move);
+                Sound.Play(SoundType.Move);
 
                 // TODO: Das ist noch nicht ganz so intuitiv, weil das Problem hier ist, dass man das nicht so wirklich gut mitbekommt, dass
                 // jetzt der Navigationsmodus verlassen wird und das fühlt sich laggy an!
@@ -163,19 +173,26 @@ namespace Chess.NET.Controls
                 else if (_pieceToMove?.Type == PieceType.Pawn && (destinationSquare.Rank == 1 || destinationSquare.Rank == 8) && game.IsMoveValid(_pieceToMove!, destinationSquare))
                 {
                     // Promotion Dialog
-                    var dialog = new PromotionDialog(PieceColor.White) { Owner = Window.GetWindow(this) };
+                    var dialog = new PromotionDialog(Shared.Model.Color.White) { Owner = Window.GetWindow(this) };
                     dialog.ShowDialog();
 
                     promotionType = dialog.PromotionResult;
                 }
 
-                bool wasMoveAccepted = await game.MoveAsync(new PendingMove(_pieceToMove!, destinationSquare, promotionType));
+                var pendingMove = new PendingMove(_pieceToMove!, destinationSquare, promotionType);
+                bool wasMoveAccepted = await game.MoveAsync(pendingMove);
 
                 ResetDrag();
                 RenderChessBoard(game.Board);
 
                 if (!wasMoveAccepted)
                     return;
+                else
+                {
+                    await SignalRClient.MakeMoveAsync(game.Moves.LastOrDefault()?.FormatMove(false, false));
+                    return;
+                }
+
 
                 // Bot Move
                 if (opponent != null)
@@ -185,10 +202,10 @@ namespace Chess.NET.Controls
                     bool foundValidMove = false;
                     while (!foundValidMove)
                     {
-                        if (game.IsCheckmate(PieceColor.Black) || game.IsCheckmate(PieceColor.White))
+                        if (game.IsCheckmate(Shared.Model.Color.Black) || game.IsCheckmate(Shared.Model.Color.White))
                             return;
 
-                        if (game.IsStalemate(PieceColor.Black) || game.IsStalemate(PieceColor.White))
+                        if (game.IsStalemate(Shared.Model.Color.Black) || game.IsStalemate(Shared.Model.Color.White))
                             return;
 
                         var next = opponent.Move(game);
@@ -212,6 +229,12 @@ namespace Chess.NET.Controls
                 {
                     ResetDrag();
                     return; // No piece to drag 
+                }
+
+                if (isOnline && playerOnlineColor != _pieceToMove.Color)
+                {
+                    ResetDrag();
+                    return; // illegal drag
                 }
 
                 DraggedImage.Width = square.ActualWidth - 10;
@@ -369,19 +392,19 @@ namespace Chess.NET.Controls
         {
             var lastMove = move ?? gm.Moves.LastOrDefault();
 
-            if (gm.IsCheck(PieceColor.White) || gm.IsCheck(PieceColor.Black))
-                Sound.Play(Sound.SoundType.Check);
+            if (gm.IsCheck(Shared.Model.Color.White) || gm.IsCheck(Shared.Model.Color.Black))
+                Sound.Play(SoundType.Check);
             else if (lastMove?.IsCapture == true)
             {
                 if (!isPreviousMove)
-                    Sound.Play(Sound.SoundType.Capture);
+                    Sound.Play(SoundType.Capture);
                 else
-                    Sound.Play(Sound.SoundType.Move);
+                    Sound.Play(SoundType.Move);
             }
             else if (lastMove?.IsCastleKingSide == true || lastMove?.IsCastleQueenSide == true)
-                Sound.Play(Sound.SoundType.Castle);
+                Sound.Play(SoundType.Castle);
             else
-                Sound.Play(Sound.SoundType.Move);
+                Sound.Play(SoundType.Move);
         }
 
         #endregion

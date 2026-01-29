@@ -1,4 +1,4 @@
-﻿using Chess.NET.Model;
+﻿using Chess.NET.Shared.Model;
 using System.ComponentModel;
 using System.Globalization;
 using System.Windows.Controls;

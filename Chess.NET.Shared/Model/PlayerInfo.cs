@@ -1,4 +1,4 @@
-﻿namespace Chess.NET.Model
+﻿namespace Chess.NET.Shared.Model
 {
     public readonly struct PlayerInfo
     {

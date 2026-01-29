@@ -1,9 +1,8 @@
-﻿using Chess.NET.Model;
+﻿using Chess.NET.Shared.Model;
 using System.Diagnostics;
-using System.DirectoryServices;
 using System.IO;
 
-namespace Chess.NET.Bot
+namespace Chess.NET.Shared.Model.Bot
 {
     public class StockfischBot : IChessBot, IDisposable
     {

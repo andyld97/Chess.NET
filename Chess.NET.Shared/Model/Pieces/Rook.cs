@@ -1,4 +1,4 @@
-﻿namespace Chess.NET.Model.Pieces
+﻿namespace Chess.NET.Shared.Model.Pieces
 {
     public class Rook : Piece
     {
@@ -6,7 +6,7 @@
 
         public override int MaterialValue => 5;
 
-        public Rook(Position position, PieceColor color) : base(position, color)
+        public Rook(Position position, Color color) : base(position, color)
         {
         }
 

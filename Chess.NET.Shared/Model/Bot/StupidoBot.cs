@@ -1,7 +1,7 @@
-﻿using Chess.NET.Model;
-using Chess.NET.Model.Pieces;
+﻿using Chess.NET.Shared.Model;
+using Chess.NET.Shared.Model.Pieces;
 
-namespace Chess.NET.Bot
+namespace Chess.NET.Shared.Model.Bot
 {
     public class StupidoBot : IChessBot
     {
@@ -20,7 +20,7 @@ namespace Chess.NET.Bot
             // - Bot soll rochieren, wenn es geht!
 
             // Bot sollte auf IsCheck zugreifen
-            if (game.IsCheck(PieceColor.Black))
+            if (game.IsCheck(Color.Black))
             {
                 // Was können wir tuen? Aus dem Schach gehen?
                 // Es gibt 3 Möglichkeiten:
@@ -33,14 +33,14 @@ namespace Chess.NET.Bot
 
                 foreach (var p in game.Board.Pieces)
                 {
-                    if (p.Color != PieceColor.Black)
+                    if (p.Color != Color.Black)
                         continue;
 
                     var possibleMoves = p.GetPossibleMoves(game.Board);
 
                     foreach (var mv in possibleMoves)
                     {
-                        if (!game.IsCheck(PieceColor.Black, p, mv))
+                        if (!game.IsCheck(Color.Black, p, mv))
                         {
                             var sm = new SortedMove() { Piece = p, TargetPosition = mv, Score = p.MaterialValue };
 
@@ -61,12 +61,12 @@ namespace Chess.NET.Bot
             }
             else
             {
-                if (game.CanCastle(PieceColor.Black, new Position(3, 8)))
+                if (game.CanCastle(Color.Black, new Position(3, 8)))
                 {
                     var king = game.Board.GetPiece(new Position(5, 8));
                     return new PendingMove(king!, new Position(3, 8));
                 }
-                else if (game.CanCastle(PieceColor.Black, new Position(7, 8)))
+                else if (game.CanCastle(Color.Black, new Position(7, 8)))
                 {
                     var king = game.Board.GetPiece(new Position(5, 8));
                     return new PendingMove(king!, new Position(7, 8));
@@ -75,7 +75,7 @@ namespace Chess.NET.Bot
 
             foreach (var p in game.Board.Pieces)
             {
-                if (p.Color != PieceColor.Black)
+                if (p.Color != Color.Black)
                     continue;
 
                 var possibleMoves = p.GetPossibleMoves(game.Board);
@@ -97,7 +97,7 @@ namespace Chess.NET.Bot
                             continue;
 
                         // Cannot caputre into check
-                        if (game.IsCheck(PieceColor.Black, p, mv))
+                        if (game.IsCheck(Color.Black, p, mv))
                             continue;
 
                         canCapture = true;
@@ -118,7 +118,7 @@ namespace Chess.NET.Bot
             }
             else
             {
-                var piece = GetRandom(game.Board.Pieces.Where(p => p.Color == PieceColor.Black), p => p.GetPossibleMoves(game.Board).Count > 0);
+                var piece = GetRandom(game.Board.Pieces.Where(p => p.Color == Color.Black), p => p.GetPossibleMoves(game.Board).Count > 0);
                 var moves = piece.GetPossibleMoves(game.Board);
 
                 return new PendingMove(piece, moves[Random.Shared.Next(moves.Count)]);

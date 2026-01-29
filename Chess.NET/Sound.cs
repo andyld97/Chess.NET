@@ -1,4 +1,5 @@
 ﻿using Chess.NET.Model;
+using Chess.NET.Shared.Model;
 using System.Windows.Media;
 
 namespace Chess.NET
@@ -48,18 +49,6 @@ namespace Chess.NET
             player.Stop();
             player.Position = TimeSpan.Zero;
             player.Play();
-        }
-
-        public enum SoundType
-        {
-            Move,
-            Capture,
-            Castle,
-            Check,
-            Checkmate,
-            Stalemate,
-            PuzzleFail,
-            PuzzleSolved
         }
     }
 }

@@ -48,6 +48,9 @@ Source: "bin\Release\net10.0-windows\publish\Chess.NET.dll"; DestDir: "{app}"; F
 Source: "bin\Release\net10.0-windows\publish\Chess.NET.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "bin\Release\net10.0-windows\publish\Chess.NET.pdb"; DestDir: "{app}"; Flags: ignoreversion
 Source: "bin\Release\net10.0-windows\publish\Chess.NET.runtimeconfig.json"; DestDir: "{app}"; Flags: ignoreversion
+
+; TODO: Add Chess.NET.Shared + ASP.NET SignalR Dependencies
+
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]
