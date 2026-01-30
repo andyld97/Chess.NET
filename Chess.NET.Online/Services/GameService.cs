@@ -40,9 +40,21 @@ namespace Chess.NET.Online.Services
                 // Notify clients
                 await _hub.Clients.Users([match.ClientWhite.ClientID, match.ClientBlack.ClientID]).SendAsync("MoveMade", new MoveMade() { Move = move.FormatMove(false, false), Color = move.Piece.Color });
             };
+            game.OnCheckmate += Game_OnCheckmate;
+            game.OnStalemate += Game_OnStalemate;
 
             match.Game = game;
             matches.Add(match);
+        }
+
+        private void Game_OnStalemate()
+        {
+            // TODO: Game is over
+        }
+
+        private void Game_OnCheckmate(Color pieceColor)
+        {
+            // TODO: Game is over
         }
     }
 }

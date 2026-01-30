@@ -69,7 +69,7 @@
                 <Image Source="/resources/images/background.jpg" Stretch="UniformToFill" />
             </Grid>
             <Viewbox Margin="10">
-                <controls:ChessBoard x:Name="Chessboard" />
+                <controls:ChessBoard x:Name="Chessboard" OnMoveMadeOnline="Chessboard_OnMoveMadeOnline" />
             </Viewbox>
         </Grid>
 
@@ -103,6 +103,7 @@
                     <ComboBox x:Name="CmbOpponent" Padding="5" Margin="0,2,0,5" SelectedIndex="0">
                         <ComboBoxItem Content="{x:Static res:Resources.strOpponent_Stockfish}" />
                         <ComboBoxItem Content="{x:Static res:Resources.strOpponent_StupidoBot}" />
+                        <ComboBoxItem Content="{x:Static res:Resources.strOpponent_Online}" />
                         <ComboBoxItem Content="{x:Static res:Resources.strOpponent_None}" />
                     </ComboBox>
                     <Button x:Name="ButtonRestart" Click="ButtonRestart_Click" Content="{x:Static res:Resources.strNewGame}" Padding="3" Margin="0" FontWeight="Bold" />

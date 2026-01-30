@@ -274,4 +274,8 @@
   <data name="strBeginPosition" xml:space="preserve">
     <value>0. Begin Position</value>
   </data>
+  <data name="strOpponent_Online" xml:space="preserve">
+    <value>Online</value>
+    <comment>@Invariant</comment>
+  </data>
 </root>

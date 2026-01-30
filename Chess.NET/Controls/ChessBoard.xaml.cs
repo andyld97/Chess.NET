@@ -28,6 +28,9 @@ namespace Chess.NET.Controls
         private bool isOnline = false;
         private Shared.Model.Color playerOnlineColor = Shared.Model.Color.White;
 
+        public delegate void onMoveMadeOnline(MoveNotation moveNotation);
+        public event onMoveMadeOnline? OnMoveMadeOnline;
+
         public Game Game => game;
 
         public ChessBoard()
@@ -189,10 +192,12 @@ namespace Chess.NET.Controls
                     return;
                 else
                 {
-                    await SignalRClient.MakeMoveAsync(game.Moves.LastOrDefault()?.FormatMove(false, false));
-                    return;
+                    if (isOnline)
+                    {
+                        OnMoveMadeOnline?.Invoke(game.Moves.LastOrDefault()!);
+                        return;
+                    }
                 }
-
 
                 // Bot Move
                 if (opponent != null)

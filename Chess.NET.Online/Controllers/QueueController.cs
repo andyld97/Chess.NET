@@ -23,6 +23,9 @@ namespace Chess.NET.Online.Controllers
         }
 
         [HttpPost("Join")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+
         public async Task<IActionResult> Join([FromBody] Client client)
         {
             var match = _matchmaking.Join(client);
@@ -38,6 +41,7 @@ namespace Chess.NET.Online.Controllers
         }
 
         [HttpPost("Leave")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         public IActionResult Leave([FromBody] Client client)
         {
             _matchmaking.Leave(client.ClientID);

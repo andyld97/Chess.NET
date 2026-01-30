@@ -4,6 +4,8 @@ using Chess.NET.Model;
 using Chess.NET.Netcode;
 using Chess.NET.Shared.Model;
 using Chess.NET.Shared.Model.Bot;
+using Chess.NET.Shared.Model.Online;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -47,7 +49,7 @@ namespace Chess.NET
             // Assign commands
             MoveLeftCommand = new RelayCommand(async () => await Chessboard.ShowPreviousMoveAsync());
             MoveRightCommand = new RelayCommand(async () => await Chessboard.ShowNextMoveAsync());
-            NewGameCommand = new RelayCommand(new Action(StartNewGame));
+            NewGameCommand = new RelayCommand(async() => await StartNewGameAsync());
             MirrorBoardCommand = new RelayCommand(new Action(Chessboard.Mirror));
             DataContext = this;
 
@@ -58,12 +60,6 @@ namespace Chess.NET
 
             RefreshPlayerDisplay();
             InitializePuzzleMenu();
-            Loaded += MainWindow_Loaded;
-        }
-
-        private async void MainWindow_Loaded(object sender, RoutedEventArgs e)
-        {
-            await SignalRClient.ConnectAsync(Chessboard);
         }
 
         #endregion
@@ -171,8 +167,10 @@ namespace Chess.NET
 
         #endregion
 
-        private void StartNewGame()
+        private async Task StartNewGameAsync()
         {
+            // TODO: Wenn gerade ein online game läuft, darf kein neues Spiel starten
+
             // First item should always stay in list
             for (int i = ListMoves.Items.Count - 1; i >= 1; i--)
                 ListMoves.Items.RemoveAt(i);
@@ -208,6 +206,8 @@ namespace Chess.NET
             }
             else if (CmbOpponent.SelectedIndex == 1)
                 opponent = new StupidoBot();
+            else if (CmbOpponent.SelectedIndex == 2)
+                await StartNewOnlineMatch();
             else
                 opponent = null;
 
@@ -215,9 +215,63 @@ namespace Chess.NET
             RefreshPlayerDisplay();
         }
 
-        private void ButtonRestart_Click(object sender, RoutedEventArgs e)
+        #region Online Match / Net GUI Code
+
+        private SignalRClient _networkClient;
+        private WaitingQueueDialog? waitingQueueDialog = null;
+        private Color ownPieceColor = Color.White;
+        private Match? currentMatch = null;
+
+        private async Task StartNewOnlineMatch()
         {
-            StartNewGame();
+            _networkClient = new SignalRClient();
+            _networkClient.OnMatchFound += NetworkClient_OnMatchFound;
+            _networkClient.OnMoveMade += NetworkClient_OnMoveMade;
+            _ = _networkClient.ConnectAsync(Chessboard);
+
+            waitingQueueDialog = new WaitingQueueDialog() { Owner = this };
+            waitingQueueDialog.ShowDialog();  
+        }
+
+        private void NetworkClient_OnMatchFound(Match match)
+        {
+            waitingQueueDialog?.Close();
+            if (match.ClientBlack.ClientID == SignalRClient.CLIENT_ID)
+            {
+                Chessboard.Mirror();
+                ownPieceColor = Color.Black;
+            }
+            else
+                ownPieceColor = Color.White;
+
+            currentMatch = match;
+            Chessboard.Game.StartNewGame(null);
+            Chessboard.SetOnline(ownPieceColor);
+        }
+
+        private async void NetworkClient_OnMoveMade(MoveMade moveMade)
+        {
+            var pendingMove = PendingMove.Parse(moveMade.Move, (Board)Chessboard.Game.Board, moveMade.Color);
+            if (moveMade.Color != ownPieceColor)
+            {
+                await Chessboard.Game.MoveAsync(pendingMove, true);
+                Chessboard.RenderChessBoard(Chessboard.Game.Board, true);
+            }
+        }
+
+        private async void Chessboard_OnMoveMadeOnline(MoveNotation moveNotation)
+        {
+            if (_networkClient == null || currentMatch == null)
+                return;
+
+            await _networkClient.MakeMoveAsync(currentMatch, moveNotation.FormatMove(false, false));
+        }
+
+        #endregion
+
+        private async void ButtonRestart_Click(object sender, RoutedEventArgs e)
+        {
+            await StartNewGameAsync();
         }
 
         private void ButtonMirror_Click(object sender, RoutedEventArgs e)
@@ -347,9 +401,9 @@ namespace Chess.NET
             dialog.ShowDialog();
         }
 
-        private void MenuNewGame_Click(object sender, RoutedEventArgs e)
+        private async void MenuNewGame_Click(object sender, RoutedEventArgs e)
         {
-            StartNewGame();
+            await StartNewGameAsync();
         }
 
         private void MenuMirrorBoard_Click(object sender, RoutedEventArgs e)

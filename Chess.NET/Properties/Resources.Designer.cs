@@ -340,6 +340,15 @@ namespace Chess.NET.Properties {
         }
         
         /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Online ähnelt.
+        /// </summary>
+        public static string strOpponent_Online {
+            get {
+                return ResourceManager.GetString("strOpponent_Online", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Sucht eine lokalisierte Zeichenfolge, die Stockfish (Bot) ähnelt.
         /// </summary>
         public static string strOpponent_Stockfish {
