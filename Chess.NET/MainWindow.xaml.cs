@@ -219,24 +219,38 @@ namespace Chess.NET
 
         private SignalRClient _networkClient;
         private WaitingQueueDialog? waitingQueueDialog = null;
-        private Color ownPieceColor = Color.White;
-        private Match? currentMatch = null;
+        private Color? ownPieceColor = null;
+        private MatchInfo? currentMatchInfo = null;
+        private Client? client = null;
+        private bool isOnlineMatch = false;
 
         private async Task StartNewOnlineMatch()
         {
+            ownPieceColor = null;
+            currentMatchInfo = null;
+            waitingQueueDialog = null;
+
             _networkClient = new SignalRClient();
             _networkClient.OnMatchFound += NetworkClient_OnMatchFound;
-            _networkClient.OnMoveMade += NetworkClient_OnMoveMade;
-            _ = _networkClient.ConnectAsync(Chessboard);
+            _networkClient.OnMoveMade += NetworkClient_OnMoveMade;            
 
             waitingQueueDialog = new WaitingQueueDialog() { Owner = this };
+            waitingQueueDialog.Loaded += async delegate (object sender, RoutedEventArgs e)
+            {
+                client = await _networkClient.ConnectAsync(Chessboard);
+                waitingQueueDialog.Client = client;
+            };
             waitingQueueDialog.ShowDialog();  
         }
 
-        private void NetworkClient_OnMatchFound(Match match)
+        private void NetworkClient_OnMatchFound(MatchInfo match)
         {
+            isOnlineMatch = true;
+            waitingQueueDialog?.FoundMatch = true; 
             waitingQueueDialog?.Close();
-            if (match.ClientBlack.ClientID == SignalRClient.CLIENT_ID)
+            waitingQueueDialog = null;
+
+            if (match.ClientColor == Color.Black)
             {
                 Chessboard.Mirror();
                 ownPieceColor = Color.Black;
@@ -244,9 +258,10 @@ namespace Chess.NET
             else
                 ownPieceColor = Color.White;
 
-            currentMatch = match;
+            currentMatchInfo = match;
             Chessboard.Game.StartNewGame(null);
-            Chessboard.SetOnline(ownPieceColor);
+            Chessboard.SetOnline(ownPieceColor.Value);
+            RefreshPlayerDisplay();
         }
 
         private async void NetworkClient_OnMoveMade(MoveMade moveMade)
@@ -261,10 +276,10 @@ namespace Chess.NET
 
         private async void Chessboard_OnMoveMadeOnline(MoveNotation moveNotation)
         {
-            if (_networkClient == null || currentMatch == null)
+            if (_networkClient == null || currentMatchInfo == null)
                 return;
 
-            await _networkClient.MakeMoveAsync(currentMatch, moveNotation.FormatMove(false, false));
+            await _networkClient.MakeMoveAsync(currentMatchInfo.MatchId, moveNotation.FormatMove(false, false));
         }
 
         #endregion
@@ -328,8 +343,16 @@ namespace Chess.NET
                 {
                     // Top:    Player 1 (White)
                     // Bottom: Player 2 (Black)
-                    TextPlayerTopName.Text = Helper.GetPlayerName(1);
-                    TextPlayerTopElo.Text = formatPlayerElo(Settings.Instance.Player1Elo);
+                    if (isOnlineMatch && currentMatchInfo != null)
+                    {
+                        TextPlayerTopName.Text = currentMatchInfo.OpponentName;
+                        TextPlayerTopElo.Text = formatPlayerElo(currentMatchInfo.OpponentElo);
+                    }
+                    else
+                    {
+                        TextPlayerTopName.Text = Helper.GetPlayerName(1);
+                        TextPlayerTopElo.Text = formatPlayerElo(Settings.Instance.Player1Elo);
+                    }
 
                     TextPlayerBottomName.Text = Helper.GetPlayerName(2);
                     TextPlayerBottomElo.Text = formatPlayerElo(Settings.Instance.Player2Elo);
@@ -341,8 +364,16 @@ namespace Chess.NET
                 {
                     // Top:     Player 2 (Black)
                     // Bottom:  Player 1 (White)
-                    TextPlayerTopName.Text = Helper.GetPlayerName(2);
-                    TextPlayerTopElo.Text = formatPlayerElo(Settings.Instance.Player2Elo);
+                    if (isOnlineMatch && currentMatchInfo != null)
+                    {
+                        TextPlayerTopName.Text = currentMatchInfo.OpponentName;
+                        TextPlayerTopElo.Text = formatPlayerElo(currentMatchInfo.OpponentElo);
+                    }
+                    else
+                    {
+                        TextPlayerTopName.Text = Helper.GetPlayerName(2);
+                        TextPlayerTopElo.Text = formatPlayerElo(Settings.Instance.Player2Elo);
+                    }
 
                     TextPlayerBottomName.Text = Helper.GetPlayerName(1);
                     TextPlayerBottomElo.Text = formatPlayerElo(Settings.Instance.Player1Elo);

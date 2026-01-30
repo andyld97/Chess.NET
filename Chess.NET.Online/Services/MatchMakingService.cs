@@ -13,7 +13,7 @@ namespace Chess.NET.Online.Services
     {
         private readonly ILogger<IMatchMakingService> _logger;
 
-        private List<Client> clients = [];
+        private readonly List<Client> clients = [];
         private object sync = new object();
 
         public MatchMakingService(ILogger<IMatchMakingService> logger)
@@ -46,7 +46,7 @@ namespace Chess.NET.Online.Services
                     };
                 }
 
-                return null; // no match
+                return null; // no match (yet)
             }
         }
 

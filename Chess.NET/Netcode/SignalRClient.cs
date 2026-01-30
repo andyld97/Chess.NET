@@ -12,7 +12,7 @@ namespace Chess.NET.Netcode
 
         #region Events
 
-        public delegate void onMatchFound(Match match);
+        public delegate void onMatchFound(MatchInfo match);
         public event onMatchFound? OnMatchFound;
 
         public delegate void onMoveMade(MoveMade moveMade);
@@ -20,8 +20,7 @@ namespace Chess.NET.Netcode
 
         #endregion
 
-
-        public async Task ConnectAsync(ChessBoard chessBoard)
+        public async Task<Client?> ConnectAsync(ChessBoard chessBoard)
         {
             try
             {
@@ -31,7 +30,7 @@ namespace Chess.NET.Netcode
                     .Build();
 
                 // Events
-                connection.On<Match>("MatchFound", async match =>
+                connection.On<MatchInfo>("MatchFound", async match =>
                 {
                     // White or Black? If black, rotate board (ensure that it was not rotated before)
                     await App.UiDispatcher.Invoke(async () =>
@@ -62,19 +61,22 @@ namespace Chess.NET.Netcode
                 };
 
                 await APIClient.JoinQueueAsync(client);
+
+                return client;
             }
             catch (Exception ex) 
             {
                 MessageBox.Show($"Failed to connect to chess server: {ex.Message}", Properties.Resources.strError, MessageBoxButton.OK, MessageBoxImage.Error);
             }
 
+            return null;
         }
 
-        public async Task MakeMoveAsync(Match match, string move)
+        public async Task MakeMoveAsync(string matchId, string move)
         {
             try
             {
-                await APIClient.MakeMoveAsync(match, move);
+                await APIClient.MakeMoveAsync(matchId, move);
             }
             catch (Exception ex)
             {

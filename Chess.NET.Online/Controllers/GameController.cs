@@ -18,6 +18,26 @@ namespace Chess.NET.Online.Controllers
             _gameService = gameService;
         }
 
+        [HttpPost("{matchId}/{clientId}/Resign")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> Resign(string matchId, string clientId)
+        {
+            var match = _gameService.GetMatch(matchId);
+            if (match == null)
+                return NotFound();
+
+            if (match.ClientWhite.ClientID != clientId && match.ClientBlack.ClientID != clientId)
+                return Unauthorized();
+
+            // TODO: Resign match
+
+            return Ok();
+
+        }
+
         [HttpPost("{matchId}/{clientId}/MakeMove")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]

@@ -16,10 +16,17 @@ namespace Chess.NET.Netcode
             response.EnsureSuccessStatusCode();
         }
 
-        public static async Task MakeMoveAsync(Match match, string move)
+        public static async Task LeaveQueueAsync(Client client)
+        {
+            var content = new StringContent(JsonSerializer.Serialize(client), Encoding.UTF8, "application/json");
+            var response = await httpClient.PostAsync($"{Consts.SERVER_URL}/queue/leave", content);
+            response.EnsureSuccessStatusCode();
+        }
+
+        public static async Task MakeMoveAsync(string matchId, string move)
         {
             var content = new StringContent(JsonSerializer.Serialize(move), Encoding.UTF8, "application/json");
-            var response = await httpClient.PostAsync($"{Consts.SERVER_URL}/game/{match.MatchId}/{SignalRClient.CLIENT_ID}/MakeMove", content);
+            var response = await httpClient.PostAsync($"{Consts.SERVER_URL}/game/{matchId}/{SignalRClient.CLIENT_ID}/MakeMove", content);
             response.EnsureSuccessStatusCode();
         }
     }
