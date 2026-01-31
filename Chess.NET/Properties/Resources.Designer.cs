@@ -466,6 +466,15 @@ namespace Chess.NET.Properties {
         }
         
         /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Resign ähnelt.
+        /// </summary>
+        public static string strResign {
+            get {
+                return ResourceManager.GetString("strResign", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Sucht eine lokalisierte Zeichenfolge, die Right ähnelt.
         /// </summary>
         public static string strRight {

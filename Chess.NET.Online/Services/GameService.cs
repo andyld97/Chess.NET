@@ -33,37 +33,51 @@ namespace Chess.NET.Online.Services
             return match;
         }
 
-        public async Task StartMatchAsync(Match match)
-        {
-            // TODO: mit lock absichern
-
-            var game = new Game();
-            game.StartNewGame(null);
-            game.OnMovedPiece += async delegate (MoveNotation move) 
-            {
-                // Notify clients
-                await _hub.Clients.Users([match.ClientWhite.ClientID, match.ClientBlack.ClientID]).SendAsync("MoveMade", new MoveMade() { Move = move.FormatMove(false, false), Color = move.Piece.Color });
-            };
-            game.OnCheckmate += async delegate 
-            {
-                await EndMatchAsync(match.MatchId, MatchResult.Checkmate, null);
-            };
-            game.OnStalemate += async delegate
-            {
-                await EndMatchAsync(match.MatchId, MatchResult.Checkmate, null);
-            };
-            game.OnResign += async delegate (Color color)
-            {
-                await EndMatchAsync(match.MatchId, MatchResult.Resign, color); 
-            };
-
-            match.Game = game;
-            matches.Add(match);
-        }
-
         public Match? GetMatchByClientId(string clientId)
         {
             return matches.FirstOrDefault(p => p.ClientBlack.ClientID == clientId || p.ClientWhite.ClientID == clientId);
+        }
+
+        public async Task StartMatchAsync(Match match)
+        {
+            await match.MatchSemaphore.WaitAsync();
+
+            try
+            {
+                var game = new Game();
+                game.StartNewGame(null);
+                game.OnMovedPiece += async delegate (MoveNotation move)
+                {
+                    // Notify clients
+                    await _hub.Clients.Users([match.ClientWhite.ClientID, match.ClientBlack.ClientID]).SendAsync("MoveMade", new MoveMade() { Move = move.FormatMove(false, false), Color = move.Piece.Color });
+                };
+                game.OnCheckmate += async delegate
+                {
+                    await EndMatchAsync(match.MatchId, MatchResult.Checkmate, game.IsCheckmate(Color.Black) ? Color.White : Color.Black);
+                };
+                game.OnStalemate += async delegate
+                {
+                    await EndMatchAsync(match.MatchId, MatchResult.Stalemate, null);
+                };
+                game.OnResign += async delegate (Color color)
+                {
+                    var winnerColor = color;
+
+                    if (color == Color.Black)
+                        color = Color.White;
+                    else
+                        color = Color.Black;
+
+                    await EndMatchAsync(match.MatchId, MatchResult.Resign, color);
+                };
+
+                match.Game = game;
+                matches.Add(match);
+            }
+            finally
+            {
+                match.MatchSemaphore.Release(); 
+            }
         }
 
         public async Task EndMatchAsync(string matchId, MatchResult matchResult, Color? color)
@@ -71,10 +85,41 @@ namespace Chess.NET.Online.Services
             var match = GetMatch(matchId);
             ArgumentNullException.ThrowIfNull(match);
 
-            matches.Remove(match);
+            await match.MatchSemaphore.WaitAsync();
 
-            // Notify clients that the match has ended
-            await _hub.Clients.Users([match.ClientWhite.ClientID, match.ClientBlack.ClientID]).SendAsync("GameOver", "TODO DATENSTRUKTUR");
+            try
+            {
+                matches.Remove(match);
+
+                string matchLog = $"[{matchId}] ended: ";
+                if (matchResult == MatchResult.Stalemate)
+                    matchLog += "Stalemate (Remis)";
+                else
+                {
+                    string playerName = string.Empty;
+                    if (color == Color.Black)
+                        playerName = match.ClientBlack.PlayerName;
+                    else if (color == Color.White)
+                        playerName = match.ClientWhite.PlayerName;
+
+                    matchLog += $"{playerName} [{color}] wins due to {matchResult}!";
+                }
+
+                _logger.LogInformation(matchLog);
+
+                MatchEnd matchEnd = new MatchEnd
+                {
+                    ColorWins = color,
+                    Result = matchResult
+                };
+
+                // Notify clients that the match has ended
+                await _hub.Clients.Users([match.ClientWhite.ClientID, match.ClientBlack.ClientID]).SendAsync("GameOver", matchEnd);
+            }
+            finally
+            {
+                match.MatchSemaphore.Release(); 
+            }
         }
     }
 }

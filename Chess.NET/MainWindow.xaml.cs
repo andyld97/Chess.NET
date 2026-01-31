@@ -5,6 +5,7 @@ using Chess.NET.Netcode;
 using Chess.NET.Shared.Model;
 using Chess.NET.Shared.Model.Bot;
 using Chess.NET.Shared.Model.Online;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -18,7 +19,6 @@ namespace Chess.NET
     public partial class MainWindow : Window
     {
         private MoveNotationDisplay currentMoveNotationDisplay = null!;
-        private bool isMirrored = false;
         private IChessBot? opponent = null;
 
         #region Commands
@@ -92,6 +92,9 @@ namespace Chess.NET
 
         private async void Game_OnCheckmate(Color pieceColor)
         {
+            if (isOnlineMatch)
+                return;
+
             string playerText = string.Empty;
 
             if (pieceColor == Color.White)
@@ -121,6 +124,9 @@ namespace Chess.NET
 
         private async void Game_OnStalemate()
         {
+            if (isOnlineMatch)
+                return;
+
             await Task.Delay(250).ContinueWith(t =>
             {
                 Application.Current.Dispatcher.Invoke(() =>
@@ -169,7 +175,8 @@ namespace Chess.NET
 
         private async Task StartNewGameAsync()
         {
-            // TODO: Wenn gerade ein online game läuft, darf kein neues Spiel starten
+            if (isOnlineMatch)
+                return;
 
             // First item should always stay in list
             for (int i = ListMoves.Items.Count - 1; i >= 1; i--)
@@ -232,31 +239,44 @@ namespace Chess.NET
 
             _networkClient = new SignalRClient();
             _networkClient.OnMatchFound += NetworkClient_OnMatchFound;
-            _networkClient.OnMoveMade += NetworkClient_OnMoveMade;            
+            _networkClient.OnMoveMade += NetworkClient_OnMoveMade;
+            _networkClient.OnMatchEnds += NetworkClient_OnMatchEnds;
 
             waitingQueueDialog = new WaitingQueueDialog() { Owner = this };
-            waitingQueueDialog.Loaded += async delegate (object sender, RoutedEventArgs e)
-            {
-                client = await _networkClient.ConnectAsync(Chessboard);
-                waitingQueueDialog.Client = client;
-            };
+            waitingQueueDialog.Loaded += WaitingQueueDialog_Loaded;
             waitingQueueDialog.ShowDialog();  
+        }
+
+        private async void WaitingQueueDialog_Loaded(object sender, RoutedEventArgs e)
+        {
+            client = await _networkClient.ConnectAsync(Chessboard);
+            waitingQueueDialog?.Client = client;
         }
 
         private void NetworkClient_OnMatchFound(MatchInfo match)
         {
+            ButtonRestart.IsEnabled = false;
+            ButtonResign.Visibility = Visibility.Visible;
             isOnlineMatch = true;
             waitingQueueDialog?.FoundMatch = true; 
+            waitingQueueDialog?.Loaded -= WaitingQueueDialog_Loaded;
             waitingQueueDialog?.Close();
             waitingQueueDialog = null;
 
             if (match.ClientColor == Color.Black)
             {
-                Chessboard.Mirror();
+                if (!Chessboard.IsMirrored)
+                    Chessboard.Mirror();
+
                 ownPieceColor = Color.Black;
             }
             else
+            {
+                if (Chessboard.IsMirrored)
+                    Chessboard.Mirror();
+
                 ownPieceColor = Color.White;
+            }
 
             currentMatchInfo = match;
             Chessboard.Game.StartNewGame(null);
@@ -274,12 +294,54 @@ namespace Chess.NET
             }
         }
 
+        private async void NetworkClient_OnMatchEnds(MatchEnd matchEnd)
+        {
+            Chessboard.DisablePieces();
+            ButtonResign.Visibility = Visibility.Collapsed;
+
+            string? playeOpponentName = currentMatchInfo?.OpponentName;
+
+            currentMatchInfo = null;
+            ButtonRestart.IsEnabled = true;
+            isOnlineMatch = false;
+            await _networkClient.DisconnectAsync();
+
+            string message = $"Match ended: ";
+            if (matchEnd.Result == MatchResult.Stalemate)
+                message += "Stalemate (Remis)";
+            else
+            {
+                string playerText = string.Empty;
+                if (matchEnd.ColorWins == ownPieceColor)
+                    playerText = "You won";
+                else
+                    playerText = $"You lost! Your opponennt {playeOpponentName} won";
+
+                message += $"{playerText} due to {matchEnd.Result}!";
+            }
+
+            MessageBox.Show(message, "Game is over!", MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+
         private async void Chessboard_OnMoveMadeOnline(MoveNotation moveNotation)
         {
             if (_networkClient == null || currentMatchInfo == null)
                 return;
 
             await _networkClient.MakeMoveAsync(currentMatchInfo.MatchId, moveNotation.FormatMove(false, false));
+        }
+
+        private async void ButtonResign_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                ArgumentNullException.ThrowIfNull(currentMatchInfo);
+                await APIClient.ResignAsync(currentMatchInfo.MatchId);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Failed to resign: {ex.Message}", Properties.Resources.strError, MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         #endregion
@@ -292,7 +354,6 @@ namespace Chess.NET
         private void ButtonMirror_Click(object sender, RoutedEventArgs e)
         {
             Chessboard.Mirror();
-            isMirrored = !isMirrored;
             RefreshPlayerDisplay();
         }
 
@@ -339,7 +400,7 @@ namespace Chess.NET
 
             if (opponent is null)
             {
-                if (isMirrored)
+                if (Chessboard.IsMirrored)
                 {
                     // Top:    Player 1 (White)
                     // Bottom: Player 2 (Black)
@@ -384,7 +445,7 @@ namespace Chess.NET
             }
             else
             {
-                if (isMirrored)
+                if (Chessboard.IsMirrored)
                 {
                     // Top:    Player 1 (White)
                     // Bottom: Bot      (Black)

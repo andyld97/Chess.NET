@@ -278,4 +278,7 @@
     <value>Online</value>
     <comment>@Invariant</comment>
   </data>
+  <data name="strResign" xml:space="preserve">
+    <value>Resign</value>
+  </data>
 </root>

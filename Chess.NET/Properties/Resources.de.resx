@@ -271,4 +271,7 @@
   <data name="strBeginPosition" xml:space="preserve">
     <value>0. Startposition</value>
   </data>
+  <data name="strResign" xml:space="preserve">
+    <value>Aufgeben</value>
+  </data>
 </root>

@@ -1,5 +1,6 @@
 ﻿using Chess.NET.Controls;
 using Chess.NET.Model;
+using Chess.NET.Shared.Model;
 using Chess.NET.Shared.Model.Online;
 using Microsoft.AspNetCore.SignalR.Client;
 using System.Windows;
@@ -9,6 +10,7 @@ namespace Chess.NET.Netcode
     public class SignalRClient
     {
         public static readonly string CLIENT_ID = Guid.NewGuid().ToString();
+        private HubConnection? connection = null;
 
         #region Events
 
@@ -18,13 +20,15 @@ namespace Chess.NET.Netcode
         public delegate void onMoveMade(MoveMade moveMade);
         public event onMoveMade? OnMoveMade;
 
+        public delegate void onMatchEnds(MatchEnd matchEnd);
+        public event onMatchEnds? OnMatchEnds;
         #endregion
 
         public async Task<Client?> ConnectAsync(ChessBoard chessBoard)
         {
             try
             {
-                var connection = new HubConnectionBuilder()
+                connection = new HubConnectionBuilder()
                     .WithUrl($"{Consts.SERVER_URL_HUB}{CLIENT_ID}")
                     .WithAutomaticReconnect()
                     .Build();
@@ -32,7 +36,6 @@ namespace Chess.NET.Netcode
                 // Events
                 connection.On<MatchInfo>("MatchFound", async match =>
                 {
-                    // White or Black? If black, rotate board (ensure that it was not rotated before)
                     await App.UiDispatcher.Invoke(async () =>
                     {
                         OnMatchFound?.Invoke(match);
@@ -44,6 +47,14 @@ namespace Chess.NET.Netcode
                     await App.UiDispatcher.Invoke(async () =>
                     {
                         OnMoveMade?.Invoke(payload);
+                    });
+                });
+
+                connection.On<MatchEnd>("GameOver", async payload =>
+                {
+                    await App.UiDispatcher.Invoke(async () =>
+                    {
+                        OnMatchEnds?.Invoke(payload);
                     });
                 });
 
@@ -64,7 +75,7 @@ namespace Chess.NET.Netcode
 
                 return client;
             }
-            catch (Exception ex) 
+            catch (Exception ex)
             {
                 MessageBox.Show($"Failed to connect to chess server: {ex.Message}", Properties.Resources.strError, MessageBoxButton.OK, MessageBoxImage.Error);
             }
@@ -81,6 +92,18 @@ namespace Chess.NET.Netcode
             catch (Exception ex)
             {
                 MessageBox.Show($"Failed to make move: {ex.Message}", Properties.Resources.strError, MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        public async Task DisconnectAsync()
+        {
+            try
+            {
+                await connection?.StopAsync();
+            }
+            catch
+            {
+                // ignore
             }
         }
     }

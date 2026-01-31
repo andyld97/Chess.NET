@@ -78,7 +78,7 @@ namespace Chess.NET.Online.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public IActionResult Leave([FromBody] Client client)
         {
-            _matchmaking.Leave(client.ClientID, "Left Queue");
+            _matchmaking.Leave(client.ClientID, "Client left Queue");
             return Ok();
         }
     }

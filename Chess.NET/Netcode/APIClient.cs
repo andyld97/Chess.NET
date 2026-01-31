@@ -29,5 +29,11 @@ namespace Chess.NET.Netcode
             var response = await httpClient.PostAsync($"{Consts.SERVER_URL}/Game/{matchId}/{SignalRClient.CLIENT_ID}/MakeMove", content);
             response.EnsureSuccessStatusCode();
         }
+
+        public static async Task ResignAsync(string matchId)
+        {
+            var response = await httpClient.PostAsync($"{Consts.SERVER_URL}/Game/{matchId}/{SignalRClient.CLIENT_ID}/Resign", new StringContent(""));
+            response.EnsureSuccessStatusCode();
+        }
     }
 }

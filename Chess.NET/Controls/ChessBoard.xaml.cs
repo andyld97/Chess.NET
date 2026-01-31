@@ -33,6 +33,8 @@ namespace Chess.NET.Controls
 
         public Game Game => game;
 
+        public bool IsMirrored => isMirrored;
+
         public ChessBoard()
         {
             InitializeComponent();
@@ -74,38 +76,7 @@ namespace Chess.NET.Controls
 
         public void EnableNavigation()
         {
-            isNavigationAllowed = true;     
-        }
-
-        #endregion
-
-        private void InitializeSquares()
-        {
-            for (int rank = 8; rank >= 1; rank--)
-            {
-                for (int file = 1; file <= 8; file++)
-                {
-                    bool dark = (file + rank) % 2 == 0;
-
-                    var square = new Border
-                    {
-                        Background = (Brush)FindResource(dark ? "ChessDarkSquare" : "ChessLightSquare")
-                    };
-
-                    Grid.SetColumn(square, file - 1);
-                    Grid.SetRow(square, 8 - rank);
-
-                    var image = new Image() { Margin = new System.Windows.Thickness(10), HorizontalAlignment = System.Windows.HorizontalAlignment.Center, VerticalAlignment = System.Windows.VerticalAlignment.Center };
-                    RenderOptions.SetBitmapScalingMode(image, BitmapScalingMode.Fant);
-                    square.Child = image;
-                    square.Tag = new Position(file, rank);
-                    square.MouseDown += Square_MouseDown;
-                    square.MouseMove += Square_MouseMove;
-                    BoardGrid.Children.Add(square);
-
-                    _squares[file - 1, rank - 1] = new BoardSquare(file, rank, square);
-                }
-            }
+            isNavigationAllowed = true;
         }
 
         public void Restart(IChessBot? opponent)
@@ -131,6 +102,7 @@ namespace Chess.NET.Controls
             RenderChessBoard(game.Board);
         }
 
+        #endregion
 
         #region Drag & Drop Pieces
         private Piece? _pieceToMove;
@@ -145,7 +117,7 @@ namespace Chess.NET.Controls
 
         private async void Square_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            if (!canMove) return;   
+            if (!canMove) return;
 
             if (isInNavigationMode)
             {
@@ -262,40 +234,6 @@ namespace Chess.NET.Controls
 
         #endregion
 
-        public void RenderChessBoard(IBoard board, bool renderLastMoveSquares = true)
-        {
-            var lastMove = game.Moves.LastOrDefault();
-
-            for (int rank = 8; rank >= 1; rank--)
-            {
-                for (int file = 1; file <= 8; file++)
-                {
-                    var position = new Position(file, rank);
-                    if (isMirrored)
-                        position = position.Mirror();
-
-                    if (_pieceToMove != null && position == _pieceToMove.Position)
-                        continue;
-
-                    Image img = (Image)_squares[file - 1, rank - 1].Border.Child;
-
-                    var piece = board.GetPiece(position);
-                    img.Source = (piece != null) ? piece.Type.ToBitmap(piece.Color) : null;
-
-                    if (renderLastMoveSquares && (lastMove != null && (lastMove.From == position || lastMove.To == position)))
-                    {
-                        // Highlight last move squares  
-                        _squares[file - 1, rank - 1].Border.Background = (Brush)FindResource("ChessHighlightSquare");
-                    }
-                    else
-                    {
-                        bool dark = (file + rank) % 2 == 0;
-                        _squares[file - 1, rank - 1].Border.Background = (Brush)FindResource(dark ? "ChessDarkSquare" : "ChessLightSquare");
-                    }
-                }
-            }
-        }
-
         #region Game Navigation
 
         private int navigationCurrentMove = -1;
@@ -410,6 +348,73 @@ namespace Chess.NET.Controls
                 Sound.Play(SoundType.Castle);
             else
                 Sound.Play(SoundType.Move);
+        }
+
+        #endregion
+
+        #region Rendering
+
+        public void RenderChessBoard(IBoard board, bool renderLastMoveSquares = true)
+        {
+            var lastMove = game.Moves.LastOrDefault();
+
+            for (int rank = 8; rank >= 1; rank--)
+            {
+                for (int file = 1; file <= 8; file++)
+                {
+                    var position = new Position(file, rank);
+                    if (isMirrored)
+                        position = position.Mirror();
+
+                    if (_pieceToMove != null && position == _pieceToMove.Position)
+                        continue;
+
+                    Image img = (Image)_squares[file - 1, rank - 1].Border.Child;
+
+                    var piece = board.GetPiece(position);
+                    img.Source = (piece != null) ? piece.Type.ToBitmap(piece.Color) : null;
+
+                    if (renderLastMoveSquares && (lastMove != null && (lastMove.From == position || lastMove.To == position)))
+                    {
+                        // Highlight last move squares  
+                        _squares[file - 1, rank - 1].Border.Background = (Brush)FindResource("ChessHighlightSquare");
+                    }
+                    else
+                    {
+                        bool dark = (file + rank) % 2 == 0;
+                        _squares[file - 1, rank - 1].Border.Background = (Brush)FindResource(dark ? "ChessDarkSquare" : "ChessLightSquare");
+                    }
+                }
+            }
+        }
+
+        private void InitializeSquares()
+        {
+            for (int rank = 8; rank >= 1; rank--)
+            {
+                for (int file = 1; file <= 8; file++)
+                {
+                    bool dark = (file + rank) % 2 == 0;
+
+                    var square = new Border
+                    {
+                        Background = (Brush)FindResource(dark ? "ChessDarkSquare" : "ChessLightSquare")
+                    };
+
+                    Grid.SetColumn(square, file - 1);
+                    Grid.SetRow(square, 8 - rank);
+
+                    var image = new Image() { Margin = new System.Windows.Thickness(10), HorizontalAlignment = System.Windows.HorizontalAlignment.Center, VerticalAlignment = System.Windows.VerticalAlignment.Center };
+                    RenderOptions.SetBitmapScalingMode(image, BitmapScalingMode.Fant);
+                    square.Child = image;
+                    square.Tag = new Position(file, rank);
+                    square.MouseDown += Square_MouseDown;
+                    square.MouseMove += Square_MouseMove;
+                    BoardGrid.Children.Add(square);
+
+                    _squares[file - 1, rank - 1] = new BoardSquare(file, rank, square);
+                }
+            }
         }
 
         #endregion

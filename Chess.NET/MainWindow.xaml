@@ -107,6 +107,7 @@
                         <ComboBoxItem Content="{x:Static res:Resources.strOpponent_None}" />
                     </ComboBox>
                     <Button x:Name="ButtonRestart" Click="ButtonRestart_Click" Content="{x:Static res:Resources.strNewGame}" Padding="3" Margin="0" FontWeight="Bold" />
+                    <Button x:Name="ButtonResign" Visibility="Collapsed" Click="ButtonResign_Click" Content="{x:Static res:Resources.strResign}" Padding="3" Margin="0,5,0,0" />
                     <Button x:Name="ButtonMirror" Content="{x:Static res:Resources.strMirrorBoard}" Click="ButtonMirror_Click" Padding="3" Margin="0,5,0,0" />
                 </StackPanel>
             </Grid>
