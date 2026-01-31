@@ -251,6 +251,14 @@ namespace Chess.NET
         {
             client = await _networkClient.ConnectAsync(Chessboard);
             waitingQueueDialog?.Client = client;
+
+            if (client == null)
+            {
+                // = Error
+                waitingQueueDialog?.FoundMatch = false;
+                waitingQueueDialog?.Loaded -= WaitingQueueDialog_Loaded;
+                waitingQueueDialog?.Close();
+            }
         }
 
         private void NetworkClient_OnMatchFound(MatchInfo match)
