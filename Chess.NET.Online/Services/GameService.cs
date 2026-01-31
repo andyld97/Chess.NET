@@ -9,6 +9,10 @@ namespace Chess.NET.Online.Services
         Task StartMatchAsync(Match match);
 
         Match? GetMatch(string matchId);
+
+        Match? GetMatchByClientId(string clientId);
+
+        Task EndMatchAsync(string matchId, MatchResult matchResult, Color? color);
     }
 
     public class GameService : IGameService
@@ -40,21 +44,37 @@ namespace Chess.NET.Online.Services
                 // Notify clients
                 await _hub.Clients.Users([match.ClientWhite.ClientID, match.ClientBlack.ClientID]).SendAsync("MoveMade", new MoveMade() { Move = move.FormatMove(false, false), Color = move.Piece.Color });
             };
-            game.OnCheckmate += Game_OnCheckmate;
-            game.OnStalemate += Game_OnStalemate;
+            game.OnCheckmate += async delegate 
+            {
+                await EndMatchAsync(match.MatchId, MatchResult.Checkmate, null);
+            };
+            game.OnStalemate += async delegate
+            {
+                await EndMatchAsync(match.MatchId, MatchResult.Checkmate, null);
+            };
+            game.OnResign += async delegate (Color color)
+            {
+                await EndMatchAsync(match.MatchId, MatchResult.Resign, color); 
+            };
 
             match.Game = game;
             matches.Add(match);
         }
 
-        private void Game_OnStalemate()
+        public Match? GetMatchByClientId(string clientId)
         {
-            // TODO: Game is over
+            return matches.FirstOrDefault(p => p.ClientBlack.ClientID == clientId || p.ClientWhite.ClientID == clientId);
         }
 
-        private void Game_OnCheckmate(Color pieceColor)
+        public async Task EndMatchAsync(string matchId, MatchResult matchResult, Color? color)
         {
-            // TODO: Game is over
+            var match = GetMatch(matchId);
+            ArgumentNullException.ThrowIfNull(match);
+
+            matches.Remove(match);
+
+            // Notify clients that the match has ended
+            await _hub.Clients.Users([match.ClientWhite.ClientID, match.ClientBlack.ClientID]).SendAsync("GameOver", "TODO DATENSTRUKTUR");
         }
     }
 }

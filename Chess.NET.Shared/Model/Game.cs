@@ -30,6 +30,9 @@ namespace Chess.NET.Shared.Model
         public delegate void onPlaySound(SoundType type);
         public event onPlaySound? OnPlaySound;
 
+        public delegate void onResign(Color color);
+        public event onResign? OnResign;
+
         #endregion
 
         #region Properties
@@ -569,6 +572,12 @@ namespace Chess.NET.Shared.Model
         #endregion
 
         #region Other
+
+        public void Resign(Color color)
+        {
+            IsGameOver = true;
+            OnResign?.Invoke(color);
+        }
 
         public PlayerInfo GetPlayerInformation()
         {

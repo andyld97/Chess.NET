@@ -6,7 +6,7 @@ namespace Chess.NET.Online.Services
     {
         Match? Join(Client client);
 
-        void Leave(string clientId);
+        void Leave(string clientId, string reason);
     }
 
     public class MatchMakingService : IMatchMakingService
@@ -37,12 +37,14 @@ namespace Chess.NET.Online.Services
                     clients.Remove(client1);
                     clients.Remove(client2);
 
-                    // Match found
+                    List<Client> tmpClients = [client1, client2];
+                    bool firstIsWhite = Random.Shared.Next(2) == 0;
+
                     return new Match()
                     {
                         MatchId = Guid.NewGuid().ToString(),
-                        ClientWhite = client1,
-                        ClientBlack = client2 // TODO: assign random
+                        ClientWhite = firstIsWhite ? tmpClients[0] : tmpClients[1],
+                        ClientBlack = firstIsWhite ? tmpClients[1] : tmpClients[0]
                     };
                 }
 
@@ -50,13 +52,16 @@ namespace Chess.NET.Online.Services
             }
         }
 
-        public void Leave(string clientId)
+        public void Leave(string clientId, string reason)
         {
             lock (sync)
             {
                 var item = clients.FirstOrDefault(c => c.ClientID == clientId);
                 if (item != null)
+                {
                     clients.Remove(item);
+                    _logger.LogInformation($"Client [{clientId}] ({item.PlayerName}) leaved waiting queue due to reason: {reason}");
+                }
             }
         }
     }

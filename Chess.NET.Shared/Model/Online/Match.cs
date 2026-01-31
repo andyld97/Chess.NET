@@ -14,5 +14,27 @@ namespace Chess.NET.Shared.Model.Online
 
         [JsonIgnore]
         public Game Game { get; set; } = null!;
+
+        [JsonIgnore]
+        public SemaphoreSlim MatchSemaphore { get; } = new SemaphoreSlim(1, 1);
+
+        public Color? GetColorByClientId(string clientId)
+        {
+            if (ClientWhite.ClientID == clientId)
+                return Color.White;
+            else if (ClientBlack.ClientID == clientId)
+                return Color.Black;
+
+            return null;
+        }
+    }
+
+    public enum MatchResult
+    {
+        Checkmate,
+        Stalemate,
+        Resign,
+        TimeOver,
+        Disconnected
     }
 }
