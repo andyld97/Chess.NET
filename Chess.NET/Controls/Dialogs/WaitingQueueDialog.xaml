@@ -5,8 +5,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Chess.NET.Controls.Dialogs"
         mc:Ignorable="d" WindowStartupLocation="CenterOwner" ResizeMode="NoResize"
-        Title="Waiting ..." Height="150" Width="300" Closing="Window_Closing">
+        xmlns:res="clr-namespace:Chess.NET.Properties"
+        Title="{x:Static res:Resources.strWaiting_Title}" Height="150" Width="400" Closing="Window_Closing">
     <Grid>
-        <TextBlock Text="Waiting for Queue ..." HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" FontSize="28" />
+        <TextBlock Text="{x:Static res:Resources.strWaiting_Content}" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" FontSize="28" />
     </Grid>
 </Window>

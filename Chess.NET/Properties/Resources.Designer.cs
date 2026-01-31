@@ -529,6 +529,24 @@ namespace Chess.NET.Properties {
         }
         
         /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Searching for a match ... ähnelt.
+        /// </summary>
+        public static string strWaiting_Content {
+            get {
+                return ResourceManager.GetString("strWaiting_Content", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Waiting ... ähnelt.
+        /// </summary>
+        public static string strWaiting_Title {
+            get {
+                return ResourceManager.GetString("strWaiting_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Sucht eine lokalisierte Zeichenfolge, die White ähnelt.
         /// </summary>
         public static string strWhite {

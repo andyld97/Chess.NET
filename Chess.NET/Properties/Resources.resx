@@ -281,4 +281,10 @@
   <data name="strResign" xml:space="preserve">
     <value>Resign</value>
   </data>
+  <data name="strWaiting_Title" xml:space="preserve">
+    <value>Waiting ...</value>
+  </data>
+  <data name="strWaiting_Content" xml:space="preserve">
+    <value>Searching for a match ...</value>
+  </data>
 </root>

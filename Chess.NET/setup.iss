@@ -48,8 +48,25 @@ Source: "bin\Release\net10.0-windows\publish\Chess.NET.dll"; DestDir: "{app}"; F
 Source: "bin\Release\net10.0-windows\publish\Chess.NET.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "bin\Release\net10.0-windows\publish\Chess.NET.pdb"; DestDir: "{app}"; Flags: ignoreversion
 Source: "bin\Release\net10.0-windows\publish\Chess.NET.runtimeconfig.json"; DestDir: "{app}"; Flags: ignoreversion
+; Shared DLL
+Source: "bin\Release\net10.0-windows\publish\Chess.NET.Shared.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "bin\Release\net10.0-windows\publish\Chess.NET.Shared.pdb"; DestDir: "{app}"; Flags: ignoreversion
 
-; TODO: Add Chess.NET.Shared + ASP.NET SignalR Dependencies
+; SignalR DLLs
+Source: "bin\Release\net10.0-windows\publish\Microsoft.AspNetCore.Connections.Abstractions.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "bin\Release\net10.0-windows\publish\Microsoft.AspNetCore.Http.Connections.Client.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "bin\Release\net10.0-windows\publish\Microsoft.AspNetCore.Http.Connections.Common.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "bin\Release\net10.0-windows\publish\Microsoft.AspNetCore.SignalR.Client.Core.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "bin\Release\net10.0-windows\publish\Microsoft.AspNetCore.SignalR.Client.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "bin\Release\net10.0-windows\publish\Microsoft.AspNetCore.SignalR.Common.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "bin\Release\net10.0-windows\publish\Microsoft.AspNetCore.SignalR.Protocols.Json.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "bin\Release\net10.0-windows\publish\Microsoft.Extensions.DependencyInjection.Abstractions.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "bin\Release\net10.0-windows\publish\Microsoft.Extensions.DependencyInjection.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "bin\Release\net10.0-windows\publish\Microsoft.Extensions.Features.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "bin\Release\net10.0-windows\publish\Microsoft.Extensions.Logging.Abstractions.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "bin\Release\net10.0-windows\publish\Microsoft.Extensions.Logging.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "bin\Release\net10.0-windows\publish\Microsoft.Extensions.Options.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "bin\Release\net10.0-windows\publish\Microsoft.Extensions.Primitives.dll"; DestDir: "{app}"; Flags: ignoreversion
 
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
