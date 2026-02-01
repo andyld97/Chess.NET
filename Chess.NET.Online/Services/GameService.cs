@@ -12,7 +12,7 @@ namespace Chess.NET.Online.Services
 
         Match? GetMatchByClientId(string clientId);
 
-        Task EndMatchAsync(string matchId, MatchResult matchResult, Color? color);
+        Task EndMatchAsync(string matchId, GameResult matchResult, Color? color);
     }
 
     public class GameService : IGameService
@@ -51,24 +51,9 @@ namespace Chess.NET.Online.Services
                     // Notify clients
                     await _hub.Clients.Users([match.ClientWhite.ClientID, match.ClientBlack.ClientID]).SendAsync("MoveMade", new MoveMade() { Move = move.FormatMove(false, false), Color = move.Piece.Color });
                 };
-                game.OnCheckmate += async delegate
+                game.OnGameOver += async delegate (GameResult result, Color? colorWon)
                 {
-                    await EndMatchAsync(match.MatchId, MatchResult.Checkmate, game.IsCheckmate(Color.Black) ? Color.White : Color.Black);
-                };
-                game.OnStalemate += async delegate
-                {
-                    await EndMatchAsync(match.MatchId, MatchResult.Stalemate, null);
-                };
-                game.OnResign += async delegate (Color color)
-                {
-                    var winnerColor = color;
-
-                    if (color == Color.Black)
-                        color = Color.White;
-                    else
-                        color = Color.Black;
-
-                    await EndMatchAsync(match.MatchId, MatchResult.Resign, color);
+                    await EndMatchAsync(match.MatchId, result, colorWon);
                 };
 
                 match.Game = game;
@@ -80,7 +65,7 @@ namespace Chess.NET.Online.Services
             }
         }
 
-        public async Task EndMatchAsync(string matchId, MatchResult matchResult, Color? color)
+        public async Task EndMatchAsync(string matchId, GameResult matchResult, Color? color)
         {
             var match = GetMatch(matchId);
             ArgumentNullException.ThrowIfNull(match);
@@ -92,7 +77,7 @@ namespace Chess.NET.Online.Services
                 matches.Remove(match);
 
                 string matchLog = $"[{matchId}] ended: ";
-                if (matchResult == MatchResult.Stalemate)
+                if (matchResult == GameResult.Stalemate)
                     matchLog += "Stalemate (Remis)";
                 else
                 {

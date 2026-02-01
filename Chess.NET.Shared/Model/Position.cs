@@ -59,8 +59,18 @@
             return (object)new Position(File, Rank);
         }
 
-        public static bool operator ==(Position left, Position right) => left.Equals(right);
+        public static bool operator ==(Position? left, Position? right)
+        {
+            if (ReferenceEquals(left, right)) return true;
 
-        public static bool operator !=(Position left, Position right) => !left.Equals(right);
+            if (left is null || right is null) return false;
+
+            return left.Equals(right);
+        }
+
+        public static bool operator !=(Position? left, Position? right)
+        {
+            return !(left == right);
+        }
     }
 }

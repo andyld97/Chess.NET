@@ -28,13 +28,4 @@ namespace Chess.NET.Shared.Model.Online
             return null;
         }
     }
-
-    public enum MatchResult
-    {
-        Checkmate,
-        Stalemate,
-        Resign,
-        TimeOver,
-        Disconnected
-    }
 }

@@ -4,6 +4,6 @@
     {
         public Color? ColorWins { get; set; } = null;
 
-        public MatchResult Result { get; set; }
+        public GameResult Result { get; set; }
     }
 }

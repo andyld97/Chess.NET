@@ -11,4 +11,15 @@
         PuzzleFail,
         PuzzleSolved
     }
+
+    public enum GameResult
+    {
+        Checkmate,
+        Stalemate,
+        Resign,
+        TimeOver,
+        FiftyMoveRule,
+        ThreefoldReptition,
+        Disconnected
+    }
 }

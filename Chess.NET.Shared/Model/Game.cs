@@ -7,6 +7,7 @@ namespace Chess.NET.Shared.Model
     {
         #region Private Members
         private readonly Board board = new Board();
+        private List<ChessPosition> positions = [];
         private Puzzle? currentPuzzle = null;
         private IChessBot? opponent = null;
 
@@ -21,17 +22,11 @@ namespace Chess.NET.Shared.Model
         public delegate void onMovedPiece(MoveNotation move);
         public event onMovedPiece? OnMovedPiece;
 
-        public delegate void onCheckmate(Color pieceColor);
-        public event onCheckmate? OnCheckmate;
-
-        public delegate void onStalemate();
-        public event onStalemate? OnStalemate;
-
         public delegate void onPlaySound(SoundType type);
         public event onPlaySound? OnPlaySound;
 
-        public delegate void onResign(Color color);
-        public event onResign? OnResign;
+        public delegate void onGameOver(GameResult result, Color? colorWon);
+        public event onGameOver? OnGameOver;    
 
         #endregion
 
@@ -44,17 +39,6 @@ namespace Chess.NET.Shared.Model
         public Color PlayersTurn { get; private set; } = Color.White;
 
         public bool IsGameOver { get; private set; }
-
-        public void StartNewGame(IChessBot? opponent)
-        {
-            board.Reset();
-            IsGameOver = false;
-            PlayersTurn = Color.White;
-            Moves.Clear();            
-            hasWhiteCastled = false;
-            hasBlackCastled = false;
-            this.opponent = opponent;
-        }
 
         #endregion
 
@@ -275,7 +259,7 @@ namespace Chess.NET.Shared.Model
 
         #endregion
 
-        #region Check, Checkmate & Stalemate
+        #region Check, Checkmate, Stalemate, 50-Move Rule, Threefold Repition
 
         public bool IsCheckmate(Color color)
         {
@@ -330,6 +314,79 @@ namespace Chess.NET.Shared.Model
 
             return clone.IsCheck(color);
         }
+
+        private void CheckFiftyMoveRule()
+        {
+            if (Moves.Count >= 100)
+            {
+                var last100HalfMoves = Moves.TakeLast(100);
+
+                bool noCapture = !last100HalfMoves.Any(m => m.IsCapture);
+                bool noPawnMove = !last100HalfMoves.Any(m => m.Piece.Type == PieceType.Pawn);
+
+                if (noCapture && noPawnMove)
+                {
+                    IsGameOver = true;
+                    OnGameOver?.Invoke(GameResult.FiftyMoveRule, null);
+                }
+            }
+        }
+
+        #region Threefold Repition
+        private void CheckThreefoldRepition()
+        {
+            bool threefoldRepition = false;
+
+            // Check if there are three positions that are exactly the same!
+            var groups = positions.GroupBy(p => p.GetHash());
+            threefoldRepition = groups.Any(g => g.Count() >= 3);
+
+            if (threefoldRepition)
+                OnGameOver?.Invoke(GameResult.ThreefoldReptition, null);
+        }
+
+        private void AddCurrentPosition()
+        {
+            Position? enPassantSquare = null;
+
+            var lastMove = Moves.LastOrDefault();
+            if (lastMove != null && lastMove.Piece.Type == PieceType.Pawn && Math.Abs(lastMove.From.Rank - lastMove.To.Rank) == 2)
+            {
+                int file = lastMove.To.File;
+                int rank = lastMove.Piece.Color == Color.White
+                    ? lastMove.To.Rank - 1
+                    : lastMove.To.Rank + 1;
+
+                enPassantSquare = new Position(file, rank);
+            }      
+
+            ChessPosition currentPosition = new ChessPosition
+            {
+                SideToMove = PlayersTurn,
+                WhiteCanCastleQueenSide = CanCastle(Color.White, Position.Parse("c1")),
+                WhiteCanCastleKingSide = CanCastle(Color.White, Position.Parse("g1")),
+                BlackCanCastleQueenSide = CanCastle(Color.Black, Position.Parse("c8")),
+                BlackCanCastleKingSide = CanCastle(Color.Black, Position.Parse("g8")),
+                PiecesHash = GetPiecesHashSha(),
+                EnPassantSquare = enPassantSquare
+            };
+
+           positions.Add(currentPosition);  
+        }
+
+        private string GetPiecesHashSha()
+        {
+            var key = string.Join("|", board.Pieces
+                .OrderBy(p => p.Position.File)
+                .ThenBy(p => p.Position.Rank)
+                .Select(p => $"{p.Type}-{p.Color}-{p.Position.File}-{p.Position.Rank}"));
+
+            var bytes = System.Text.Encoding.UTF8.GetBytes(key);
+            var hash = System.Security.Cryptography.SHA256.HashData(bytes);
+            return Convert.ToBase64String(hash);
+        }
+
+        #endregion
 
         #endregion
 
@@ -388,7 +445,7 @@ namespace Chess.NET.Shared.Model
             bool isEnPassant = false;
             string disambiguation = string.Empty;
             Position oldPosition = (Position)piece.Position.Clone();
-            bool willBeCheck = IsCheck(Helper.InvertPieceColor(piece.Color), piece, position);
+            bool willBeCheck = IsCheck(piece.Color.InvertPieceColor(), piece, position);
 
             if (piece.Type == PieceType.Pawn && (position.Rank == 1 || position.Rank == 8))
             {
@@ -414,7 +471,7 @@ namespace Chess.NET.Shared.Model
                 board.PromotedPieces.Add(newPiece);
                 board.Pieces.Add(newPiece);
 
-                willBeCheck |= IsCheck(Helper.InvertPieceColor(piece.Color));
+                willBeCheck |= IsCheck(piece.Color.InvertPieceColor());
                 isPromotion = true;
             }
 
@@ -495,8 +552,7 @@ namespace Chess.NET.Shared.Model
             if (Moves.Count > 0)
             {
                 move.Count = Moves[^1].Count;
-                //if (piece.Color == PieceColor.White)
-                    move.Count++;
+                move.Count++;
             }
 
             if (isCastle)
@@ -521,7 +577,7 @@ namespace Chess.NET.Shared.Model
                 IsGameOver = true;
 
                 OnMovedPiece?.Invoke(move);
-                OnCheckmate?.Invoke((IsCheckmate(Color.White) ? Color.White : Color.Black));
+                OnGameOver?.Invoke(GameResult.Checkmate, IsCheckmate(Color.White) ? Color.Black : Color.White);
 
                 if (playSound)
                 {
@@ -537,7 +593,7 @@ namespace Chess.NET.Shared.Model
                 move.IsStalemate = true;
 
                 OnMovedPiece?.Invoke(move);
-                OnStalemate?.Invoke();
+                OnGameOver?.Invoke(GameResult.Stalemate, null);
 
                 if (playSound)
                     OnPlaySound?.Invoke(SoundType.Stalemate);
@@ -547,9 +603,18 @@ namespace Chess.NET.Shared.Model
             else if (willBeCheck && playSound)
                 OnPlaySound?.Invoke(SoundType.Check);
 
+            // Important for Threefold Repition
+            AddCurrentPosition();
+
             // Switch players
-            PlayersTurn = Helper.InvertPieceColor(PlayersTurn);
+            PlayersTurn = PlayersTurn.InvertPieceColor();
             OnMovedPiece?.Invoke(move);
+
+            // Check for fifty move rule (= 100 plies/Halbzüge)
+            CheckFiftyMoveRule();
+
+            // Check for threefold repition!
+            CheckThreefoldRepition();            
 
             return true;
         }
@@ -573,10 +638,25 @@ namespace Chess.NET.Shared.Model
 
         #region Other
 
+        public void StartNewGame(IChessBot? opponent)
+        {
+            board.Reset();
+            positions.Clear();
+            IsGameOver = false;
+            PlayersTurn = Color.White;
+            Moves.Clear();
+            hasWhiteCastled = false;
+            hasBlackCastled = false;
+            this.opponent = opponent;
+        }
+
         public void Resign(Color color)
         {
+            if (IsGameOver)
+                return;
+
             IsGameOver = true;
-            OnResign?.Invoke(color);
+            OnGameOver?.Invoke(GameResult.Resign, color.InvertPieceColor());
         }
 
         public PlayerInfo GetPlayerInformation()
@@ -587,7 +667,7 @@ namespace Chess.NET.Shared.Model
             var whitePromotedPieces = board.PromotedPieces.Where(p => p.Color == Color.White);
             var blackPromotedPieces = board.PromotedPieces.Where(p => p.Color == Color.Black);
 
-            // Promotion: -1 per Piece cause you promoted the pawn, but lost it anyways!
+            // Promotion: -1 per Piece cause you promoted the pawn, but the pawn is on your team anymore!
             int whiteCapturePiecesMaterialValue = whiteCapturedPieces.Sum(p => p.MaterialValue) + whitePromotedPieces.Sum(p => p.MaterialValue - 1);
             int blackCapturePiecesMaterialValue = blackCapturedPieces.Sum(p => p.MaterialValue) + blackPromotedPieces.Sum(p => p.MaterialValue - 1);
 

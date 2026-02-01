@@ -33,7 +33,7 @@ namespace Chess.NET.Online
                     Color? col = match.GetColorByClientId(clientId);
                     ArgumentNullException.ThrowIfNull(col);
 
-                    await _gameService.EndMatchAsync(match.MatchId, Shared.Model.Online.MatchResult.Disconnected, col.Value);
+                    await _gameService.EndMatchAsync(match.MatchId, GameResult.Disconnected, col.Value);
                 }
             }
 

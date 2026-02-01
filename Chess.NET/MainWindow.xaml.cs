@@ -5,8 +5,6 @@ using Chess.NET.Netcode;
 using Chess.NET.Shared.Model;
 using Chess.NET.Shared.Model.Bot;
 using Chess.NET.Shared.Model.Online;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -42,8 +40,7 @@ namespace Chess.NET
 
             // Assign events
             Chessboard.Game.OnMovedPiece += Game_MovedPiece;
-            Chessboard.Game.OnCheckmate += Game_OnCheckmate;
-            Chessboard.Game.OnStalemate += Game_OnStalemate;
+            Chessboard.Game.OnGameOver += Game_OnGameOver;
             Chessboard.Game.OnPlaySound += Game_OnPlaySound;
 
             // Assign commands
@@ -83,18 +80,32 @@ namespace Chess.NET
 
         private void MenuPuzzle_Click(object sender, RoutedEventArgs e)
         {
-            new PuzzleDialog((sender as MenuItem)!.Tag as Puzzle).ShowDialog();
+            var puzzle = (sender as MenuItem)!.Tag as Puzzle;
+            var puzzleDialog = new PuzzleDialog(puzzle);
+            puzzleDialog.ShowDialog();
         }
 
         #endregion
 
         #region Game Events
-
-        private async void Game_OnCheckmate(Color pieceColor)
+        private async void Game_OnGameOver(GameResult result, Color? colorWon)
         {
             if (isOnlineMatch)
                 return;
 
+            if (result == GameResult.Checkmate)
+                DisplayCheckmate(colorWon!.Value);
+            else if (result == GameResult.Stalemate)
+                DisplayStalemate();
+            else
+            {
+                // TODO: Weitere Fälle implementieren
+                MessageBox.Show($"Match ended due to {result}", "Game is over!", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+        }
+
+        private async void DisplayCheckmate(Color pieceColor)
+        {
             string playerText = string.Empty;
 
             if (pieceColor == Color.White)
@@ -116,17 +127,8 @@ namespace Chess.NET
             });
         }
 
-        private void Game_OnPlaySound(SoundType type)
+        private async void DisplayStalemate()
         {
-            // Always play
-            Sound.Play(type);
-        }
-
-        private async void Game_OnStalemate()
-        {
-            if (isOnlineMatch)
-                return;
-
             await Task.Delay(250).ContinueWith(t =>
             {
                 Application.Current.Dispatcher.Invoke(() =>
@@ -134,6 +136,12 @@ namespace Chess.NET
                     MessageBox.Show(Properties.Resources.strGameOver_StalemateText, Properties.Resources.strGameOver_Stalemate, MessageBoxButton.OK, MessageBoxImage.Information);
                 });
             });
+        }
+
+        private void Game_OnPlaySound(SoundType type)
+        {
+            // Always play
+            Sound.Play(type);
         }
 
         private void Game_MovedPiece(MoveNotation move)
@@ -156,7 +164,13 @@ namespace Chess.NET
                 currentMoveNotationDisplay.OnJumpToMove += OnJumpToMove;
             }
 
+            // ... select +
             ListMoves.SelectedIndex = ListMoves.Items.Count - 1;
+
+            // ... scroll into view
+            if (ListMoves.SelectedItem != null)
+                ListMoves.ScrollIntoView(ListMoves.SelectedItem);
+
             RefreshPlayerDisplay();
         }
 
@@ -214,7 +228,7 @@ namespace Chess.NET
             else if (CmbOpponent.SelectedIndex == 1)
                 opponent = new StupidoBot();
             else if (CmbOpponent.SelectedIndex == 2)
-                await StartNewOnlineMatch();
+                await StartOnlineMatchAsync();
             else
                 opponent = null;
 
@@ -224,14 +238,14 @@ namespace Chess.NET
 
         #region Online Match / Net GUI Code
 
-        private SignalRClient _networkClient;
+        private SignalRClient _networkClient = null!;
         private WaitingQueueDialog? waitingQueueDialog = null;
         private Color? ownPieceColor = null;
         private MatchInfo? currentMatchInfo = null;
         private Client? client = null;
         private bool isOnlineMatch = false;
 
-        private async Task StartNewOnlineMatch()
+        private async Task StartOnlineMatchAsync()
         {
             ownPieceColor = null;
             currentMatchInfo = null;
@@ -254,7 +268,7 @@ namespace Chess.NET
 
             if (client == null)
             {
-                // = Error
+                // Error
                 waitingQueueDialog?.FoundMatch = false;
                 waitingQueueDialog?.Loaded -= WaitingQueueDialog_Loaded;
                 waitingQueueDialog?.Close();
@@ -315,7 +329,7 @@ namespace Chess.NET
             await _networkClient.DisconnectAsync();
 
             string message = $"Match ended: ";
-            if (matchEnd.Result == MatchResult.Stalemate)
+            if (matchEnd.Result == GameResult.Stalemate)
                 message += "Stalemate (Remis)";
             else
             {
