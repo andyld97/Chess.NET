@@ -99,6 +99,7 @@ namespace Chess.NET.Controls
         public void Mirror()
         {
             isMirrored = !isMirrored; // toggle
+            InitializeSquares();
             RenderChessBoard(game.Board);
         }
 
@@ -381,7 +382,7 @@ namespace Chess.NET.Controls
                     }
                     else
                     {
-                        bool dark = (file + rank) % 2 == 0;
+                        bool dark = (file + (isMirrored ? (9 - rank) : rank)) % 2 == 0;
                         _squares[file - 1, rank - 1].Border.Background = (Brush)FindResource(dark ? "ChessDarkSquare" : "ChessLightSquare");
                     }
                 }
@@ -390,18 +391,24 @@ namespace Chess.NET.Controls
 
         private void InitializeSquares()
         {
+            BoardGrid.Children.Clear();
+
             for (int rank = 8; rank >= 1; rank--)
             {
                 for (int file = 1; file <= 8; file++)
                 {
-                    bool dark = (file + rank) % 2 == 0;
+                    bool dark = (file + (isMirrored ? (9 - rank) : rank)) % 2 == 0;
 
                     var square = new Border
                     {
                         Background = (Brush)FindResource(dark ? "ChessDarkSquare" : "ChessLightSquare")
                     };
 
-                    Grid.SetColumn(square, file - 1);
+                    if (isMirrored)
+                        Grid.SetColumn(square, 8 - file);
+                    else
+                        Grid.SetColumn(square, file - 1);
+
                     Grid.SetRow(square, 8 - rank);
 
                     var image = new Image() { Margin = new System.Windows.Thickness(10), HorizontalAlignment = System.Windows.HorizontalAlignment.Center, VerticalAlignment = System.Windows.VerticalAlignment.Center };
