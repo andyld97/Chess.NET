@@ -121,7 +121,7 @@ namespace Chess.NET.Shared.Model
         public bool IsCheck(Color pieceColor)
         {
             var king = Pieces.First(p => p.Type == PieceType.King && p.Color == pieceColor);
-            var opponentColor = Helper.InvertPieceColor(pieceColor);
+            var opponentColor = Helper.InvertColor(pieceColor);
 
             foreach (var oponnentPiece in Pieces.Where(p => p.Type != PieceType.King && p.Color == opponentColor))
             {

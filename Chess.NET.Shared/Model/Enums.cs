@@ -20,6 +20,7 @@
         TimeOver,
         FiftyMoveRule,
         ThreefoldReptition,
-        Disconnected
+        Disconnected,
+        InsufficentCheckmatingMaterial
     }
 }

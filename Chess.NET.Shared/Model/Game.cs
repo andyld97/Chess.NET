@@ -332,6 +332,65 @@ namespace Chess.NET.Shared.Model
             }
         }
 
+        private void CheckInsufficientCheckmatingMaterial()
+        {
+            if (board.Pieces.Any(p => p.Type == PieceType.Pawn))
+                return;
+
+            bool insufficientCheckmatingMaterial = false;
+            if (board.Pieces.Count == 2 && board.Pieces.All(p => p.Type == PieceType.King))
+                insufficientCheckmatingMaterial = true;
+            else if (board.Pieces.Count == 3 || board.Pieces.Count == 4)
+            {
+                // Case 1) King + Bishop (White) && King (Black) [3]
+
+                // Case 2) King + Knight (White) && King (Black) [3]
+
+                // Case 3) King (White) && King + Bishop (Black) [3]
+
+                // Case 4) King (White) && King + Knight (Black) [3]
+
+                // Case 5) King + Bishop (White and Black) but both bishops needs to be on the same color [4]
+
+                var whiteKing = board.Pieces.FirstOrDefault(p => p.Type == PieceType.King && p.Color == Color.White);
+                var blackKing = board.Pieces.FirstOrDefault(p => p.Type == PieceType.King && p.Color == Color.Black);
+
+                if (whiteKing == null || blackKing == null)
+                    return;
+
+                if (board.Pieces.Count == 3)
+                {
+                    // Case 1-4)
+                    if (board.Pieces.Any(p => p.Type == PieceType.Bishop))
+                        insufficientCheckmatingMaterial = true;
+                    else if (board.Pieces.Any(p => p.Type == PieceType.Knight))
+                        insufficientCheckmatingMaterial = true;
+                }
+
+                else if (board.Pieces.Count == 4)
+                {
+                    // Case 5)
+                    var whiteBishop = board.Pieces.FirstOrDefault(p => p.Type == PieceType.Bishop && p.Color == Color.White);
+                    var blackBishop = board.Pieces.FirstOrDefault(p => p.Type == PieceType.Bishop && p.Color == Color.Black);
+
+                    if (whiteBishop == null || blackBishop == null)
+                        return;
+
+                    insufficientCheckmatingMaterial =
+                        (whiteBishop.Position.IsDarkSquare && blackBishop.Position.IsDarkSquare) ||
+                        (whiteBishop.Position.IsLightSquare && blackBishop.Position.IsLightSquare);
+                }
+                else
+                    return;
+            }
+
+            if (insufficientCheckmatingMaterial)
+            {
+                IsGameOver = true;
+                OnGameOver?.Invoke(GameResult.InsufficentCheckmatingMaterial, null);
+            }
+        }
+
         #region Threefold Repition
         private void CheckThreefoldRepition()
         {
@@ -445,7 +504,7 @@ namespace Chess.NET.Shared.Model
             bool isEnPassant = false;
             string disambiguation = string.Empty;
             Position oldPosition = (Position)piece.Position.Clone();
-            bool willBeCheck = IsCheck(piece.Color.InvertPieceColor(), piece, position);
+            bool willBeCheck = IsCheck(piece.Color.InvertColor(), piece, position);
 
             if (piece.Type == PieceType.Pawn && (position.Rank == 1 || position.Rank == 8))
             {
@@ -471,7 +530,7 @@ namespace Chess.NET.Shared.Model
                 board.PromotedPieces.Add(newPiece);
                 board.Pieces.Add(newPiece);
 
-                willBeCheck |= IsCheck(piece.Color.InvertPieceColor());
+                willBeCheck |= IsCheck(piece.Color.InvertColor());
                 isPromotion = true;
             }
 
@@ -607,8 +666,11 @@ namespace Chess.NET.Shared.Model
             AddCurrentPosition();
 
             // Switch players
-            PlayersTurn = PlayersTurn.InvertPieceColor();
+            PlayersTurn = PlayersTurn.InvertColor();
             OnMovedPiece?.Invoke(move);
+
+            // Check if there is still enough material to checkmate, otherwise its a draw too ...
+            CheckInsufficientCheckmatingMaterial();
 
             // Check for fifty move rule (= 100 plies/Halbzüge)
             CheckFiftyMoveRule();
@@ -656,7 +718,7 @@ namespace Chess.NET.Shared.Model
                 return;
 
             IsGameOver = true;
-            OnGameOver?.Invoke(GameResult.Resign, color.InvertPieceColor());
+            OnGameOver?.Invoke(GameResult.Resign, color.InvertColor());
         }
 
         public PlayerInfo GetPlayerInformation()

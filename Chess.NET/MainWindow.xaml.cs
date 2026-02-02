@@ -108,14 +108,14 @@ namespace Chess.NET
         {
             string playerText = string.Empty;
 
-            if (pieceColor == Color.White)
+            if (pieceColor == Color.Black)
             {
                 if (opponent == null)
                     playerText = $"{Helper.GetPlayerName(1)} ({Properties.Resources.strBlack})";
                 else
                     playerText = $"{opponent?.Name} [Bot] ({Properties.Resources.strBlack})";
             }
-            else if (pieceColor == Color.Black)
+            else if (pieceColor == Color.White)
                 playerText = $"{Helper.GetPlayerName(1)} ({Properties.Resources.strWhite})";
 
             await Task.Delay(250).ContinueWith(t =>

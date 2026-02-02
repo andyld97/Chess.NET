@@ -21,6 +21,10 @@
             Rank = rank;
         }
 
+        public bool IsLightSquare => !IsDarkSquare;
+
+        public bool IsDarkSquare => (File + Rank) % 2 == 0;
+
         public static Position Parse(string pos)
         {
             if (string.IsNullOrWhiteSpace(pos) || pos.Length != 2)

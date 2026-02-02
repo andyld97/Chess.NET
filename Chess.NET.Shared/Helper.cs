@@ -4,7 +4,7 @@ namespace Chess.NET.Shared
 {
     public static class Helper
     {
-        public static Color InvertPieceColor(this Color pieceColor)
+        public static Color InvertColor(this Color pieceColor)
         {
             if (pieceColor == Color.White)
                 return Color.Black;

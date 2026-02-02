@@ -2,8 +2,11 @@
 using Chess.NET.Model;
 using Chess.NET.Model.GUI;
 using Chess.NET.Netcode;
+using Chess.NET.Shared;
 using Chess.NET.Shared.Model;
 using Chess.NET.Shared.Model.Bot;
+using Chess.NET.Shared.Model.Pieces;
+using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -40,11 +43,7 @@ namespace Chess.NET.Controls
             InitializeComponent();
             InitializeSquares();
 
-            game = new Game();
-            game.StartNewGame(null);
-
-            RenderChessBoard(game.Board);
-            canMove = true;
+            Restart(null);
         }
 
         public void LoadPuzzle(Puzzle puzzle)
@@ -83,7 +82,9 @@ namespace Chess.NET.Controls
         {
             ResetDrag();
 
+            InitializeSquares();
             game.StartNewGame(opponent);
+            game.OnGameOver += Game_OnGameOver;
             RenderChessBoard(game.Board);
             this.opponent = opponent;
             isInNavigationMode = false;
@@ -180,10 +181,7 @@ namespace Chess.NET.Controls
                     bool foundValidMove = false;
                     while (!foundValidMove)
                     {
-                        if (game.IsCheckmate(Shared.Model.Color.Black) || game.IsCheckmate(Shared.Model.Color.White))
-                            return;
-
-                        if (game.IsStalemate(Shared.Model.Color.Black) || game.IsStalemate(Shared.Model.Color.White))
+                        if (game.IsGameOver)
                             return;
 
                         var next = opponent.Move(game);
@@ -423,6 +421,49 @@ namespace Chess.NET.Controls
                 }
             }
         }
+
+
+        private void Game_OnGameOver(GameResult result, Shared.Model.Color? colorWon)
+        {
+            if (isPuzzle)
+                return;
+
+            // Rotate king(s)
+            if (colorWon != null && (result == GameResult.Checkmate || result == GameResult.Resign))
+            {
+                var king = game.Board.Pieces.FirstOrDefault(p => p.Type == PieceType.King && p.Color == colorWon.Value.InvertColor());
+                if (king == null)
+                    return;
+
+                var kingSquare = _squares[king.Position.File - 1, king.Position.Rank - 1];
+                var border = kingSquare.Border;
+
+                border.RenderTransformOrigin = new Point(0.5, 0.5);
+                border.RenderTransform = new RotateTransform(180);
+
+                return;
+            }
+
+            // Rotate both kings since its a draw
+            var kingWhite = game.Board.Pieces.FirstOrDefault(p => p.Type == PieceType.King && p.Color ==  Shared.Model.Color.White);
+            var kingBlack = game.Board.Pieces.FirstOrDefault(p => p.Type == PieceType.King && p.Color == Shared.Model.Color.Black);
+            if (kingWhite == null || kingBlack == null)
+                return;
+
+            var kingSquareWhite = _squares[kingWhite.Position.File - 1, kingWhite.Position.Rank - 1];
+            var borderKingWite = kingSquareWhite.Border;
+
+            borderKingWite.RenderTransformOrigin = new Point(0.5, 0.5);
+            borderKingWite.RenderTransform = new RotateTransform(180);
+
+
+            var kingSquareBlack = _squares[kingBlack.Position.File - 1, kingBlack.Position.Rank - 1];
+            var borderKingBlack = kingSquareBlack.Border;
+
+            borderKingBlack.RenderTransformOrigin = new Point(0.5, 0.5);
+            borderKingBlack.RenderTransform = new RotateTransform(180);
+        }
+
 
         #endregion
     }
