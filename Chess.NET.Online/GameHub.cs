@@ -1,4 +1,5 @@
 ﻿using Chess.NET.Online.Services;
+using Chess.NET.Shared;
 using Chess.NET.Shared.Model;
 using Microsoft.AspNetCore.SignalR;
 
@@ -33,7 +34,7 @@ namespace Chess.NET.Online
                     Color? col = match.GetColorByClientId(clientId);
                     ArgumentNullException.ThrowIfNull(col);
 
-                    await _gameService.EndMatchAsync(match.MatchId, GameResult.Disconnected, col.Value);
+                    match.Game.Resign(col.Value, true);
                 }
             }
 

@@ -269,7 +269,7 @@
     <value>Erneut versuchen</value>
   </data>
   <data name="strBeginPosition" xml:space="preserve">
-    <value>0. Startposition</value>
+    <value>Startposition</value>
   </data>
   <data name="strResign" xml:space="preserve">
     <value>Aufgeben</value>
@@ -279,5 +279,50 @@
   </data>
   <data name="strWaiting_Content" xml:space="preserve">
     <value>Gegner wird gesucht ...</value>
+  </data>
+  <data name="strFailedToResign" xml:space="preserve">
+    <value>Beim Aufgeben ist ein Fehler aufgetreten: {0}</value>
+  </data>
+  <data name="strFailedToConnectToServer" xml:space="preserve">
+    <value>Fehler beim Verbinden mit dem Schach-Server: {0}</value>
+  </data>
+  <data name="strFailedToMove" xml:space="preserve">
+    <value>Der Zug konnte nicht ausgeführt werden oder wurde vom Server nicht akzeptiert: {0}</value>
+  </data>
+  <data name="strPlayerWinsWith" xml:space="preserve">
+    <value>gewinnt mit</value>
+  </data>
+  <data name="strGameOver" xml:space="preserve">
+    <value>Spielende</value>
+  </data>
+  <data name="strPlayerWinsDueTo" xml:space="preserve">
+    <value>durch</value>
+  </data>
+  <data name="strDraw" xml:space="preserve">
+    <value>Remis</value>
+  </data>
+  <data name="strResignation" xml:space="preserve">
+    <value>Aufgabe!</value>
+  </data>
+  <data name="strDisconnect" xml:space="preserve">
+    <value>Verbindungsabbruch!</value>
+  </data>
+  <data name="strCheckmate" xml:space="preserve">
+    <value>Schachmatt!</value>
+  </data>
+  <data name="strTimeout" xml:space="preserve">
+    <value>Zeitüberschreitung!</value>
+  </data>
+  <data name="strStalemate" xml:space="preserve">
+    <value>Patt!</value>
+  </data>
+  <data name="strThreefoldRepition" xml:space="preserve">
+    <value>Dreifachwiederholung!</value>
+  </data>
+  <data name="strFiftyMoveRule" xml:space="preserve">
+    <value>50-Züge-Regel!</value>
+  </data>
+  <data name="strInsufficientCheckmatingMaterial" xml:space="preserve">
+    <value>Materialmangel!</value>
   </data>
 </root>

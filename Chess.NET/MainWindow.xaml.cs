@@ -93,47 +93,26 @@ namespace Chess.NET
             if (isOnlineMatch)
                 return;
 
-            if (result == GameResult.Checkmate)
-                DisplayCheckmate(colorWon!.Value);
-            else if (result == GameResult.Stalemate)
-                DisplayStalemate();
-            else
-            {
-                // TODO: Weitere Fälle implementieren
-                MessageBox.Show($"Match ended due to {result}", "Game is over!", MessageBoxButton.OK, MessageBoxImage.Information);
-            }
-        }
-
-        private async void DisplayCheckmate(Color pieceColor)
-        {
-            string playerText = string.Empty;
-
-            if (pieceColor == Color.Black)
-            {
-                if (opponent == null)
-                    playerText = $"{Helper.GetPlayerName(1)} ({Properties.Resources.strBlack})";
-                else
-                    playerText = $"{opponent?.Name} [Bot] ({Properties.Resources.strBlack})";
-            }
-            else if (pieceColor == Color.White)
-                playerText = $"{Helper.GetPlayerName(1)} ({Properties.Resources.strWhite})";
-
             await Task.Delay(250).ContinueWith(t =>
             {
                 Application.Current.Dispatcher.Invoke(() =>
                 {
-                    MessageBox.Show(string.Format(Properties.Resources.strGameOver_WinMessage, playerText), Properties.Resources.strGameOver_Win, MessageBoxButton.OK, MessageBoxImage.Information);
-                });
-            });
-        }
+                    string playerName = string.Empty;
+                    if (colorWon != null)
+                    {
+                        if (colorWon == Color.White)
+                            playerName = Settings.Instance.Player1Name;
+                        else
+                        {
+                            if (opponent is null)
+                                playerName = Settings.Instance.Player2Name;
+                            else
+                                playerName = $"{opponent.Name} (Bot)";
+                        }
+                    }
 
-        private async void DisplayStalemate()
-        {
-            await Task.Delay(250).ContinueWith(t =>
-            {
-                Application.Current.Dispatcher.Invoke(() =>
-                {
-                    MessageBox.Show(Properties.Resources.strGameOver_StalemateText, Properties.Resources.strGameOver_Stalemate, MessageBoxButton.OK, MessageBoxImage.Information);
+                    GameOverDialog gameOverDialog = new GameOverDialog(result, colorWon, playerName) { Owner = this };
+                    gameOverDialog.ShowDialog();
                 });
             });
         }
@@ -321,28 +300,26 @@ namespace Chess.NET
             Chessboard.DisablePieces();
             ButtonResign.Visibility = Visibility.Collapsed;
 
-            string? playeOpponentName = currentMatchInfo?.OpponentName;
+            string playerWon = string.Empty;
+
+            if (matchEnd.ColorWins.HasValue && matchEnd.ColorWins == ownPieceColor)
+                playerWon = Settings.Instance.Player1Name;
+            else if (matchEnd.ColorWins.HasValue)
+                playerWon = currentMatchInfo?.OpponentName ?? string.Empty;
 
             currentMatchInfo = null;
             ButtonRestart.IsEnabled = true;
             isOnlineMatch = false;
             await _networkClient.DisconnectAsync();
 
-            string message = $"Match ended: ";
-            if (matchEnd.Result == GameResult.Stalemate)
-                message += "Stalemate (Remis)";
-            else
+            await Task.Delay(250).ContinueWith(t =>
             {
-                string playerText = string.Empty;
-                if (matchEnd.ColorWins == ownPieceColor)
-                    playerText = "You won";
-                else
-                    playerText = $"You lost! Your opponennt {playeOpponentName} won";
-
-                message += $"{playerText} due to {matchEnd.Result}!";
-            }
-
-            MessageBox.Show(message, "Game is over!", MessageBoxButton.OK, MessageBoxImage.Information);
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    GameOverDialog gameOverDialog = new GameOverDialog(matchEnd.Result, matchEnd.ColorWins, playerWon) { Owner = this };
+                    gameOverDialog.ShowDialog();
+                });
+            });
         }
 
         private async void Chessboard_OnMoveMadeOnline(MoveNotation moveNotation)
@@ -350,7 +327,13 @@ namespace Chess.NET
             if (_networkClient == null || currentMatchInfo == null)
                 return;
 
-            await _networkClient.MakeMoveAsync(currentMatchInfo.MatchId, moveNotation.FormatMove(false, false));
+            var result = await _networkClient.MakeMoveAsync(currentMatchInfo.MatchId, moveNotation.FormatMove(false, false));
+
+            if (!result)
+            {
+                // TODO: Wenn Move vom Server nicht akzeptiert wurde, ihn wieder lokal rückgängig machen!
+
+            }
         }
 
         private async void ButtonResign_Click(object sender, RoutedEventArgs e)
@@ -362,7 +345,7 @@ namespace Chess.NET
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Failed to resign: {ex.Message}", Properties.Resources.strError, MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(string.Format(Properties.Resources.strFailedToResign, ex.Message), Properties.Resources.strError, MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -420,79 +403,107 @@ namespace Chess.NET
                 return $"Elo: {value}";
             }
 
-            if (opponent is null)
+            string playerTopName = string.Empty;
+            string playerTopElo = string.Empty;
+            string playerBottomName = string.Empty;
+            string playerBottomElo = string.Empty;
+
+            if (isOnlineMatch)
             {
-                if (Chessboard.IsMirrored)
+                if (!Chessboard.IsMirrored)
                 {
-                    // Top:    Player 1 (White)
-                    // Bottom: Player 2 (Black)
-                    if (isOnlineMatch && currentMatchInfo != null)
+                    if (ownPieceColor == Color.White)
                     {
-                        TextPlayerTopName.Text = currentMatchInfo.OpponentName;
-                        TextPlayerTopElo.Text = formatPlayerElo(currentMatchInfo.OpponentElo);
+                        playerTopName = currentMatchInfo?.OpponentName ?? string.Empty;
+                        playerTopElo = formatPlayerElo(currentMatchInfo?.OpponentElo ?? string.Empty);
+
+                        playerBottomName = Helper.GetPlayerName(1);
+                        playerBottomElo = formatPlayerElo(Settings.Instance.Player1Elo);
                     }
                     else
                     {
-                        TextPlayerTopName.Text = Helper.GetPlayerName(1);
-                        TextPlayerTopElo.Text = formatPlayerElo(Settings.Instance.Player1Elo);
+                        playerBottomName = currentMatchInfo?.OpponentName ?? string.Empty;
+                        playerBottomElo = formatPlayerElo(currentMatchInfo?.OpponentElo ?? string.Empty);
+
+                        playerTopName = Helper.GetPlayerName(1);
+                        playerTopElo = formatPlayerElo(Settings.Instance.Player1Elo);
                     }
-
-                    TextPlayerBottomName.Text = Helper.GetPlayerName(2);
-                    TextPlayerBottomElo.Text = formatPlayerElo(Settings.Instance.Player2Elo);
-
-                    TextPlayerInfoTop.Text = playerInfo.GetWhite();
-                    TextPlayerInfoBottom.Text = playerInfo.GetBlack();
                 }
                 else
                 {
-                    // Top:     Player 2 (Black)
-                    // Bottom:  Player 1 (White)
-                    if (isOnlineMatch && currentMatchInfo != null)
+                    if (ownPieceColor == Color.White)
                     {
-                        TextPlayerTopName.Text = currentMatchInfo.OpponentName;
-                        TextPlayerTopElo.Text = formatPlayerElo(currentMatchInfo.OpponentElo);
+                        playerTopName = Helper.GetPlayerName(1);
+                        playerTopElo = formatPlayerElo(Settings.Instance.Player1Elo);
+
+                        playerBottomName = currentMatchInfo?.OpponentName ?? string.Empty;
+                        playerBottomElo = formatPlayerElo(currentMatchInfo?.OpponentElo ?? string.Empty);
                     }
                     else
                     {
-                        TextPlayerTopName.Text = Helper.GetPlayerName(2);
-                        TextPlayerTopElo.Text = formatPlayerElo(Settings.Instance.Player2Elo);
+                        playerBottomName = Helper.GetPlayerName(1);
+                        playerBottomElo = formatPlayerElo(Settings.Instance.Player1Elo);
+
+                        playerTopName = currentMatchInfo?.OpponentName ?? string.Empty;
+                        playerTopElo = formatPlayerElo(currentMatchInfo?.OpponentElo ?? string.Empty);
                     }
+                }
+            }
+            else if (opponent is not null)
+            {
+                // Bot
+                if (!Chessboard.IsMirrored)
+                {
+                    playerTopName = $"{opponent.Name} (Bot)";               
+                    playerTopElo = formatElo(opponent.Elo);
 
-                    TextPlayerBottomName.Text = Helper.GetPlayerName(1);
-                    TextPlayerBottomElo.Text = formatPlayerElo(Settings.Instance.Player1Elo);
+                    playerBottomName = Helper.GetPlayerName(1);
+                    playerBottomElo = formatPlayerElo(Settings.Instance.Player1Elo);
+                }
+                else
+                {
+                    playerTopName = Helper.GetPlayerName(1);
+                    playerTopElo = Settings.Instance.Player1Elo;
 
-                    TextPlayerInfoTop.Text = playerInfo.GetBlack();
-                    TextPlayerInfoBottom.Text = playerInfo.GetWhite();
+                    playerBottomName = $"{opponent.Name} (Bot)";
+                    playerBottomElo = formatElo(opponent.Elo);
                 }
             }
             else
             {
-                if (Chessboard.IsMirrored)
+                // Player 2
+                if (!Chessboard.IsMirrored)
                 {
-                    // Top:    Player 1 (White)
-                    // Bottom: Bot      (Black)
-                    TextPlayerTopName.Text = Helper.GetPlayerName(1);
-                    TextPlayerTopElo.Text = formatPlayerElo(Settings.Instance.Player1Elo);
+                    playerTopName = Helper.GetPlayerName(2);
+                    playerTopElo = Settings.Instance.Player2Elo;
 
-                    TextPlayerBottomName.Text = $"{opponent.Name} (Bot)";
-                    TextPlayerBottomElo.Text = formatElo(opponent.Elo);
-
-                    TextPlayerInfoTop.Text = playerInfo.GetWhite();
-                    TextPlayerInfoBottom.Text = playerInfo.GetBlack();
+                    playerBottomName = Helper.GetPlayerName(1);
+                    playerBottomElo = formatPlayerElo(Settings.Instance.Player1Elo);
                 }
                 else
                 {
-                    // Top:    Bot      (Black)
-                    // Bottom: Player 1 (White)
-                    TextPlayerTopName.Text = $"{opponent.Name} (Bot)";
-                    TextPlayerTopElo.Text = formatElo(opponent.Elo);
+                    playerTopName = Helper.GetPlayerName(1);
+                    playerTopElo = Settings.Instance.Player1Elo;
 
-                    TextPlayerBottomName.Text = Helper.GetPlayerName(1);
-                    TextPlayerBottomElo.Text = formatPlayerElo(Settings.Instance.Player1Elo);
-
-                    TextPlayerInfoTop.Text = playerInfo.GetBlack();
-                    TextPlayerInfoBottom.Text = playerInfo.GetWhite();
+                    playerBottomName = Helper.GetPlayerName(2);
+                    playerBottomElo = formatPlayerElo(Settings.Instance.Player2Elo);
                 }
+            }
+
+            TextPlayerTopName.Text = playerTopName;
+            TextPlayerTopElo.Text = playerTopElo;
+            TextPlayerBottomName.Text = playerBottomName;
+            TextPlayerBottomElo.Text = playerBottomElo;
+
+            if (Chessboard.IsMirrored)
+            {
+                TextPlayerInfoTop.Text = playerInfo.GetBlack();
+                TextPlayerInfoBottom.Text = playerInfo.GetWhite();
+            }
+            else
+            {
+                TextPlayerInfoTop.Text = playerInfo.GetBlack();
+                TextPlayerInfoBottom.Text = playerInfo.GetWhite();          
             }
         }
 

@@ -712,13 +712,13 @@ namespace Chess.NET.Shared.Model
             this.opponent = opponent;
         }
 
-        public void Resign(Color color)
+        public void Resign(Color color, bool isDisconnect = false)
         {
             if (IsGameOver)
                 return;
 
             IsGameOver = true;
-            OnGameOver?.Invoke(GameResult.Resign, color.InvertColor());
+            OnGameOver?.Invoke((isDisconnect ? GameResult.Disconnected : GameResult.Resign), color.InvertColor());
         }
 
         public PlayerInfo GetPlayerInformation()

@@ -17,7 +17,7 @@
         Checkmate,
         Stalemate,
         Resign,
-        TimeOver,
+        Timeout,       // not implemented yet
         FiftyMoveRule,
         ThreefoldReptition,
         Disconnected,

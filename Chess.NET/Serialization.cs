@@ -61,12 +61,10 @@ namespace Chess.NET
                 if (mode == Mode.XML)
                 {
                     XmlSerializer mySerializer = new XmlSerializer(typeof(T));
-                    using (MemoryStream ms = new MemoryStream())
-                    {
-                        ms.Write(xmlBytes, 0, xmlBytes.Length);
-                        ms.Position = 0;
-                        instance = (T)mySerializer.Deserialize(ms)!;
-                    }
+                    using MemoryStream ms = new MemoryStream();
+                    ms.Write(xmlBytes, 0, xmlBytes.Length);
+                    ms.Position = 0;
+                    instance = (T)mySerializer.Deserialize(ms)!;
                 }
                 else
                 {
@@ -139,17 +137,15 @@ namespace Chess.NET
         /// <param name="mode">The mode <see cref="Mode"/></param>
         /// <param name="additionalTypes">AdditionalTypes which are required for deserialization</param>
         /// <returns></returns>
-        public static T Read<T>(string fileName, Mode mode = Mode.XML, Type[] additionalTypes = null)
+        public static T? Read<T>(string fileName, Mode mode = Mode.XML, Type[]? additionalTypes = null)
         {
             try
             {
                 if (mode == Mode.XML)
                 {
                     XmlSerializer xmlSerializer = new XmlSerializer(typeof(T), additionalTypes);
-                    using (FileStream fileStream = new FileStream(fileName, FileMode.Open))
-                    {
-                        return (T)xmlSerializer.Deserialize(fileStream);
-                    }
+                    using FileStream fileStream = new FileStream(fileName, FileMode.Open);
+                    return (T?)xmlSerializer.Deserialize(fileStream);
                 }
                 else
                 {
@@ -176,10 +172,8 @@ namespace Chess.NET
             if (mode == Mode.XML)
             {
                 XmlSerializer mySerializer = new XmlSerializer(typeof(T), additionalTypes);
-                using (StreamWriter myWriter = new StreamWriter(fileName))
-                {
-                    mySerializer.Serialize(myWriter, instance);
-                }
+                using StreamWriter myWriter = new StreamWriter(fileName);
+                mySerializer.Serialize(myWriter, instance);
             }
             else
             {
@@ -209,18 +203,16 @@ namespace Chess.NET
         /// <typeparam name="T"></typeparam>
         /// <param name="instance">The instance to serialize</param>
         /// <returns></returns>
-        public static byte[] SaveToBytes<T>(T instance, Mode mode, Type[] additionalTypes = null)
+        public static byte[] SaveToBytes<T>(T instance, Mode mode, Type[]? additionalTypes = null)
         {
             byte[] serializedContent = null!;
 
             if (mode == Mode.XML)
             {
                 XmlSerializer mySerializer = new XmlSerializer(typeof(T), additionalTypes);
-                using (MemoryStream ms = new MemoryStream())
-                {
-                    mySerializer.Serialize(ms, instance);
-                    serializedContent = ms.ToArray();
-                }
+                using MemoryStream ms = new MemoryStream();
+                mySerializer.Serialize(ms, instance);
+                serializedContent = ms.ToArray();
             }
             else
             {
@@ -244,11 +236,9 @@ namespace Chess.NET
                 if (mode == Mode.XML)
                 {
                     XmlSerializer mySerializer = new XmlSerializer(type, additionalTypes);
-                    using (MemoryStream ms = new MemoryStream())
-                    {
-                        mySerializer.Serialize(ms, instance);
-                        serializedContent = ms.ToArray();
-                    }
+                    using MemoryStream ms = new MemoryStream();
+                    mySerializer.Serialize(ms, instance);
+                    serializedContent = ms.ToArray();
                 }
                 else
                 {
@@ -270,7 +260,7 @@ namespace Chess.NET
         public static string SaveToString(object instance, Type type, System.Text.Encoding encoding, Type[] additionalTypes = null)
         {
             if (instance != null && type != null && encoding != null)
-                return encoding.GetString(Serialization.SaveToBytes(instance, type, Mode.XML, additionalTypes));
+                return encoding.GetString(SaveToBytes(instance, type, Mode.XML, additionalTypes));
 
             return string.Empty;
         }

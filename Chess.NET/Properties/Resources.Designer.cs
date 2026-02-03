@@ -88,7 +88,7 @@ namespace Chess.NET.Properties {
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die 0. Begin Position ähnelt.
+        ///   Sucht eine lokalisierte Zeichenfolge, die Starting Position ähnelt.
         /// </summary>
         public static string strBeginPosition {
             get {
@@ -102,6 +102,15 @@ namespace Chess.NET.Properties {
         public static string strBlack {
             get {
                 return ResourceManager.GetString("strBlack", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Checkmate! ähnelt.
+        /// </summary>
+        public static string strCheckmate {
+            get {
+                return ResourceManager.GetString("strCheckmate", resourceCulture);
             }
         }
         
@@ -142,6 +151,24 @@ namespace Chess.NET.Properties {
         }
         
         /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Disconnect! ähnelt.
+        /// </summary>
+        public static string strDisconnect {
+            get {
+                return ResourceManager.GetString("strDisconnect", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Draw ähnelt.
+        /// </summary>
+        public static string strDraw {
+            get {
+                return ResourceManager.GetString("strDraw", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Sucht eine lokalisierte Zeichenfolge, die Elo: ähnelt.
         /// </summary>
         public static string strElo {
@@ -160,11 +187,29 @@ namespace Chess.NET.Properties {
         }
         
         /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Failed to connect to chess server: {0} ähnelt.
+        /// </summary>
+        public static string strFailedToConnectToServer {
+            get {
+                return ResourceManager.GetString("strFailedToConnectToServer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Sucht eine lokalisierte Zeichenfolge, die Failed to load settings! ähnelt.
         /// </summary>
         public static string strFailedToLoadSettings {
             get {
                 return ResourceManager.GetString("strFailedToLoadSettings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Failed to make move or server did not accept this move: {0} ähnelt.
+        /// </summary>
+        public static string strFailedToMove {
+            get {
+                return ResourceManager.GetString("strFailedToMove", resourceCulture);
             }
         }
         
@@ -178,11 +223,38 @@ namespace Chess.NET.Properties {
         }
         
         /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Failed to resign: {0} ähnelt.
+        /// </summary>
+        public static string strFailedToResign {
+            get {
+                return ResourceManager.GetString("strFailedToResign", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Sucht eine lokalisierte Zeichenfolge, die Failed to save settings! ähnelt.
         /// </summary>
         public static string strFailedToSaveSettings {
             get {
                 return ResourceManager.GetString("strFailedToSaveSettings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die 50-Move Rule! ähnelt.
+        /// </summary>
+        public static string strFiftyMoveRule {
+            get {
+                return ResourceManager.GetString("strFiftyMoveRule", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Game Over ähnelt.
+        /// </summary>
+        public static string strGameOver {
+            get {
+                return ResourceManager.GetString("strGameOver", resourceCulture);
             }
         }
         
@@ -228,6 +300,15 @@ namespace Chess.NET.Properties {
         public static string strHere {
             get {
                 return ResourceManager.GetString("strHere", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Insufficient Material ähnelt.
+        /// </summary>
+        public static string strInsufficientCheckmatingMaterial {
+            get {
+                return ResourceManager.GetString("strInsufficientCheckmatingMaterial", resourceCulture);
             }
         }
         
@@ -403,6 +484,24 @@ namespace Chess.NET.Properties {
         }
         
         /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die due to ähnelt.
+        /// </summary>
+        public static string strPlayerWinsDueTo {
+            get {
+                return ResourceManager.GetString("strPlayerWinsDueTo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die wins with ähnelt.
+        /// </summary>
+        public static string strPlayerWinsWith {
+            get {
+                return ResourceManager.GetString("strPlayerWinsWith", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Sucht eine lokalisierte Zeichenfolge, die Play sounds ähnelt.
         /// </summary>
         public static string strPlaySounds {
@@ -475,6 +574,15 @@ namespace Chess.NET.Properties {
         }
         
         /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Resignation! ähnelt.
+        /// </summary>
+        public static string strResignation {
+            get {
+                return ResourceManager.GetString("strResignation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Sucht eine lokalisierte Zeichenfolge, die Right ähnelt.
         /// </summary>
         public static string strRight {
@@ -511,6 +619,15 @@ namespace Chess.NET.Properties {
         }
         
         /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Stalemate! ähnelt.
+        /// </summary>
+        public static string strStalemate {
+            get {
+                return ResourceManager.GetString("strStalemate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Sucht eine lokalisierte Zeichenfolge, die Stockfish is a UCI chess engine that you can play against! Further information and downloads are available ähnelt.
         /// </summary>
         public static string strStockfish_Explanation {
@@ -525,6 +642,24 @@ namespace Chess.NET.Properties {
         public static string strStockfishNotFound {
             get {
                 return ResourceManager.GetString("strStockfishNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Threefold Repetition! ähnelt.
+        /// </summary>
+        public static string strThreefoldRepition {
+            get {
+                return ResourceManager.GetString("strThreefoldRepition", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Timeout! ähnelt.
+        /// </summary>
+        public static string strTimeout {
+            get {
+                return ResourceManager.GetString("strTimeout", resourceCulture);
             }
         }
         

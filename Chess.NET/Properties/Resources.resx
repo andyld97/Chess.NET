@@ -272,7 +272,7 @@
     <value>Retry</value>
   </data>
   <data name="strBeginPosition" xml:space="preserve">
-    <value>0. Begin Position</value>
+    <value>Starting Position</value>
   </data>
   <data name="strOpponent_Online" xml:space="preserve">
     <value>Online</value>
@@ -286,5 +286,50 @@
   </data>
   <data name="strWaiting_Content" xml:space="preserve">
     <value>Searching for a match ...</value>
+  </data>
+  <data name="strFailedToResign" xml:space="preserve">
+    <value>Failed to resign: {0}</value>
+  </data>
+  <data name="strFailedToConnectToServer" xml:space="preserve">
+    <value>Failed to connect to chess server: {0}</value>
+  </data>
+  <data name="strFailedToMove" xml:space="preserve">
+    <value>Failed to make move or server did not accept this move: {0}</value>
+  </data>
+  <data name="strGameOver" xml:space="preserve">
+    <value>Game Over</value>
+  </data>
+  <data name="strPlayerWinsWith" xml:space="preserve">
+    <value>wins with</value>
+  </data>
+  <data name="strPlayerWinsDueTo" xml:space="preserve">
+    <value>due to</value>
+  </data>
+  <data name="strDraw" xml:space="preserve">
+    <value>Draw</value>
+  </data>
+  <data name="strResignation" xml:space="preserve">
+    <value>Resignation!</value>
+  </data>
+  <data name="strDisconnect" xml:space="preserve">
+    <value>Disconnect!</value>
+  </data>
+  <data name="strCheckmate" xml:space="preserve">
+    <value>Checkmate!</value>
+  </data>
+  <data name="strTimeout" xml:space="preserve">
+    <value>Timeout!</value>
+  </data>
+  <data name="strStalemate" xml:space="preserve">
+    <value>Stalemate!</value>
+  </data>
+  <data name="strThreefoldRepition" xml:space="preserve">
+    <value>Threefold Repetition!</value>
+  </data>
+  <data name="strFiftyMoveRule" xml:space="preserve">
+    <value>50-Move Rule!</value>
+  </data>
+  <data name="strInsufficientCheckmatingMaterial" xml:space="preserve">
+    <value>Insufficient Material</value>
   </data>
 </root>

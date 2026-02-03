@@ -25,21 +25,27 @@
             {
                 // Short castle
                 var king = board.Pieces.FirstOrDefault(p => p.Color == color && p.Type == PieceType.King);
-
-                if (color == Color.White)
-                    return new PendingMove(king, Position.Parse("g1"));
-                else
-                    return new PendingMove(king, Position.Parse("g8"));
+                
+                if (king != null)
+                {
+                    if (color == Color.White)
+                        return new PendingMove(king, Position.Parse("g1"));
+                    else
+                        return new PendingMove(king, Position.Parse("g8"));
+                }
             }
             else if (san.Equals("o-o-o", StringComparison.CurrentCultureIgnoreCase))
             {
                 // Long castle
                 var king = board.Pieces.FirstOrDefault(p => p.Color == color && p.Type == PieceType.King);
 
-                if (color == Color.White)
-                    return new PendingMove(king, Position.Parse("c1"));
-                else
-                    return new PendingMove(king, Position.Parse("c8"));
+                if (king != null)
+                {
+                    if (color == Color.White)
+                        return new PendingMove(king, Position.Parse("c1"));
+                    else
+                        return new PendingMove(king, Position.Parse("c8"));
+                }
             }
 
             // 2) Promotion handling (e8=Q)

@@ -1,6 +1,5 @@
 ﻿using Chess.NET.Controls;
 using Chess.NET.Model;
-using Chess.NET.Shared.Model;
 using Chess.NET.Shared.Model.Online;
 using Microsoft.AspNetCore.SignalR.Client;
 using System.Windows;
@@ -77,22 +76,25 @@ namespace Chess.NET.Netcode
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Failed to connect to chess server: {ex.Message}", Properties.Resources.strError, MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(string.Format(Properties.Resources.strFailedToConnectToServer, ex.Message), Properties.Resources.strError, MessageBoxButton.OK, MessageBoxImage.Error);
             }
 
             return null;
         }
 
-        public async Task MakeMoveAsync(string matchId, string move)
+        public async Task<bool> MakeMoveAsync(string matchId, string move)
         {
             try
             {
                 await APIClient.MakeMoveAsync(matchId, move);
+                return true;
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Failed to make move: {ex.Message}", Properties.Resources.strError, MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(string.Format(Properties.Resources.strFailedToMove, ex.Message), Properties.Resources.strError, MessageBoxButton.OK, MessageBoxImage.Error);
             }
+
+            return false;
         }
 
         public async Task DisconnectAsync()
