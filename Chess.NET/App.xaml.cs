@@ -17,9 +17,9 @@ namespace Chess.NET
 #if DEBUG
             // For english screenshots:
 
-            var cultureInfoTest = new CultureInfo("en-US");
-            Thread.CurrentThread.CurrentCulture =
-            Thread.CurrentThread.CurrentUICulture = cultureInfoTest;
+            //var cultureInfoTest = new CultureInfo("en-US");
+            //Thread.CurrentThread.CurrentCulture =
+            //Thread.CurrentThread.CurrentUICulture = cultureInfoTest;
 #endif
         }
     }
