@@ -304,7 +304,7 @@ namespace Chess.NET.Properties {
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die Insufficient Material ähnelt.
+        ///   Sucht eine lokalisierte Zeichenfolge, die Insufficient Material! ähnelt.
         /// </summary>
         public static string strInsufficientCheckmatingMaterial {
             get {

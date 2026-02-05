@@ -242,7 +242,7 @@ namespace Chess.NET
 
         private async void WaitingQueueDialog_Loaded(object sender, RoutedEventArgs e)
         {
-            client = await _networkClient.ConnectAsync(Chessboard);
+            client = await _networkClient.ConnectAsync();
             waitingQueueDialog?.Client = client;
 
             if (client == null)

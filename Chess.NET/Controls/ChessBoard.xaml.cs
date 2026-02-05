@@ -21,6 +21,8 @@ namespace Chess.NET.Controls
         private readonly BoardSquare[,] _squares = new BoardSquare[8, 8];
         private readonly Game game = new Game();
 
+        private readonly List<Border> rotatedBorders = [];
+
         private IChessBot? opponent = null;
         private Puzzle? currentPuzzle = null;
 
@@ -86,6 +88,7 @@ namespace Chess.NET.Controls
             game.StartNewGame(opponent);
             game.OnGameOver += Game_OnGameOver;
             RenderChessBoard(game.Board);
+            rotatedBorders.Clear();
             this.opponent = opponent;
             isInNavigationMode = false;
             canMove = true;
@@ -293,6 +296,9 @@ namespace Chess.NET.Controls
             if (!isNavigationAllowed)
                 return null!;
 
+            rotatedBorders.ForEach(p => p.RenderTransform = null);
+            rotatedBorders.Clear();
+
             Game gm = new Game();
             gm.StartNewGame(null);
             if (isPuzzle)
@@ -441,6 +447,7 @@ namespace Chess.NET.Controls
                 border.RenderTransformOrigin = new Point(0.5, 0.5);
                 border.RenderTransform = new RotateTransform(180);
 
+                rotatedBorders.Add(border);    
                 return;
             }
 
@@ -462,6 +469,9 @@ namespace Chess.NET.Controls
 
             borderKingBlack.RenderTransformOrigin = new Point(0.5, 0.5);
             borderKingBlack.RenderTransform = new RotateTransform(180);
+
+            rotatedBorders.Add(borderKingWite);
+            rotatedBorders.Add(borderKingBlack);
         }
 
 

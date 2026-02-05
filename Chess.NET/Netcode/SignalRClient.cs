@@ -23,7 +23,7 @@ namespace Chess.NET.Netcode
         public event onMatchEnds? OnMatchEnds;
         #endregion
 
-        public async Task<Client?> ConnectAsync(ChessBoard chessBoard)
+        public async Task<Client?> ConnectAsync()
         {
             try
             {
@@ -101,7 +101,10 @@ namespace Chess.NET.Netcode
         {
             try
             {
-                await connection?.StopAsync();
+                if (connection != null)
+                {
+                    await connection.StopAsync();
+                }
             }
             catch
             {

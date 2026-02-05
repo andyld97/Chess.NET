@@ -66,6 +66,31 @@ namespace Chess.NET.Shared.Model
                     new Pawn(Position.Parse("g4"), Color.White),
                     new Pawn(Position.Parse("h4"), Color.White)
                 ]
+            },
+            new Puzzle()
+            {
+                ColorToMove = Color.White,
+                Name = "Back At Home",
+                Moves = ["Rf7+", "Ke8", "Nf6#"],
+                Pieces = [
+                    new Rook(Position.Parse("f1"), Color.White),
+                    new King(Position.Parse("g1"), Color.White),
+                    new Pawn(Position.Parse("g2"), Color.White),
+                    new Pawn(Position.Parse("h2"), Color.White),
+                    new Knight(Position.Parse("b7"), Color.White),
+                    new Pawn(Position.Parse("d5"), Color.White),
+                    new Knight(Position.Parse("g4"), Color.White),
+                    new Bishop(Position.Parse("h5"), Color.White),
+                    new Bishop(Position.Parse("c2"), Color.Black),
+                    new Pawn(Position.Parse("b3"), Color.Black),
+                    new Pawn(Position.Parse("a4"), Color.Black),
+                    new Pawn(Position.Parse("c5"), Color.Black),
+                    new Queen(Position.Parse("d3"), Color.Black),
+                    new King(Position.Parse("e7"), Color.Black),
+                    new Bishop(Position.Parse("d7"), Color.Black),
+                    new Rook(Position.Parse("h8"), Color.Black),
+                    new Pawn(Position.Parse("h7"), Color.Black),
+                ]
             }
         ];
 
