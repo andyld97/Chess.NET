@@ -377,7 +377,7 @@ namespace Chess.NET.Controls
                     Image img = (Image)_squares[file - 1, rank - 1].Border.Child;
 
                     var piece = board.GetPiece(position);
-                    img.Source = (piece != null) ? piece.Type.ToBitmap(piece.Color) : null;
+                    img.Source = (piece != null) ? piece.Type.ToBitmap(piece.Color, Settings.Instance.Theme) : null;
 
                     if (renderLastMoveSquares && (lastMove != null && (lastMove.From == position || lastMove.To == position)))
                     {

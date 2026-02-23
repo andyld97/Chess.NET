@@ -1,5 +1,6 @@
 ﻿using Chess.NET.Shared.Model;
 using Chess.NET.Shared.Model.Bot;
+using System.ComponentModel;
 using System.Windows;
 using System.Windows.Input;
 

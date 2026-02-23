@@ -332,4 +332,13 @@
   <data name="strInsufficientCheckmatingMaterial" xml:space="preserve">
     <value>Insufficient Material!</value>
   </data>
+  <data name="strTheme" xml:space="preserve">
+    <value>Theme:</value>
+  </data>
+  <data name="strTheme_Default" xml:space="preserve">
+    <value>Standard</value>
+  </data>
+  <data name="strTheme_Comic" xml:space="preserve">
+    <value>Comic</value>
+  </data>
 </root>

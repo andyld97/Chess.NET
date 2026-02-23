@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using Chess.NET.Shared.Model;
+using System.Windows;
 
 namespace Chess.NET.Model
 {
@@ -37,6 +38,8 @@ namespace Chess.NET.Model
         public int Difficulty { get; set; } = 0;
 
         public bool AutoPromoteToQueen { get; set; } = false;
+
+        public Theme Theme { get; set; } = Theme.Default;
 
         public bool PlaySounds { get; set; } = true;
 

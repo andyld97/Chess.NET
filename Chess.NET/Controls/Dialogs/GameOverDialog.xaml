@@ -37,8 +37,8 @@
             </Grid.ColumnDefinitions>
 
             <StackPanel Orientation="Horizontal">
-                <Image x:Name="ImgKingWhite" Source="/resources/icons/white/King.png" Height="96" Margin="10,0,0,0" />
-                <Image x:Name="ImgKingBlack" Source="/resources/icons/black/King.png" Height="96" Margin="10,0,0,0" />
+                <Image x:Name="ImgKingWhite" Source="/resources/icons/themes/default/white/King.png" Height="96" Margin="10,0,0,0" />
+                <Image x:Name="ImgKingBlack" Source="/resources/icons/themes/default/black/King.png" Height="96" Margin="10,0,0,0" />
             </StackPanel>
 
             <StackPanel Grid.Column="1">

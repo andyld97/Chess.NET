@@ -1,4 +1,5 @@
-﻿using Chess.NET.Shared.Model;
+﻿using Chess.NET.Model;
+using Chess.NET.Shared.Model;
 using System.Windows;
 
 namespace Chess.NET.Controls.Dialogs
@@ -14,10 +15,10 @@ namespace Chess.NET.Controls.Dialogs
         {
             InitializeComponent();
 
-            ImgQueen.Source = PieceType.Queen.ToBitmap(color);
-            ImgRook.Source = PieceType.Rook.ToBitmap(color);
-            ImgBishop.Source = PieceType.Bishop.ToBitmap(color);
-            ImgKnight.Source = PieceType.Knight.ToBitmap(color);         
+            ImgQueen.Source = PieceType.Queen.ToBitmap(color, Settings.Instance.Theme);
+            ImgRook.Source = PieceType.Rook.ToBitmap(color, Settings.Instance.Theme);
+            ImgBishop.Source = PieceType.Bishop.ToBitmap(color, Settings.Instance.Theme);
+            ImgKnight.Source = PieceType.Knight.ToBitmap(color, Settings.Instance.Theme);         
         }
 
         private void RadioQueen_Checked(object sender, RoutedEventArgs e)

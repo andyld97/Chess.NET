@@ -1,4 +1,5 @@
 ﻿using Chess.NET.Model;
+using Chess.NET.Shared.Model;
 using Microsoft.Win32;
 using System;
 using System.Windows;
@@ -24,6 +25,7 @@ namespace Chess.NET.Controls.Dialogs
             ChkAutoPromote.IsChecked = Settings.Instance.AutoPromoteToQueen;
             ChkPlaySounds.IsChecked = Settings.Instance.PlaySounds;
             CmbDifficuluty.SelectedIndex = Settings.Instance.Difficulty;
+            CmbTheme.SelectedIndex = (int)Settings.Instance.Theme;
 
             isInitialized = true;
         }
@@ -106,6 +108,18 @@ namespace Chess.NET.Controls.Dialogs
         private void Link_Click(object sender, RoutedEventArgs e)
         {
             Helper.OpenHyperlink(Link.NavigateUri.ToString());
+        }
+
+        private void CmbTheme_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {
+            if (!isInitialized)
+                return;
+
+            Settings.Instance.Theme = (Theme)CmbTheme.SelectedIndex;
+            Settings.Instance.Save();
+
+            Helper.ClearBitmapCache();
+            MainWindow.W_INSTANCE.Refresh();
         }
     }
 }

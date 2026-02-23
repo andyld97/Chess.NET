@@ -15,18 +15,37 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="resources\icons\black\Bishop.png" />
-    <None Remove="resources\icons\black\King.png" />
-    <None Remove="resources\icons\black\Knight.png" />
-    <None Remove="resources\icons\black\Pawn.png" />
-    <None Remove="resources\icons\black\Queen.png" />
-    <None Remove="resources\icons\black\Rook.png" />
-    <None Remove="resources\icons\white\Bishop.png" />
-    <None Remove="resources\icons\white\King.png" />
-    <None Remove="resources\icons\white\Knight.png" />
-    <None Remove="resources\icons\white\Pawn.png" />
-    <None Remove="resources\icons\white\Queen.png" />
-    <None Remove="resources\icons\white\Rook.png" />
+    <Compile Remove="resources\icons\themes\custom\**" />
+    <EmbeddedResource Remove="resources\icons\themes\custom\**" />
+    <None Remove="resources\icons\themes\custom\**" />
+    <Page Remove="resources\icons\themes\custom\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="resources\icons\themes\default\black\Bishop.png" />
+    <None Remove="resources\icons\themes\default\black\King.png" />
+    <None Remove="resources\icons\themes\default\black\Knight.png" />
+    <None Remove="resources\icons\themes\default\black\Pawn.png" />
+    <None Remove="resources\icons\themes\default\black\Queen.png" />
+    <None Remove="resources\icons\themes\default\black\Rook.png" />
+    <None Remove="resources\icons\themes\comic\black\Bishop.png" />
+    <None Remove="resources\icons\themes\comic\black\King.png" />
+    <None Remove="resources\icons\themes\comic\black\Knight.png" />
+    <None Remove="resources\icons\themes\comic\black\Pawn.png" />
+    <None Remove="resources\icons\themes\comic\black\Queen.png" />
+    <None Remove="resources\icons\themes\comic\black\Rook.png" />
+    <None Remove="resources\icons\themes\comic\white\Bishop.png" />
+    <None Remove="resources\icons\themes\comic\white\King.png" />
+    <None Remove="resources\icons\themes\comic\white\Knight.png" />
+    <None Remove="resources\icons\themes\comic\white\Pawn.png" />
+    <None Remove="resources\icons\themes\comic\white\Queen.png" />
+    <None Remove="resources\icons\themes\comic\white\Rook.png" />
+    <None Remove="resources\icons\themes\default\white\Bishop.png" />
+    <None Remove="resources\icons\themes\default\white\King.png" />
+    <None Remove="resources\icons\themes\default\white\Knight.png" />
+    <None Remove="resources\icons\themes\default\white\Pawn.png" />
+    <None Remove="resources\icons\themes\default\white\Queen.png" />
+    <None Remove="resources\icons\themes\default\white\Rook.png" />
     <None Remove="resources\images\background.jpg" />
     <None Remove="resources\images\logo.png" />
     <None Remove="resources\sounds\capture.mp3" />
@@ -68,8 +87,17 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="10.0.2" />
-    <PackageReference Include="System.Text.Json" Version="10.0.2" />
+    <Resource Include="resources\icons\themes\comic\white\Bishop.png" />
+    <Resource Include="resources\icons\themes\comic\white\King.png" />
+    <Resource Include="resources\icons\themes\comic\white\Knight.png" />
+    <Resource Include="resources\icons\themes\comic\white\Pawn.png" />
+    <Resource Include="resources\icons\themes\comic\white\Queen.png" />
+    <Resource Include="resources\icons\themes\comic\white\Rook.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="10.0.3" />
+    <PackageReference Include="System.Text.Json" Version="10.0.3" />
   </ItemGroup>
 
   <ItemGroup>
@@ -77,18 +105,24 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="resources\icons\black\Bishop.png" />
-    <Resource Include="resources\icons\black\King.png" />
-    <Resource Include="resources\icons\black\Knight.png" />
-    <Resource Include="resources\icons\black\Pawn.png" />
-    <Resource Include="resources\icons\black\Queen.png" />
-    <Resource Include="resources\icons\black\Rook.png" />
-    <Resource Include="resources\icons\white\Bishop.png" />
-    <Resource Include="resources\icons\white\King.png" />
-    <Resource Include="resources\icons\white\Knight.png" />
-    <Resource Include="resources\icons\white\Pawn.png" />
-    <Resource Include="resources\icons\white\Queen.png" />
-    <Resource Include="resources\icons\white\Rook.png" />
+    <Resource Include="resources\icons\themes\default\black\Bishop.png" />
+    <Resource Include="resources\icons\themes\default\black\King.png" />
+    <Resource Include="resources\icons\themes\default\black\Knight.png" />
+    <Resource Include="resources\icons\themes\default\black\Pawn.png" />
+    <Resource Include="resources\icons\themes\default\black\Queen.png" />
+    <Resource Include="resources\icons\themes\default\black\Rook.png" />
+    <Resource Include="resources\icons\themes\comic\black\Bishop.png" />
+    <Resource Include="resources\icons\themes\comic\black\King.png" />
+    <Resource Include="resources\icons\themes\comic\black\Knight.png" />
+    <Resource Include="resources\icons\themes\comic\black\Pawn.png" />
+    <Resource Include="resources\icons\themes\comic\black\Queen.png" />
+    <Resource Include="resources\icons\themes\comic\black\Rook.png" />
+    <Resource Include="resources\icons\themes\default\white\Bishop.png" />
+    <Resource Include="resources\icons\themes\default\white\King.png" />
+    <Resource Include="resources\icons\themes\default\white\Knight.png" />
+    <Resource Include="resources\icons\themes\default\white\Pawn.png" />
+    <Resource Include="resources\icons\themes\default\white\Queen.png" />
+    <Resource Include="resources\icons\themes\default\white\Rook.png" />
     <Resource Include="resources\images\background.jpg" />
     <Resource Include="resources\images\logo.png" />
   </ItemGroup>

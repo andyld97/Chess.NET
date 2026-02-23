@@ -23,4 +23,10 @@
         Disconnected,
         InsufficentCheckmatingMaterial
     }
+
+    public enum Theme
+    {
+        Default = 0,
+        Comic = 1
+    }
 }

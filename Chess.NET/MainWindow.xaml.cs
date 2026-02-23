@@ -19,6 +19,8 @@ namespace Chess.NET
         private MoveNotationDisplay currentMoveNotationDisplay = null!;
         private IChessBot? opponent = null;
 
+        public static MainWindow W_INSTANCE { get; private set; } = null!;    
+
         #region Commands
 
         public ICommand MoveLeftCommand { get; }
@@ -37,6 +39,7 @@ namespace Chess.NET
         public MainWindow()
         {
             InitializeComponent();
+            W_INSTANCE = this;
 
             // Assign events
             Chessboard.Game.OnMovedPiece += Game_MovedPiece;
@@ -463,7 +466,7 @@ namespace Chess.NET
                 else
                 {
                     playerTopName = Helper.GetPlayerName(1);
-                    playerTopElo = Settings.Instance.Player1Elo;
+                    playerTopElo = formatPlayerElo(Settings.Instance.Player1Elo);
 
                     playerBottomName = $"{opponent.Name} (Bot)";
                     playerBottomElo = formatElo(opponent.Elo);
@@ -475,7 +478,7 @@ namespace Chess.NET
                 if (!Chessboard.IsMirrored)
                 {
                     playerTopName = Helper.GetPlayerName(2);
-                    playerTopElo = Settings.Instance.Player2Elo;
+                    playerTopElo = formatPlayerElo(Settings.Instance.Player2Elo);
 
                     playerBottomName = Helper.GetPlayerName(1);
                     playerBottomElo = formatPlayerElo(Settings.Instance.Player1Elo);
@@ -483,7 +486,7 @@ namespace Chess.NET
                 else
                 {
                     playerTopName = Helper.GetPlayerName(1);
-                    playerTopElo = Settings.Instance.Player1Elo;
+                    playerTopElo = formatPlayerElo(Settings.Instance.Player1Elo);
 
                     playerBottomName = Helper.GetPlayerName(2);
                     playerBottomElo = formatPlayerElo(Settings.Instance.Player2Elo);
@@ -544,6 +547,11 @@ namespace Chess.NET
         private async void MenuItemJumpToEnd_Click(object sender, RoutedEventArgs e)
         {
             await Chessboard.ShowLastMoveAsync();
+        }
+
+        public void Refresh()
+        {
+            Chessboard.RenderChessBoard(Chessboard.Game.Board, true);
         }
 
         #endregion

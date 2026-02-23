@@ -1,4 +1,5 @@
-﻿using Chess.NET.Shared.Model;
+﻿using Chess.NET.Model;
+using Chess.NET.Shared.Model;
 using System.ComponentModel;
 using System.Globalization;
 using System.Windows.Controls;
@@ -95,7 +96,7 @@ namespace Chess.NET.Controls
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if (value is MoveNotation mv)
-                return mv.Piece.Type.ToBitmap(mv.Piece.Color);
+                return mv.Piece.Type.ToBitmap(mv.Piece.Color, Settings.Instance.Theme);
 
             return null!;
         }

@@ -95,8 +95,15 @@
                 </StackPanel>
             </GroupBox>
 
-            <CheckBox x:Name="ChkAutoPromote" Checked="ChkAutoPromote_Checked" Unchecked="ChkAutoPromote_Checked" Content="{x:Static res:Resources.strAutoPromote}" Margin="0,10,0,0" />
-            <CheckBox x:Name="ChkPlaySounds" Checked="ChkPlaySounds_Checked" Unchecked="ChkPlaySounds_Checked" Content="{x:Static res:Resources.strPlaySounds}" Margin="0,3,0,0" />
+            <TextBlock Text="{x:Static res:Resources.strTheme}" Margin="5,2" />
+            <ComboBox x:Name="CmbTheme" SelectionChanged="CmbTheme_SelectionChanged" Margin="5,2">
+                <ComboBoxItem Content="{x:Static res:Resources.strTheme_Default}" />
+                <ComboBoxItem Content="{x:Static res:Resources.strTheme_Comic}" />
+            </ComboBox>
+
+
+            <CheckBox x:Name="ChkAutoPromote" Checked="ChkAutoPromote_Checked" Unchecked="ChkAutoPromote_Checked" Content="{x:Static res:Resources.strAutoPromote}" Margin="5,10,0,0" />
+            <CheckBox x:Name="ChkPlaySounds" Checked="ChkPlaySounds_Checked" Unchecked="ChkPlaySounds_Checked" Content="{x:Static res:Resources.strPlaySounds}" Margin="5,3,0,0" />
         </StackPanel>
     </Grid>
 </Window>

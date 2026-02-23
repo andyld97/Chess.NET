@@ -646,6 +646,33 @@ namespace Chess.NET.Properties {
         }
         
         /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Theme: ähnelt.
+        /// </summary>
+        public static string strTheme {
+            get {
+                return ResourceManager.GetString("strTheme", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Comic ähnelt.
+        /// </summary>
+        public static string strTheme_Comic {
+            get {
+                return ResourceManager.GetString("strTheme_Comic", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Standard ähnelt.
+        /// </summary>
+        public static string strTheme_Default {
+            get {
+                return ResourceManager.GetString("strTheme_Default", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Sucht eine lokalisierte Zeichenfolge, die Threefold Repetition! ähnelt.
         /// </summary>
         public static string strThreefoldRepition {

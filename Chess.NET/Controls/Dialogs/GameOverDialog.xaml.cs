@@ -1,4 +1,5 @@
-﻿using Chess.NET.Shared.Model;
+﻿using Chess.NET.Model;
+using Chess.NET.Shared.Model;
 using System.Windows;
 
 namespace Chess.NET.Controls.Dialogs
@@ -29,7 +30,7 @@ namespace Chess.NET.Controls.Dialogs
                 if (!System.Globalization.CultureInfo.CurrentCulture.TwoLetterISOLanguageName.Equals("de", StringComparison.CurrentCultureIgnoreCase))
                     TextColor.Text = TextColor.Text.ToLower();
 
-                ImgKing.Source = PieceType.King.ToBitmap(colorWon!.Value);
+                ImgKing.Source = PieceType.King.ToBitmap(colorWon!.Value, Settings.Instance.Theme);
                 TextPlayer.Text = playerName;
             }
             else
@@ -37,6 +38,9 @@ namespace Chess.NET.Controls.Dialogs
                 GridWin.Visibility = Visibility.Collapsed;
                 GridDraw.Visibility = Visibility.Visible;
                 Width = 430;
+
+                ImgKingWhite.Source = PieceType.King.ToBitmap(Color.White, Settings.Instance.Theme);
+                ImgKingBlack.Source = PieceType.King.ToBitmap(Color.Black, Settings.Instance.Theme);
 
                 switch (gameResult)
                 {

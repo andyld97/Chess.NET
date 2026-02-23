@@ -39,10 +39,16 @@ namespace Chess.NET
             }
         }
 
-        private static Dictionary<PieceType, BitmapImage> bitmapCacheWhite = [];
-        private static Dictionary<PieceType, BitmapImage> bitmapCacheBlack = [];
+        private static readonly Dictionary<PieceType, BitmapImage> bitmapCacheWhite = [];
+        private static readonly Dictionary<PieceType, BitmapImage> bitmapCacheBlack = [];
 
-        public static BitmapImage ToBitmap(this PieceType pieceType, Color color)
+        public static void ClearBitmapCache()
+        {
+            bitmapCacheWhite.Clear();
+            bitmapCacheBlack.Clear();
+        }
+
+        public static BitmapImage ToBitmap(this PieceType pieceType, Color color, Theme theme)
         {
             if (color == Color.White && bitmapCacheWhite.TryGetValue(pieceType, out BitmapImage? value))
                 return value;
@@ -53,7 +59,7 @@ namespace Chess.NET
 
             BitmapImage bi = new BitmapImage { CacheOption = BitmapCacheOption.OnLoad };
             bi.BeginInit();
-            bi.UriSource = new Uri($"pack://application:,,,/Chess.NET;component/resources/icons/{col}/{pieceType}.png");
+            bi.UriSource = new Uri($"pack://application:,,,/Chess.NET;component/resources/icons/themes/{theme.ToString().ToLower()}/{col}/{pieceType}.png");
             bi.EndInit();
             bi.Freeze();
 
