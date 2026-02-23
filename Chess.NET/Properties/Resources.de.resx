@@ -334,4 +334,10 @@
   <data name="strTheme_Comic" xml:space="preserve">
     <value>Comicstil</value>
   </data>
+  <data name="strGeneral" xml:space="preserve">
+    <value>Allgemein</value>
+  </data>
+  <data name="strPlayer" xml:space="preserve">
+    <value>Spieler</value>
+  </data>
 </root>

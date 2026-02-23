@@ -106,6 +106,15 @@ namespace Chess.NET.Properties {
         }
         
         /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Bots ähnelt.
+        /// </summary>
+        public static string strBots {
+            get {
+                return ResourceManager.GetString("strBots", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Sucht eine lokalisierte Zeichenfolge, die Checkmate! ähnelt.
         /// </summary>
         public static string strCheckmate {
@@ -295,6 +304,15 @@ namespace Chess.NET.Properties {
         }
         
         /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die General ähnelt.
+        /// </summary>
+        public static string strGeneral {
+            get {
+                return ResourceManager.GetString("strGeneral", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Sucht eine lokalisierte Zeichenfolge, die here ähnelt.
         /// </summary>
         public static string strHere {
@@ -453,6 +471,15 @@ namespace Chess.NET.Properties {
         public static string strPath {
             get {
                 return ResourceManager.GetString("strPath", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Player ähnelt.
+        /// </summary>
+        public static string strPlayer {
+            get {
+                return ResourceManager.GetString("strPlayer", resourceCulture);
             }
         }
         

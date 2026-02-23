@@ -341,4 +341,14 @@
   <data name="strTheme_Comic" xml:space="preserve">
     <value>Comic</value>
   </data>
+  <data name="strGeneral" xml:space="preserve">
+    <value>General</value>
+  </data>
+  <data name="strPlayer" xml:space="preserve">
+    <value>Player</value>
+  </data>
+  <data name="strBots" xml:space="preserve">
+    <value>Bots</value>
+    <comment>@Invariant</comment>
+  </data>
 </root>
