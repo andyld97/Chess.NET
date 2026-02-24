@@ -9,7 +9,9 @@ using Chess.NET.Shared.Model.Pieces;
 using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 
 namespace Chess.NET.Controls
 {
@@ -134,6 +136,13 @@ namespace Chess.NET.Controls
 
                 // TODO: Das ist noch nicht ganz so intuitiv, weil das Problem hier ist, dass man das nicht so wirklich gut mitbekommt, dass
                 // jetzt der Navigationsmodus verlassen wird und das fühlt sich laggy an!
+                return;
+            }
+
+            if (e.RightButton == System.Windows.Input.MouseButtonState.Pressed)
+            {
+                ResetDrag();
+                RenderChessBoard(game.Board, true);
                 return;
             }
 

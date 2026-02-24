@@ -21,7 +21,7 @@
                 
         <Grid Grid.Column="0">
             <Grid IsHitTestVisible="False">
-                <Image Source="/resources/images/background.jpg" Stretch="UniformToFill" />
+                <Image x:Name="imgBackground" Source="/resources/backgrounds/sand.jpg" Stretch="UniformToFill" />
             </Grid>
             <Viewbox>
                 <controls:ChessBoard x:Name="Chessboard" />

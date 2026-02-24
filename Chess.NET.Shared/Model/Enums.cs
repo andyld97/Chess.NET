@@ -29,4 +29,11 @@
         Default = 0,
         Comic = 1
     }
+
+    public enum Background
+    {
+        Sand,
+        Abstract,
+        AbstractPurple
+    }
 }

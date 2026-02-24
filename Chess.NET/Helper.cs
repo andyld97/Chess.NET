@@ -71,5 +71,23 @@ namespace Chess.NET
 
             return bi;
         }
+
+        public static BitmapImage GetBackground(Background background)
+        {
+            string backgroundUri = background switch
+            {
+                Background.Sand => "pack://application:,,,/Chess.NET;component/resources/backgrounds/sand.jpg",
+                Background.Abstract => "pack://application:,,,/Chess.NET;component/resources/backgrounds/abstract.png",
+                Background.AbstractPurple => "pack://application:,,,/Chess.NET;component/resources/backgrounds/abstract-purple.jpg",
+                _ => throw new ArgumentOutOfRangeException(nameof(background), background, null)
+            };
+
+            BitmapImage bi = new BitmapImage { CacheOption = BitmapCacheOption.OnLoad };
+            bi.BeginInit();
+            bi.UriSource = new Uri(backgroundUri);
+            bi.EndInit();
+            bi.Freeze();
+            return bi;
+        }
     }
 }

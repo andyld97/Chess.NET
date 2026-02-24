@@ -22,13 +22,29 @@
                 <Hyperlink x:Name="LnkHomepage" Click="LnkHomepage_Click" NavigateUri="https://ca-soft.net">
                     <TextBlock Text="Homepage" />
                 </Hyperlink>
+                
+                <Run Text=" | " />
+                
+                <Hyperlink x:Name="LnkGitHub" Click="LnkGitHub_Click" NavigateUri="https://github.com/andyld97/Chess.NET">
+                    <TextBlock Text="GitHub" />
+                </Hyperlink>
                
                 <LineBreak />
                 <LineBreak />
                 
+                <Run Text="{x:Static res:Resources.strContributors}" FontWeight="Bold" />
+                <LineBreak />
+                <Hyperlink x:Name="LnkLisydra" Click="LnkLisydra_Click" NavigateUri="https://linktr.ee/lisydra">
+                    <TextBlock Text="Lisydra" />
+                </Hyperlink>
+                <Run Text="{x:Static res:Resources.strLLisydra}" />                
+                
+                <LineBreak />
+                <LineBreak />                
+                
                 <Run x:Name="TextVersion" Text="Version 1.0.0" FontWeight="Bold" />
                 <LineBreak />
-                <Run x:Name="TextService" Text="Powered by .NET 10.0.2" />
+                <Run x:Name="TextService" Text="Powered by .NET 10.0.3" />
             </TextBlock>
         </StackPanel>
     </Grid>

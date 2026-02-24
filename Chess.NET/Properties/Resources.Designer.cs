@@ -88,6 +88,42 @@ namespace Chess.NET.Properties {
         }
         
         /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Background: ähnelt.
+        /// </summary>
+        public static string strBackground {
+            get {
+                return ResourceManager.GetString("strBackground", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Abstract ähnelt.
+        /// </summary>
+        public static string strBackground_Abstract {
+            get {
+                return ResourceManager.GetString("strBackground_Abstract", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Abstract (Purple) ähnelt.
+        /// </summary>
+        public static string strBackground_Abstract_Purple {
+            get {
+                return ResourceManager.GetString("strBackground_Abstract_Purple", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Sand ähnelt.
+        /// </summary>
+        public static string strBackground_Sand {
+            get {
+                return ResourceManager.GetString("strBackground_Sand", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Sucht eine lokalisierte Zeichenfolge, die Starting Position ähnelt.
         /// </summary>
         public static string strBeginPosition {
@@ -120,6 +156,15 @@ namespace Chess.NET.Properties {
         public static string strCheckmate {
             get {
                 return ResourceManager.GetString("strCheckmate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Contributors: ähnelt.
+        /// </summary>
+        public static string strContributors {
+            get {
+                return ResourceManager.GetString("strContributors", resourceCulture);
             }
         }
         
@@ -354,6 +399,15 @@ namespace Chess.NET.Properties {
         public static string strLeft {
             get {
                 return ResourceManager.GetString("strLeft", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die (Illustrator of the comic figures) ähnelt.
+        /// </summary>
+        public static string strLLisydra {
+            get {
+                return ResourceManager.GetString("strLLisydra", resourceCulture);
             }
         }
         

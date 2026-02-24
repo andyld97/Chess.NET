@@ -41,6 +41,8 @@ namespace Chess.NET.Model
 
         public Theme Theme { get; set; } = Theme.Default;
 
+        public Background Background { get; set; } = Background.Sand;   
+
         public bool PlaySounds { get; set; } = true;
 
         public static Settings Load()

@@ -1,4 +1,5 @@
-﻿using Chess.NET.Shared.Model;
+﻿using Chess.NET.Model;
+using Chess.NET.Shared.Model;
 using Chess.NET.Shared.Model.Bot;
 using System.ComponentModel;
 using System.Windows;
@@ -32,6 +33,7 @@ namespace Chess.NET.Controls.Dialogs
         {
             InitializeComponent();
             DataContext = this;
+            imgBackground.Source = Helper.GetBackground(Settings.Instance.Background);
 
             currentPuzzle = puzzle!;
             if (currentPuzzle == null)

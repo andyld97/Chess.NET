@@ -20,5 +20,15 @@ namespace Chess.NET.Controls.Dialogs
         {
             Helper.OpenHyperlink(LnkHomepage.NavigateUri.ToString());
         }
+
+        private void LnkLisydra_Click(object sender, RoutedEventArgs e)
+        {
+            Helper.OpenHyperlink(LnkLisydra.NavigateUri.ToString());
+        }
+
+        private void LnkGitHub_Click(object sender, RoutedEventArgs e)
+        {
+            Helper.OpenHyperlink(LnkGitHub.NavigateUri.ToString());
+        }
     }
 }

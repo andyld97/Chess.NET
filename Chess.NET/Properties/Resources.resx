@@ -351,4 +351,22 @@
     <value>Bots</value>
     <comment>@Invariant</comment>
   </data>
+  <data name="strLLisydra" xml:space="preserve">
+    <value>(Illustrator of the comic figures)</value>
+  </data>
+  <data name="strContributors" xml:space="preserve">
+    <value>Contributors:</value>
+  </data>
+  <data name="strBackground" xml:space="preserve">
+    <value>Background:</value>
+  </data>
+  <data name="strBackground_Sand" xml:space="preserve">
+    <value>Sand</value>
+  </data>
+  <data name="strBackground_Abstract" xml:space="preserve">
+    <value>Abstract</value>
+  </data>
+  <data name="strBackground_Abstract_Purple" xml:space="preserve">
+    <value>Abstract (Purple)</value>
+  </data>
 </root>

@@ -46,8 +46,13 @@
     <None Remove="resources\icons\themes\default\white\Pawn.png" />
     <None Remove="resources\icons\themes\default\white\Queen.png" />
     <None Remove="resources\icons\themes\default\white\Rook.png" />
+    <None Remove="resources\images\abstract-purple.jpg" />
+    <None Remove="resources\images\abstract.png" />
     <None Remove="resources\images\background.jpg" />
+    <None Remove="resources\images\background2.png" />
+    <None Remove="resources\images\background3.jpg" />
     <None Remove="resources\images\logo.png" />
+    <None Remove="resources\images\sand.jpg" />
     <None Remove="resources\sounds\capture.mp3" />
     <None Remove="resources\sounds\castle.mp3" />
     <None Remove="resources\sounds\check.mp3" />
@@ -123,8 +128,10 @@
     <Resource Include="resources\icons\themes\default\white\Pawn.png" />
     <Resource Include="resources\icons\themes\default\white\Queen.png" />
     <Resource Include="resources\icons\themes\default\white\Rook.png" />
-    <Resource Include="resources\images\background.jpg" />
+    <Resource Include="resources\backgrounds\abstract-purple.jpg" />
+    <Resource Include="resources\backgrounds\abstract.png" />
     <Resource Include="resources\images\logo.png" />
+    <Resource Include="resources\backgrounds\sand.jpg" />
   </ItemGroup>
 
   <ItemGroup>

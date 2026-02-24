@@ -22,6 +22,13 @@
         <TabControl Margin="2">
             <TabItem Header="{x:Static res:Resources.strGeneral}">
                 <StackPanel>
+                    <TextBlock Text="{x:Static res:Resources.strBackground}" Margin="5,2" />
+                    <ComboBox x:Name="CmbBackground" SelectionChanged="CmbBackground_SelectionChanged" Margin="5,2">
+                        <ComboBoxItem Content="{x:Static res:Resources.strBackground_Sand}" />
+                        <ComboBoxItem Content="{x:Static res:Resources.strBackground_Abstract}" />
+                        <ComboBoxItem Content="{x:Static res:Resources.strBackground_Abstract_Purple}" />
+                    </ComboBox>
+
                     <TextBlock Text="{x:Static res:Resources.strTheme}" Margin="5,2" />
                     <ComboBox x:Name="CmbTheme" SelectionChanged="CmbTheme_SelectionChanged" Margin="5,2">
                         <ComboBoxItem Content="{x:Static res:Resources.strTheme_Default}" />

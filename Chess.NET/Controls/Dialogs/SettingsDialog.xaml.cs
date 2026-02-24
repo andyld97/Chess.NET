@@ -26,6 +26,7 @@ namespace Chess.NET.Controls.Dialogs
             ChkPlaySounds.IsChecked = Settings.Instance.PlaySounds;
             CmbDifficuluty.SelectedIndex = Settings.Instance.Difficulty;
             CmbTheme.SelectedIndex = (int)Settings.Instance.Theme;
+            CmbBackground.SelectedIndex = (int)Settings.Instance.Background;
 
             isInitialized = true;
         }
@@ -116,6 +117,18 @@ namespace Chess.NET.Controls.Dialogs
                 return;
 
             Settings.Instance.Theme = (Theme)CmbTheme.SelectedIndex;
+            Settings.Instance.Save();
+
+            Helper.ClearBitmapCache();
+            MainWindow.W_INSTANCE.Refresh();
+        }
+
+        private void CmbBackground_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {
+            if (!isInitialized)
+                return;
+
+            Settings.Instance.Background = (Background)CmbBackground.SelectedIndex;
             Settings.Instance.Save();
 
             Helper.ClearBitmapCache();

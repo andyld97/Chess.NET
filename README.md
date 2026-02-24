@@ -25,3 +25,7 @@ It includes (almost) full game rules, a WPF-based GUI, custom bot logic, and eve
 
 ### Requirements
 - `stockfish.exe` if you want to play against the engine!
+
+### Contributors
+
+- [Lisydra](https://linktr.ee/lisydra) (Illustrator of the comic figures)

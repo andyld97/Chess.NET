@@ -340,4 +340,22 @@
   <data name="strPlayer" xml:space="preserve">
     <value>Spieler</value>
   </data>
+  <data name="strLLisydra" xml:space="preserve">
+    <value>(Zeichnerin der Comic-Figuren)</value>
+  </data>
+  <data name="strContributors" xml:space="preserve">
+    <value>Mitwirkende:</value>
+  </data>
+  <data name="strBackground" xml:space="preserve">
+    <value>Hintergrund:</value>
+  </data>
+  <data name="strBackground_Sand" xml:space="preserve">
+    <value>Sand</value>
+  </data>
+  <data name="strBackground_Abstract" xml:space="preserve">
+    <value>Abstrakt</value>
+  </data>
+  <data name="strBackground_Abstract_Purple" xml:space="preserve">
+    <value>Abstrakt (lila)</value>
+  </data>
 </root>
