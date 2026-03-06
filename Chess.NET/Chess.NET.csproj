@@ -1,152 +1,159 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <OutputType>WinExe</OutputType>
-    <TargetFramework>net10.0-windows</TargetFramework>
-    <Nullable>enable</Nullable>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <UseWPF>true</UseWPF>
-    <ApplicationIcon>icon.ico</ApplicationIcon>
-    <AssemblyVersion>1.0.1</AssemblyVersion>
-    <FileVersion>1.0.1</FileVersion>
-	<Copyright>Chess.NET © 2026</Copyright>
-	<Company>Code A Software</Company>
-	<ApplicationManifest>app.manifest</ApplicationManifest>
-  </PropertyGroup>
+	<PropertyGroup>
+		<OutputType>WinExe</OutputType>
+		<TargetFramework>net10.0-windows</TargetFramework>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<UseWPF>true</UseWPF>
+		<Copyright>Chess.NET © 2026</Copyright>
+		<ApplicationIcon>icon.ico</ApplicationIcon>
+		<AssemblyVersion>1.0.1</AssemblyVersion>
+		<FileVersion>1.0.1</FileVersion>
+		<Company>Code A Software</Company>
+		<ApplicationManifest>app.manifest</ApplicationManifest>
+		<Configurations>Debug;Release;Store</Configurations>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <Compile Remove="resources\icons\themes\custom\**" />
-    <EmbeddedResource Remove="resources\icons\themes\custom\**" />
-    <None Remove="resources\icons\themes\custom\**" />
-    <Page Remove="resources\icons\themes\custom\**" />
-  </ItemGroup>
+	<PropertyGroup Condition="'$(Configuration)' == 'Store'">
+		<AssemblyName>OpenChess</AssemblyName>
+		<DefineConstants>$(DefineConstants);STORE</DefineConstants>
+		<Copyright>Open Chess © 2026</Copyright>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <None Remove="resources\icons\themes\default\black\Bishop.png" />
-    <None Remove="resources\icons\themes\default\black\King.png" />
-    <None Remove="resources\icons\themes\default\black\Knight.png" />
-    <None Remove="resources\icons\themes\default\black\Pawn.png" />
-    <None Remove="resources\icons\themes\default\black\Queen.png" />
-    <None Remove="resources\icons\themes\default\black\Rook.png" />
-    <None Remove="resources\icons\themes\comic\black\Bishop.png" />
-    <None Remove="resources\icons\themes\comic\black\King.png" />
-    <None Remove="resources\icons\themes\comic\black\Knight.png" />
-    <None Remove="resources\icons\themes\comic\black\Pawn.png" />
-    <None Remove="resources\icons\themes\comic\black\Queen.png" />
-    <None Remove="resources\icons\themes\comic\black\Rook.png" />
-    <None Remove="resources\icons\themes\comic\white\Bishop.png" />
-    <None Remove="resources\icons\themes\comic\white\King.png" />
-    <None Remove="resources\icons\themes\comic\white\Knight.png" />
-    <None Remove="resources\icons\themes\comic\white\Pawn.png" />
-    <None Remove="resources\icons\themes\comic\white\Queen.png" />
-    <None Remove="resources\icons\themes\comic\white\Rook.png" />
-    <None Remove="resources\icons\themes\default\white\Bishop.png" />
-    <None Remove="resources\icons\themes\default\white\King.png" />
-    <None Remove="resources\icons\themes\default\white\Knight.png" />
-    <None Remove="resources\icons\themes\default\white\Pawn.png" />
-    <None Remove="resources\icons\themes\default\white\Queen.png" />
-    <None Remove="resources\icons\themes\default\white\Rook.png" />
-    <None Remove="resources\images\abstract-purple.jpg" />
-    <None Remove="resources\images\abstract.png" />
-    <None Remove="resources\images\background.jpg" />
-    <None Remove="resources\images\background2.png" />
-    <None Remove="resources\images\background3.jpg" />
-    <None Remove="resources\images\logo.png" />
-    <None Remove="resources\images\sand.jpg" />
-    <None Remove="resources\sounds\capture.mp3" />
-    <None Remove="resources\sounds\castle.mp3" />
-    <None Remove="resources\sounds\check.mp3" />
-    <None Remove="resources\sounds\checkmate.mp3" />
-    <None Remove="resources\sounds\fail.mp3" />
-    <None Remove="resources\sounds\move.mp3" />
-    <None Remove="resources\sounds\solved.mp3" />
-    <None Remove="resources\sounds\stalemate.mp3" />
-  </ItemGroup>
+	<ItemGroup>
+		<Compile Remove="resources\icons\themes\custom\**" />
+		<EmbeddedResource Remove="resources\icons\themes\custom\**" />
+		<None Remove="resources\icons\themes\custom\**" />
+		<Page Remove="resources\icons\themes\custom\**" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <Content Include="icon.ico" />
-    <Content Include="resources\sounds\capture.mp3">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="resources\sounds\castle.mp3">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="resources\sounds\check.mp3">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="resources\sounds\checkmate.mp3">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="resources\sounds\fail.mp3">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="resources\sounds\move.mp3">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="resources\sounds\solved.mp3">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="resources\sounds\stalemate.mp3">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
+	<ItemGroup>
+		<None Remove="resources\icons\themes\default\black\Bishop.png" />
+		<None Remove="resources\icons\themes\default\black\King.png" />
+		<None Remove="resources\icons\themes\default\black\Knight.png" />
+		<None Remove="resources\icons\themes\default\black\Pawn.png" />
+		<None Remove="resources\icons\themes\default\black\Queen.png" />
+		<None Remove="resources\icons\themes\default\black\Rook.png" />
+		<None Remove="resources\icons\themes\comic\black\Bishop.png" />
+		<None Remove="resources\icons\themes\comic\black\King.png" />
+		<None Remove="resources\icons\themes\comic\black\Knight.png" />
+		<None Remove="resources\icons\themes\comic\black\Pawn.png" />
+		<None Remove="resources\icons\themes\comic\black\Queen.png" />
+		<None Remove="resources\icons\themes\comic\black\Rook.png" />
+		<None Remove="resources\icons\themes\comic\white\Bishop.png" />
+		<None Remove="resources\icons\themes\comic\white\King.png" />
+		<None Remove="resources\icons\themes\comic\white\Knight.png" />
+		<None Remove="resources\icons\themes\comic\white\Pawn.png" />
+		<None Remove="resources\icons\themes\comic\white\Queen.png" />
+		<None Remove="resources\icons\themes\comic\white\Rook.png" />
+		<None Remove="resources\icons\themes\default\white\Bishop.png" />
+		<None Remove="resources\icons\themes\default\white\King.png" />
+		<None Remove="resources\icons\themes\default\white\Knight.png" />
+		<None Remove="resources\icons\themes\default\white\Pawn.png" />
+		<None Remove="resources\icons\themes\default\white\Queen.png" />
+		<None Remove="resources\icons\themes\default\white\Rook.png" />
+		<None Remove="resources\images\abstract-purple.jpg" />
+		<None Remove="resources\images\abstract.png" />
+		<None Remove="resources\images\background.jpg" />
+		<None Remove="resources\images\background2.png" />
+		<None Remove="resources\images\background3.jpg" />
+		<None Remove="resources\images\logo.png" />
+		<None Remove="resources\images\sand.jpg" />
+		<None Remove="resources\sounds\capture.mp3" />
+		<None Remove="resources\sounds\castle.mp3" />
+		<None Remove="resources\sounds\check.mp3" />
+		<None Remove="resources\sounds\checkmate.mp3" />
+		<None Remove="resources\sounds\fail.mp3" />
+		<None Remove="resources\sounds\move.mp3" />
+		<None Remove="resources\sounds\solved.mp3" />
+		<None Remove="resources\sounds\stalemate.mp3" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <Resource Include="resources\icons\themes\comic\white\Bishop.png" />
-    <Resource Include="resources\icons\themes\comic\white\King.png" />
-    <Resource Include="resources\icons\themes\comic\white\Knight.png" />
-    <Resource Include="resources\icons\themes\comic\white\Pawn.png" />
-    <Resource Include="resources\icons\themes\comic\white\Queen.png" />
-    <Resource Include="resources\icons\themes\comic\white\Rook.png" />
-  </ItemGroup>
+	<ItemGroup>
+		<Content Include="icon.ico" />
+		<Content Include="resources\sounds\capture.mp3">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Include="resources\sounds\castle.mp3">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Include="resources\sounds\check.mp3">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Include="resources\sounds\checkmate.mp3">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Include="resources\sounds\fail.mp3">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Include="resources\sounds\move.mp3">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Include="resources\sounds\solved.mp3">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Include="resources\sounds\stalemate.mp3">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+	</ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="10.0.3" />
-    <PackageReference Include="System.Text.Json" Version="10.0.3" />
-  </ItemGroup>
+	<ItemGroup>
+		<Resource Include="resources\icons\themes\comic\white\Bishop.png" />
+		<Resource Include="resources\icons\themes\comic\white\King.png" />
+		<Resource Include="resources\icons\themes\comic\white\Knight.png" />
+		<Resource Include="resources\icons\themes\comic\white\Pawn.png" />
+		<Resource Include="resources\icons\themes\comic\white\Queen.png" />
+		<Resource Include="resources\icons\themes\comic\white\Rook.png" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Chess.NET.Shared\Chess.NET.Shared.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="10.0.3" />
+		<PackageReference Include="System.Text.Json" Version="10.0.3" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <Resource Include="resources\icons\themes\default\black\Bishop.png" />
-    <Resource Include="resources\icons\themes\default\black\King.png" />
-    <Resource Include="resources\icons\themes\default\black\Knight.png" />
-    <Resource Include="resources\icons\themes\default\black\Pawn.png" />
-    <Resource Include="resources\icons\themes\default\black\Queen.png" />
-    <Resource Include="resources\icons\themes\default\black\Rook.png" />
-    <Resource Include="resources\icons\themes\comic\black\Bishop.png" />
-    <Resource Include="resources\icons\themes\comic\black\King.png" />
-    <Resource Include="resources\icons\themes\comic\black\Knight.png" />
-    <Resource Include="resources\icons\themes\comic\black\Pawn.png" />
-    <Resource Include="resources\icons\themes\comic\black\Queen.png" />
-    <Resource Include="resources\icons\themes\comic\black\Rook.png" />
-    <Resource Include="resources\icons\themes\default\white\Bishop.png" />
-    <Resource Include="resources\icons\themes\default\white\King.png" />
-    <Resource Include="resources\icons\themes\default\white\Knight.png" />
-    <Resource Include="resources\icons\themes\default\white\Pawn.png" />
-    <Resource Include="resources\icons\themes\default\white\Queen.png" />
-    <Resource Include="resources\icons\themes\default\white\Rook.png" />
-    <Resource Include="resources\backgrounds\abstract-purple.jpg" />
-    <Resource Include="resources\backgrounds\abstract.png" />
-    <Resource Include="resources\images\logo.png" />
-    <Resource Include="resources\backgrounds\sand.jpg" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\Chess.NET.Shared\Chess.NET.Shared.csproj" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <Compile Update="Properties\Resources.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
-  </ItemGroup>
+	<ItemGroup>
+		<Resource Include="resources\icons\themes\default\black\Bishop.png" />
+		<Resource Include="resources\icons\themes\default\black\King.png" />
+		<Resource Include="resources\icons\themes\default\black\Knight.png" />
+		<Resource Include="resources\icons\themes\default\black\Pawn.png" />
+		<Resource Include="resources\icons\themes\default\black\Queen.png" />
+		<Resource Include="resources\icons\themes\default\black\Rook.png" />
+		<Resource Include="resources\icons\themes\comic\black\Bishop.png" />
+		<Resource Include="resources\icons\themes\comic\black\King.png" />
+		<Resource Include="resources\icons\themes\comic\black\Knight.png" />
+		<Resource Include="resources\icons\themes\comic\black\Pawn.png" />
+		<Resource Include="resources\icons\themes\comic\black\Queen.png" />
+		<Resource Include="resources\icons\themes\comic\black\Rook.png" />
+		<Resource Include="resources\icons\themes\default\white\Bishop.png" />
+		<Resource Include="resources\icons\themes\default\white\King.png" />
+		<Resource Include="resources\icons\themes\default\white\Knight.png" />
+		<Resource Include="resources\icons\themes\default\white\Pawn.png" />
+		<Resource Include="resources\icons\themes\default\white\Queen.png" />
+		<Resource Include="resources\icons\themes\default\white\Rook.png" />
+		<Resource Include="resources\backgrounds\abstract-purple.jpg" />
+		<Resource Include="resources\backgrounds\abstract.png" />
+		<Resource Include="resources\images\logo.png" />
+		<Resource Include="resources\backgrounds\sand.jpg" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <EmbeddedResource Update="Properties\Resources.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-  </ItemGroup>
+	<ItemGroup>
+		<Compile Update="Properties\Resources.Designer.cs">
+			<DesignTime>True</DesignTime>
+			<AutoGen>True</AutoGen>
+			<DependentUpon>Resources.resx</DependentUpon>
+		</Compile>
+	</ItemGroup>
+
+	<ItemGroup>
+		<EmbeddedResource Update="Properties\Resources.resx">
+			<Generator>PublicResXFileCodeGenerator</Generator>
+			<LastGenOutput>Resources.Designer.cs</LastGenOutput>
+		</EmbeddedResource>
+	</ItemGroup>
 
 </Project>

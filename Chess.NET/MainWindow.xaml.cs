@@ -42,6 +42,10 @@ namespace Chess.NET
             W_INSTANCE = this;
             imgBackground.Source = Helper.GetBackground(Settings.Instance.Background);
 
+#if STORE
+            Title = "Open Chess";
+#endif
+
             // Assign events
             Chessboard.Game.OnMovedPiece += Game_MovedPiece;
             Chessboard.Game.OnGameOver += Game_OnGameOver;

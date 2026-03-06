@@ -5,6 +5,12 @@ It includes (almost) full game rules, a WPF-based GUI, custom bot logic, and eve
 
 > ⚠️ **ATTENTION**  This game isn't finished yet and it's still very rudimental!
 
+<a href="https://apps.microsoft.com/detail/9pfhww5dh8wg" target="_self" >
+	<img src="https://get.microsoft.com/images/en-us%20dark.svg" width="200"/>
+</a>
+
+<svg xmlns="http://www.w3.org/2000/svg" fill="transparent"></svg>
+
 ![Chess.NET Screenshot](Assets/screenshot.png)
 
 ### Missing Features

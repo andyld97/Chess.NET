@@ -56,10 +56,14 @@ namespace Chess.NET
                 return value1;
 
             string col = (color == Color.White ? "white" : "black");
+            string appName = "Chess.NET";
+#if STORE
+            appName = "OpenChess";
+#endif
 
             BitmapImage bi = new BitmapImage { CacheOption = BitmapCacheOption.OnLoad };
             bi.BeginInit();
-            bi.UriSource = new Uri($"pack://application:,,,/Chess.NET;component/resources/icons/themes/{theme.ToString().ToLower()}/{col}/{pieceType}.png");
+            bi.UriSource = new Uri($"pack://application:,,,/{appName};component/resources/icons/themes/{theme.ToString().ToLower()}/{col}/{pieceType}.png");
             bi.EndInit();
             bi.Freeze();
 
@@ -74,11 +78,15 @@ namespace Chess.NET
 
         public static BitmapImage GetBackground(Background background)
         {
+            string appName = "Chess.NET";
+#if STORE
+            appName = "OpenChess";
+#endif
             string backgroundUri = background switch
             {
-                Background.Sand => "pack://application:,,,/Chess.NET;component/resources/backgrounds/sand.jpg",
-                Background.Abstract => "pack://application:,,,/Chess.NET;component/resources/backgrounds/abstract.png",
-                Background.AbstractPurple => "pack://application:,,,/Chess.NET;component/resources/backgrounds/abstract-purple.jpg",
+                Background.Sand =>              $"pack://application:,,,/{appName};component/resources/backgrounds/sand.jpg",
+                Background.Abstract =>          $"pack://application:,,,/{appName};component/resources/backgrounds/abstract.png",
+                Background.AbstractPurple =>    $"pack://application:,,,/{appName};component/resources/backgrounds/abstract-purple.jpg",
                 _ => throw new ArgumentOutOfRangeException(nameof(background), background, null)
             };
 
