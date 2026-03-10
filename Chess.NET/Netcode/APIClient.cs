@@ -7,7 +7,7 @@ namespace Chess.NET.Netcode
 {
     public static class APIClient
     {
-        private static HttpClient httpClient = new HttpClient();  
+        private static readonly HttpClient httpClient = new HttpClient();  
 
         public static async Task JoinQueueAsync(Client client)
         {

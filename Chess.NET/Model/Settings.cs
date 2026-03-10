@@ -37,6 +37,10 @@ namespace Chess.NET.Model
 
         public int Difficulty { get; set; } = 0;
 
+        public int LastSelectedGameMode { get; set; } = 0;
+
+        public bool IsOOBE { get; set; } = true;
+
         public bool AutoPromoteToQueen { get; set; } = false;
 
         public Theme Theme { get; set; } = Theme.Default;
@@ -65,6 +69,7 @@ namespace Chess.NET.Model
         {
             try
             {
+                IsOOBE = false;
                 Serialization.Save<Settings>(path, this, Serialization.Mode.XML);
             }
             catch (Exception e)

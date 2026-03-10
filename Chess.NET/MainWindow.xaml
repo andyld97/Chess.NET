@@ -100,7 +100,7 @@
 
                 <StackPanel Margin="4" Grid.Row="1">
                     <TextBlock Text="{x:Static res:Resources.strOpponent}" Margin="2,2,2,0" />
-                    <ComboBox x:Name="CmbOpponent" Padding="5" Margin="0,2,0,5" SelectedIndex="0">
+                    <ComboBox x:Name="CmbOpponent" SelectionChanged="CmbOpponent_SelectionChanged" Padding="5" Margin="0,2,0,5" SelectedIndex="0">
                         <ComboBoxItem Content="{x:Static res:Resources.strOpponent_Stockfish}" />
                         <ComboBoxItem Content="{x:Static res:Resources.strOpponent_StupidoBot}" />
                         <ComboBoxItem Content="{x:Static res:Resources.strOpponent_Online}" />

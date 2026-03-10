@@ -18,7 +18,7 @@ namespace Chess.NET
     {
         private MoveNotationDisplay currentMoveNotationDisplay = null!;
         private IChessBot? opponent = null;
-
+        private bool isInitialized = false; 
         public static MainWindow W_INSTANCE { get; private set; } = null!;    
 
         #region Commands
@@ -65,6 +65,21 @@ namespace Chess.NET
 
             RefreshPlayerDisplay();
             InitializePuzzleMenu();
+
+            if (Settings.Instance.LastSelectedGameMode >= 0 && Settings.Instance.LastSelectedGameMode < CmbOpponent.Items.Count)
+                CmbOpponent.SelectedIndex = Settings.Instance.LastSelectedGameMode;
+
+            isInitialized = true;
+            Loaded += MainWindow_Loaded;
+        }
+
+        private void MainWindow_Loaded(object sender, RoutedEventArgs e)
+        {
+            if (Settings.Instance.IsOOBE)
+            {
+                var dialog = new SettingsDialog() { Owner = this };
+                dialog.ShowDialog();
+            }
         }
 
         #endregion
@@ -320,10 +335,14 @@ namespace Chess.NET
             isOnlineMatch = false;
             await _networkClient.DisconnectAsync();
 
-            await Task.Delay(250).ContinueWith(t =>
+            await Task.Delay(50).ContinueWith(t =>
             {
                 Application.Current.Dispatcher.Invoke(() =>
                 {
+                    // Only consider sounds that are normally not played using the Game-Class
+                    if (matchEnd.Result == GameResult.Disconnected || matchEnd.Result == GameResult.Resign || matchEnd.Result == GameResult.Timeout)
+                        Sound.Play(SoundType.Checkmate);
+
                     GameOverDialog gameOverDialog = new GameOverDialog(matchEnd.Result, matchEnd.ColorWins, playerWon) { Owner = this };
                     gameOverDialog.ShowDialog();
                 });
@@ -340,7 +359,6 @@ namespace Chess.NET
             if (!result)
             {
                 // TODO: Wenn Move vom Server nicht akzeptiert wurde, ihn wieder lokal rückgängig machen!
-
             }
         }
 
@@ -558,6 +576,15 @@ namespace Chess.NET
         {
             imgBackground.Source = Helper.GetBackground(Settings.Instance.Background);
             Chessboard.RenderChessBoard(Chessboard.Game.Board, true);
+        }
+
+        private void CmbOpponent_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (!isInitialized)
+                return;
+
+            Settings.Instance.LastSelectedGameMode = CmbOpponent.SelectedIndex;
+            Settings.Instance.Save();
         }
 
         #endregion

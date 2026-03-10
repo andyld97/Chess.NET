@@ -8,11 +8,13 @@
 		<UseWPF>true</UseWPF>
 		<Copyright>Chess.NET © 2026</Copyright>
 		<ApplicationIcon>icon.ico</ApplicationIcon>
-		<AssemblyVersion>1.0.1</AssemblyVersion>
-		<FileVersion>1.0.1</FileVersion>
+		<AssemblyVersion>1.0.2</AssemblyVersion>
+		<FileVersion>1.0.2</FileVersion>
 		<Company>Code A Software</Company>
 		<ApplicationManifest>app.manifest</ApplicationManifest>
 		<Configurations>Debug;Release;Store</Configurations>
+		<PublishAot>false</PublishAot>
+		<PublishTrimmed>false</PublishTrimmed>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)' == 'Store'">
@@ -108,8 +110,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="10.0.3" />
-		<PackageReference Include="System.Text.Json" Version="10.0.3" />
+		<PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="10.0.4" />
 	</ItemGroup>
 
 	<ItemGroup>

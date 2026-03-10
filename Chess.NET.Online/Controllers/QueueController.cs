@@ -32,8 +32,12 @@ namespace Chess.NET.Online.Controllers
         /// <returns>An HTTP 200 OK response indicating that the join request was processed.</returns>
         [HttpPost("Join")]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Join([FromBody] Client client)
         {
+            if (string.IsNullOrEmpty(client.PlayerName))
+                return BadRequest("PlayerName is required.");
+
             var match = _matchmaking.Join(client);
 
             if (match != null)
