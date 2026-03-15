@@ -27,13 +27,13 @@ namespace Chess.NET.Model
 
         public string StockfishPath { get; set; } = "stockfish.exe";
 
-        public string Player1Name { get; set; } = string.Empty;
+        public string Player1Name { get; set; } = Properties.Resources.strPlayer1;
 
-        public string Player1Elo { get; set; } = string.Empty;
+        public string Player1Elo { get; set; } = "500";
 
-        public string Player2Name { get; set; } = string.Empty;
+        public string Player2Name { get; set; } = Properties.Resources.strPlayer2;
 
-        public string Player2Elo { get; set; } = string.Empty;
+        public string Player2Elo { get; set; } = "500";
 
         public int Difficulty { get; set; } = 0;
 
