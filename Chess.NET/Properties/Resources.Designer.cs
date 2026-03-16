@@ -592,6 +592,15 @@ namespace Chess.NET.Properties {
         }
         
         /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Please set a name (at least for Player 1) in the settings dialog! ähnelt.
+        /// </summary>
+        public static string strPleaseSetAName {
+            get {
+                return ResourceManager.GetString("strPleaseSetAName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Sucht eine lokalisierte Zeichenfolge, die Promote Pawn ähnelt.
         /// </summary>
         public static string strPromotePawn {

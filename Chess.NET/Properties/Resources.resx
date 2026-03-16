@@ -369,4 +369,7 @@
   <data name="strBackground_Abstract_Purple" xml:space="preserve">
     <value>Abstract (Purple)</value>
   </data>
+  <data name="strPleaseSetAName" xml:space="preserve">
+    <value>Please set a name (at least for Player 1) in the settings dialog!</value>
+  </data>
 </root>

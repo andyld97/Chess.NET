@@ -249,6 +249,12 @@ namespace Chess.NET
 
         private async Task StartOnlineMatchAsync()
         {
+            if (string.IsNullOrEmpty(Settings.Instance.Player1Name))
+            {
+                MessageBox.Show(Properties.Resources.strPleaseSetAName, Properties.Resources.strError, MessageBoxButton.OK, MessageBoxImage.Error); 
+                return;
+            }
+
             ownPieceColor = null;
             currentMatchInfo = null;
             waitingQueueDialog = null;

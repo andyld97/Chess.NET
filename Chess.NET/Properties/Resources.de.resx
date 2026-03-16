@@ -358,4 +358,7 @@
   <data name="strBackground_Abstract_Purple" xml:space="preserve">
     <value>Abstrakt (lila)</value>
   </data>
+  <data name="strPleaseSetAName" xml:space="preserve">
+    <value>Bitte legen Sie zunächst Ihren Namen (zu mindestens für Spieler 1) in den Einstellungen fest!</value>
+  </data>
 </root>
