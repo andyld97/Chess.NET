@@ -316,7 +316,7 @@ namespace Chess.NET
 
         private async void NetworkClient_OnMoveMade(MoveMade moveMade)
         {
-            var pendingMove = PendingMove.Parse(moveMade.Move, (Board)Chessboard.Game.Board, moveMade.Color);
+            var pendingMove = PendingMove.Parse(moveMade.Move, (Board)Chessboard.Game.Board, Chessboard.Game, moveMade.Color);
             if (moveMade.Color != ownPieceColor)
             {
                 await Chessboard.Game.MoveAsync(pendingMove, true);

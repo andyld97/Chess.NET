@@ -21,7 +21,7 @@
             return $"{Type}: {Position}";
         }
 
-        public abstract List<Position> GetPossibleMoves(IBoard board);
+        public abstract List<Position> GetPossibleMoves(Game game);
 
         #region Helper Methods
 

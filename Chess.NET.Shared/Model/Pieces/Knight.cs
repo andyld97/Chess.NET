@@ -10,7 +10,7 @@
         {
         }
 
-        public override List<Position> GetPossibleMoves(IBoard board)
+        public override List<Position> GetPossibleMoves(Game game)
         {
             List<Position> positions = [];
             int file = Position.File;
@@ -30,7 +30,7 @@
                 {
                     var pos = new Position(newFile, newRank);
 
-                    var currentPieceThere = board.GetPiece(pos);
+                    var currentPieceThere = game.Board.GetPiece(pos);
 
                     if (currentPieceThere == null || currentPieceThere.Color != this.Color)
                         positions.Add(pos);

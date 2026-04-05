@@ -10,8 +10,10 @@
         {
         }   
 
-        public override List<Position> GetPossibleMoves(IBoard board)
+        public override List<Position> GetPossibleMoves(Game game)
         {
+            var board = game.Board;
+
             List<Position> positions = [];
 
             if (Position.Rank == 8)
@@ -21,7 +23,7 @@
             {
                 bool mayHopTwice = false;   
                 Position newPos = new Position(Position.File, Position.Rank + 1);
-                if (board.GetPiece(newPos) == null)
+                if (game.Board.GetPiece(newPos) == null)
                 {
                     positions.Add(newPos);
                     mayHopTwice = true;
@@ -107,6 +109,47 @@
                     if (board.GetPiece(captureLeft) != null && board.GetPiece(captureLeft)?.Color != Color)
                         positions.Add(captureLeft);
                 }
+            }
+
+            // Also add EN Passant captures if available
+            // A and H pawns can only on passant right and left
+            List<Position> enPassantPositions = []; 
+
+            if (Color == Color.White)
+            {
+                int rank = Position.Rank + 1;
+                if (rank < 1)
+                    return positions;
+
+                int fileLeft = Position.File - 1;
+                int fileRight = Position.File + 1;
+
+                if (fileLeft > 1) 
+                    enPassantPositions.Add(new Position(fileLeft, rank));   
+
+                if (fileRight < 9)
+                    enPassantPositions.Add(new Position(fileRight, rank));  
+            }
+            else
+            {
+                int rank = Position.Rank - 1;
+                if (rank > 8)
+                    return positions;
+
+                int fileLeft = Position.File - 1;
+                int fileRight = Position.File + 1;
+
+                if (fileLeft > 1)
+                    enPassantPositions.Add(new Position(fileLeft, rank));
+
+                if (fileRight < 9)
+                    enPassantPositions.Add(new Position(fileRight, rank));
+            }
+
+            foreach (var enPassant in enPassantPositions)
+            {
+                if (game.IsEnPassant(Color, this, enPassant))
+                    positions.Add(enPassant);
             }
 
             return positions;

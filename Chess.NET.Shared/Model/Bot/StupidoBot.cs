@@ -36,7 +36,7 @@ namespace Chess.NET.Shared.Model.Bot
                     if (p.Color != Color.Black)
                         continue;
 
-                    var possibleMoves = p.GetPossibleMoves(game.Board);
+                    var possibleMoves = p.GetPossibleMoves(game);
 
                     foreach (var mv in possibleMoves)
                     {
@@ -78,7 +78,7 @@ namespace Chess.NET.Shared.Model.Bot
                 if (p.Color != Color.Black)
                     continue;
 
-                var possibleMoves = p.GetPossibleMoves(game.Board);
+                var possibleMoves = p.GetPossibleMoves(game);
                 foreach (var mv in possibleMoves)
                 {
                     var capturePiece = game.Board.GetPiece(mv);
@@ -118,8 +118,8 @@ namespace Chess.NET.Shared.Model.Bot
             }
             else
             {
-                var piece = GetRandom(game.Board.Pieces.Where(p => p.Color == Color.Black), p => p.GetPossibleMoves(game.Board).Count > 0);
-                var moves = piece.GetPossibleMoves(game.Board);
+                var piece = GetRandom(game.Board.Pieces.Where(p => p.Color == Color.Black), p => p.GetPossibleMoves(game).Count > 0);
+                var moves = piece.GetPossibleMoves(game);
 
                 return new PendingMove(piece, moves[Random.Shared.Next(moves.Count)]);
             }

@@ -122,7 +122,7 @@ namespace Chess.NET.Controls.Dialogs
             }
 
             string nextMove = currentPuzzle.Moves[currentPuzzleMove];
-            var pendingPuzzleMove = PendingMove.Parse(nextMove, (Board)Chessboard.Game.Board, Chess.NET.Shared.Helper.InvertColor(lastMove.Piece.Color));
+            var pendingPuzzleMove = PendingMove.Parse(nextMove, (Board)Chessboard.Game.Board, Chessboard.Game, Chess.NET.Shared.Helper.InvertColor(lastMove.Piece.Color));
 
             ignoreMoveEvent = true;
             await Chessboard.Game.MoveAsync(pendingPuzzleMove);

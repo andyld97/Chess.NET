@@ -15,7 +15,7 @@
             PromotionType = promotionType;
         }
 
-        public static PendingMove? Parse(string san, Board board, Color color)
+        public static PendingMove? Parse(string san, Board board, Game game, Color color)
         {
             // 1) Remove check / checkmate markers
             san = san.TrimEnd('+', '#');
@@ -111,7 +111,7 @@
             // 7) Find all candidate pieces of that type that can move to the target
             var candidates = board.Pieces
                 .Where(p => p.Color == color && p.Type == pieceType)
-                .Where(p => p.GetPossibleMoves(board).Any(m => m == to))
+                .Where(p => p.GetPossibleMoves(game).Any(m => m == to))
                 .ToList();
 
             // 8) Apply disambiguation if present

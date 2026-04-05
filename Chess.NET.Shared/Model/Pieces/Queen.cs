@@ -10,9 +10,10 @@
         {
         }
 
-        public override List<Position> GetPossibleMoves(IBoard board)
+        public override List<Position> GetPossibleMoves(Game game)
         {
             var moves = new List<Position>();
+            var board = game.Board;
 
             AddRay(moves, board, 1, 0);     // rechts
             AddRay(moves, board, -1, 0);    // links

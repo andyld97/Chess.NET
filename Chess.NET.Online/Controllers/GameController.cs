@@ -92,7 +92,7 @@ namespace Chess.NET.Online.Controllers
                     return BadRequest(); // wrong player 
                 }
 
-                PendingMove? pendingMove = PendingMove.Parse(move, (Board)match.Game.Board, col.Value!);
+                PendingMove? pendingMove = PendingMove.Parse(move, (Board)match.Game.Board, match.Game, col.Value!);
                 if (pendingMove == null)
                 {
                     _logger.LogInformation($"[{match.MatchId}]: Move {move} by {col} not accepted: Move couldn't be parsed!");
