@@ -7,7 +7,8 @@
     Title="Chess.NET.Android">
 
     <ShellContent
-        Title="Chess"
+        Title="Open Chess"
         ContentTemplate="{DataTemplate local:MainPage}"
         Route="MainPage" />
+    
 </Shell>

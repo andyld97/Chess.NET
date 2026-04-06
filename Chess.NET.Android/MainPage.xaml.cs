@@ -7,5 +7,14 @@
             InitializeComponent();
         }
 
+        private void ButtonRestart_Clicked(object sender, EventArgs e)
+        {
+            Chessboard.Restart();
+        }
+
+        private void ToolbarItem_Clicked(object sender, EventArgs e)
+        {
+            Chessboard.Mirror();
+        }
     }
 }

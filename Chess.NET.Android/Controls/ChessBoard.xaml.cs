@@ -1,11 +1,6 @@
-#if ANDROID
-using A = Android;
-using Android.Media;
-#endif
 using Chess.NET.Shared.Model;
 using Microsoft.Maui.Controls.Shapes;
 using Image = Microsoft.Maui.Controls.Image;
-using System.Reflection;
 using Chess.NET.Shared.Model.GUI;
 using Chess.NET.Shared.Model.Bot;
 
@@ -14,6 +9,8 @@ namespace Chess.NET.Android.Controls;
 public partial class ChessBoard : ContentView
 {
     private bool isMirrored = false;
+    private bool ignoreTapping = false;
+
     private Game game = new Game();
 
     private IChessBot? opponent = null;
@@ -39,16 +36,39 @@ public partial class ChessBoard : ContentView
     {
         InitializeSquares();
 
+        opponent = new StupidoBot();
+
         game = new Game();
         game.OnPlaySound += Game_OnPlaySound;
-        game.StartNewGame(null);
-        RenderChessBoard(game.Board, false);
-
-        opponent = new StupidoBot();
+        game.StartNewGame(opponent);
+        RenderChessBoard(game.Board, false);        
     }
+
+    public void Mirror()
+    {
+        isMirrored = !isMirrored; // toggle
+        InitializeSquares();
+        RenderChessBoard(game.Board);
+    }
+
+    public void Restart()
+    {
+        game.StartNewGame(opponent);
+        RenderChessBoard(game.Board, false);
+    }
+
+    #region Audio
+
+    private Dictionary<SoundType, Plugin.Maui.Audio.IAudioPlayer> audioCache = [];
 
     private async void Game_OnPlaySound(SoundType type)
     {
+        if (audioCache.TryGetValue(type, out var player))
+        {
+            player.Play();
+            return;
+        }
+
         string file = type switch
         {
             SoundType.Move => "move.mp3",
@@ -63,8 +83,11 @@ public partial class ChessBoard : ContentView
         };
 
         var audioPlayer = Plugin.Maui.Audio.AudioManager.Current.CreatePlayer(await FileSystem.OpenAppPackageFileAsync(file));
-        audioPlayer.Play();
+        audioCache.TryAdd(type, audioPlayer);
+        audioPlayer.Play();        
     }
+
+    #endregion
 
     #region Rendering
 
@@ -80,7 +103,7 @@ public partial class ChessBoard : ContentView
                 if (isMirrored)
                     position = position.Mirror();
 
-                Image? img = (Image)_squares[file - 1, rank - 1].Border.Children.FirstOrDefault();
+                Image? img = (Image?)_squares[file - 1, rank - 1].Border.Children.FirstOrDefault();
 
                 var piece = board.GetPiece(position);
                 img.Source = (piece != null) ? GetImage(piece.Type, piece.Color) : null; // piece.Type.ToBitmap(piece.Color, Settings.Instance.Theme) : null;
@@ -88,12 +111,12 @@ public partial class ChessBoard : ContentView
                 if (renderLastMoveSquares && (lastMove != null && (lastMove.From == position || lastMove.To == position)))
                 {
                     // Highlight last move squares  
-                    _squares[file - 1, rank - 1].Border.Background = (Brush)Application.Current.Resources["ChessHighlightSquare"];
+                    _squares[file - 1, rank - 1].Border.Background = (Brush?)Application.Current?.Resources["ChessHighlightSquare"];
                 }
                 else
                 {
                     bool dark = (file + (isMirrored ? (9 - rank) : rank)) % 2 == 0;
-                    _squares[file - 1, rank - 1].Border.Background = (Brush)Application.Current.Resources[dark ? "ChessDarkSquare" : "ChessLightSquare"];
+                    _squares[file - 1, rank - 1].Border.Background = (Brush?)Application.Current?.Resources[dark ? "ChessDarkSquare" : "ChessLightSquare"];
                 }
             }
         }
@@ -117,7 +140,7 @@ public partial class ChessBoard : ContentView
 
                 var square = new Grid
                 {
-                    Background = (Brush)Application.Current.Resources[dark ? "ChessDarkSquare" : "ChessLightSquare"],
+                    Background = (Brush?)Application.Current?.Resources[dark ? "ChessDarkSquare" : "ChessLightSquare"],
                     RowSpacing = 0,
                     ColumnSpacing = 0   
                 };
@@ -142,7 +165,7 @@ public partial class ChessBoard : ContentView
                     Opacity = 1,
                     StrokeShape = new Ellipse(),
                     StrokeThickness = 3,
-                    Stroke = new SolidColorBrush(Colors.Gray),
+                    Stroke = new SolidColorBrush(Microsoft.Maui.Graphics.Color.FromArgb("#202D40")),
                     HorizontalOptions = LayoutOptions.Fill,
                     VerticalOptions = LayoutOptions.Fill,
                     InputTransparent = true,
@@ -162,8 +185,6 @@ public partial class ChessBoard : ContentView
         }
     }
 
-    private bool ignoreTapping = false;
-
     private async void Tap_Tapped(object? sender, TappedEventArgs e)
     {
         if (ignoreTapping)
@@ -172,6 +193,9 @@ public partial class ChessBoard : ContentView
         var position = (sender as Grid)?.BindingContext as Position;
         if (position == null)
             return;
+
+        if (isMirrored)
+            position = position.Mirror();
 
         if (_pieceToMove != null)
         {
@@ -239,13 +263,17 @@ public partial class ChessBoard : ContentView
         foreach (var square in _squares)
         {         
             var border = (square.Border.Children[1] as Border);
-            bool isVisible = moves.Any(p => p.Rank == square.Rank && p.File == square.File && !game.IsCheck(_pieceToMove.Color, _pieceToMove, p));
 
             var pos = new Position(square.File, square.Rank);
-            if (isVisible && game.Board.GetPiece(pos) != null)
+            if (isMirrored)
+                pos = pos.Mirror();
+
+            bool isVisible = moves.Any(p => p.Rank == pos.Rank && p.File == pos.File && !game.IsCheck(_pieceToMove.Color, _pieceToMove, p));            
+            
+            if (isVisible && game.Board.GetPiece(pos) != null && square.Border.Children.FirstOrDefault() is Image img)
             {
                 // Gray out pieces a bit
-                (square.Border.Children.FirstOrDefault() as Image).Opacity = 0.4;
+                img.Opacity = 0.4;
             }
 
             border?.IsVisible = isVisible;

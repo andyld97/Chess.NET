@@ -4,6 +4,23 @@
              xmlns:controls="clr-namespace:Chess.NET.Android.Controls"
              x:Class="Chess.NET.Android.MainPage">
 
-    <controls:ChessBoard />
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="Rotate" Clicked="ToolbarItem_Clicked" Order="Secondary" />
+        <ToolbarItem Text="Puzzles" Order="Secondary" />
+        <ToolbarItem Text="Settings" Order="Secondary" />
+        <ToolbarItem Text="About" Order="Secondary" />
+    </ContentPage.ToolbarItems>
 
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <controls:ChessBoard x:Name="Chessboard" Grid.Row="0" />
+
+        <StackLayout Orientation="Vertical" Grid.Row="1">
+            <Button x:Name="ButtonRestart" Text="Restart Game" Clicked="ButtonRestart_Clicked" Margin="10"/>
+        </StackLayout>
+    </Grid>
 </ContentPage>
