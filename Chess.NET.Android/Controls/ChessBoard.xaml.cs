@@ -47,50 +47,26 @@ public partial class ChessBoard : ContentView
         opponent = new StupidoBot();
     }
 
-    private void Game_OnPlaySound(SoundType type)
+    private async void Game_OnPlaySound(SoundType type)
     {
-#if ANDROID
-        var tone = new ToneGenerator(A.Media.Stream.System, 60);
-        switch (type)
+        string file = type switch
         {
-            case SoundType.Move:
-                tone.StartTone(Tone.PropAck, 70);
-                break;
+            SoundType.Move => "move.mp3",
+            SoundType.Capture => "capture.mp3",
+            SoundType.Castle => "castle.mp3",
+            SoundType.Check => "check.mp3",
+            SoundType.Checkmate => "checkmate.mp3",
+            SoundType.Stalemate => "stalemate.mp3",
+            SoundType.PuzzleFail => "fail.mp3",
+            SoundType.PuzzleSolved => "success.mp3",
+            _ => throw new ArgumentOutOfRangeException()
+        };
 
-            case SoundType.Capture:
-                tone.StartTone(Tone.PropBeep, 90);
-                break;
-
-            case SoundType.Castle:
-                tone.StartTone(Tone.PropAck, 120);
-                break;
-
-            case SoundType.Check:
-                tone.StartTone(Tone.PropNack, 120);
-                break;
-
-            case SoundType.Checkmate:
-                tone.StartTone(Tone.PropNack, 250);
-                break;
-
-            case SoundType.Stalemate:
-                tone.StartTone(Tone.PropBeep2, 200);
-                break;
-
-            case SoundType.PuzzleFail:
-                tone.StartTone(Tone.PropNack, 150);
-                break;
-
-            case SoundType.PuzzleSolved:
-                tone.StartTone(Tone.PropAck, 150);
-                break;
-        }
-#endif
+        var audioPlayer = Plugin.Maui.Audio.AudioManager.Current.CreatePlayer(await FileSystem.OpenAppPackageFileAsync(file));
+        audioPlayer.Play();
     }
 
-
     #region Rendering
-
 
     public void RenderChessBoard(IBoard board, bool renderLastMoveSquares = true)
     {

@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
+using Plugin.Maui.Audio;
 
 namespace Chess.NET.Android
 {
@@ -19,6 +20,7 @@ namespace Chess.NET.Android
     		builder.Logging.AddDebug();
 #endif
 
+            builder.AddAudio();
             return builder.Build();
         }
     }
