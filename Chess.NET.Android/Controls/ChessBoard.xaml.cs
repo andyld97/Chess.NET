@@ -3,6 +3,9 @@ using Microsoft.Maui.Controls.Shapes;
 using Image = Microsoft.Maui.Controls.Image;
 using Chess.NET.Shared.Model.GUI;
 using Chess.NET.Shared.Model.Bot;
+#if ANDROID
+using A = Android;
+#endif
 
 namespace Chess.NET.Android.Controls;
 
@@ -40,8 +43,16 @@ public partial class ChessBoard : ContentView
 
         game = new Game();
         game.OnPlaySound += Game_OnPlaySound;
+        game.OnGameOver += Game_OnGameOver;
         game.StartNewGame(opponent);
         RenderChessBoard(game.Board, false);        
+    }
+
+    private void Game_OnGameOver(GameResult result, Shared.Model.Color? colorWon)
+    {
+#if ANDROID
+        A.Widget.Toast.MakeText(A.App.Application.Context, $"Game Over: {result}. Won: {(colorWon == null ? "-" : colorWon.ToString())}", A.Widget.ToastLength.Short).Show();
+#endif
     }
 
     public void Mirror()
@@ -103,10 +114,10 @@ public partial class ChessBoard : ContentView
                 if (isMirrored)
                     position = position.Mirror();
 
-                Image? img = (Image?)_squares[file - 1, rank - 1].Border.Children.FirstOrDefault();
-
                 var piece = board.GetPiece(position);
-                img.Source = (piece != null) ? GetImage(piece.Type, piece.Color) : null; // piece.Type.ToBitmap(piece.Color, Settings.Instance.Theme) : null;
+
+                Image? img = (Image?)_squares[file - 1, rank - 1].Border.Children.FirstOrDefault();
+                img?.Source = (piece != null) ? GetImage(piece.Type, piece.Color) : null; 
 
                 if (renderLastMoveSquares && (lastMove != null && (lastMove.From == position || lastMove.To == position)))
                 {
