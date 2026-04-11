@@ -40,6 +40,23 @@ namespace Chess.NET.Shared.Model
             Pieces.Clear();
             PromotedPieces.Clear();
 
+
+#if STALEMATE_TEST
+            Pieces.Add(new Pawn(Position.Parse("a2"), Color.White));
+            Pieces.Add(new Pawn(Position.Parse("b2"), Color.White));
+            Pieces.Add(new Pawn(Position.Parse("f2"), Color.White));
+            Pieces.Add(new Pawn(Position.Parse("h3"), Color.White));
+            Pieces.Add(new King(Position.Parse("g2"), Color.White));          
+            Pieces.Add(new Bishop(Position.Parse("a4"), Color.White));
+            Pieces.Add(new Bishop(Position.Parse("f4"), Color.White));
+            Pieces.Add(new Rook(Position.Parse("d7"), Color.White));
+            Pieces.Add(new Queen(Position.Parse("g8"), Color.White));
+
+            Pieces.Add(new King(Position.Parse("g6"), Color.Black));
+            Pieces.Add(new Pawn(Position.Parse("h4"), Color.Black));
+            return;
+#endif
+
             foreach (var color in new List<Color>() { Color.White, Color.Black })
             {
                 int fileForPawns = 2;

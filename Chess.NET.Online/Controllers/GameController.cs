@@ -105,7 +105,7 @@ namespace Chess.NET.Online.Controllers
                     return BadRequest(); // illegal move!
                 }
 
-                await match.Game.MoveAsync(pendingMove, false);
+                await match.Game.Move(pendingMove, false);
                 _logger.LogInformation($"[{match.MatchId}]: Move {move} was made by {col}!");
                 return Ok();
             }

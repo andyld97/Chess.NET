@@ -1,6 +1,4 @@
-﻿using Chess.NET.Shared.Model;
-
-namespace Chess.NET.Shared.Model.Bot
+﻿namespace Chess.NET.Shared.Model.Bot
 {
     public interface IChessBot
     {
@@ -9,5 +7,7 @@ namespace Chess.NET.Shared.Model.Bot
         int Elo { get; }
 
         string Name { get; }
+
+        Color Color { get; }
     }
 }

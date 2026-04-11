@@ -11,16 +11,34 @@
         <ToolbarItem Text="About" Order="Secondary" />
     </ContentPage.ToolbarItems>
 
-    <Grid>
+    <Grid VerticalOptions="Center">
         <Grid.RowDefinitions>
-            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <controls:ChessBoard x:Name="Chessboard" Grid.Row="0" />
+        <StackLayout Orientation="Vertical" Padding="4" Background="WhiteSmoke">
+            <Label Text="Opponent" FontAttributes="Bold" />
+            <Label Text="Elo: 800" />
+        </StackLayout>        
 
-        <StackLayout Orientation="Vertical" Grid.Row="1">
-            <Button x:Name="ButtonRestart" Text="Restart Game" Clicked="ButtonRestart_Clicked" Margin="10"/>
-        </StackLayout>
+        <controls:ChessBoard x:Name="Chessboard" Grid.Row="1" />
+
+        <Grid Grid.Row="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            
+            <StackLayout Orientation="Vertical" Padding="4" Background="WhiteSmoke">
+                <Label Text="You" FontAttributes="Bold" />
+                <Label Text="Elo: 800" />
+            </StackLayout>
+
+            <StackLayout Orientation="Vertical" Grid.Row="1">
+                <Button x:Name="ButtonRestart" Text="Restart Game" Clicked="ButtonRestart_Clicked" Margin="10"/>
+            </StackLayout>
+        </Grid>
     </Grid>
 </ContentPage>

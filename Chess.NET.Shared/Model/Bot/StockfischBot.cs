@@ -17,6 +17,8 @@ namespace Chess.NET.Shared.Model.Bot
 
         public string Name => "Stockfish";
 
+        public Color Color => Color.Black;
+
         public StockfischBot(int skill = 8, int depth = 10, string stockfishPath = "stockfish.exe")
         {
             this.skill = skill;

@@ -201,6 +201,13 @@ public partial class ChessBoard : ContentView
         if (ignoreTapping)
             return;
 
+        if (game.IsGameOver)
+        {
+            ClearMoveIndicators();
+            _pieceToMove = null;
+            return;
+        }
+
         var position = (sender as Grid)?.BindingContext as Position;
         if (position == null)
             return;
@@ -210,14 +217,14 @@ public partial class ChessBoard : ContentView
 
         if (_pieceToMove != null)
         {
-            if (_pieceToMove.Color != game.PlayersTurn || game.IsGameOver)
+            if (_pieceToMove.Color != game.PlayersTurn)
             {
                 ClearMoveIndicators();
                 _pieceToMove = null;
                 return;
 
             }
-            var success = await game.MoveAsync(new PendingMove(_pieceToMove, position, null));
+            var success = game.Move(new PendingMove(_pieceToMove, position, null));
             if (success)
             {
                 RenderChessBoard(game.Board, true);
@@ -242,7 +249,7 @@ public partial class ChessBoard : ContentView
                         if (next == null)
                             break;
 
-                        foundValidMove = await game.MoveAsync(next);
+                        foundValidMove = game.Move(next);
                     }
                 }
 

@@ -1,5 +1,4 @@
-﻿using Chess.NET.Shared.Model;
-using Chess.NET.Shared.Model.Pieces;
+﻿using Chess.NET.Shared.Model.Pieces;
 
 namespace Chess.NET.Shared.Model.Bot
 {
@@ -9,18 +8,20 @@ namespace Chess.NET.Shared.Model.Bot
 
         public int Elo => 42;
 
-        public PendingMove? Move(Game game)
+        public Color Color => Color.Black;
+
+        public PendingMove Move(Game game)
         {
             List<SortedMove> sortedMoves = [];
             bool canCapture = false;
 
             // Man könnte noch überlegen:
-            // - Bot soll Schach geben, wenn möglich
-            // - Bot soll Figuren nur setzten, wenn er nicht direkt geschlagen wird oder tauschen kann
-            // - Bot soll rochieren, wenn es geht!
+            // - Bot should move hanging pieces!
+            // - Bot could also be white, currently it is only considered as black!
+            // - Bot could check if the move can be re-captured and check the resulting material balance
 
-            // Bot sollte auf IsCheck zugreifen
-            if (game.IsCheck(Color.Black))
+            // Bot sollte auf IsCheck prüfen
+            if (game.IsCheck(Color))
             {
                 // Was können wir tuen? Aus dem Schach gehen?
                 // Es gibt 3 Möglichkeiten:
@@ -33,14 +34,14 @@ namespace Chess.NET.Shared.Model.Bot
 
                 foreach (var p in game.Board.Pieces)
                 {
-                    if (p.Color != Color.Black)
+                    if (p.Color != Color)
                         continue;
 
                     var possibleMoves = p.GetPossibleMoves(game);
 
                     foreach (var mv in possibleMoves)
                     {
-                        if (!game.IsCheck(Color.Black, p, mv))
+                        if (!game.IsCheck(Color, p, mv))
                         {
                             var sm = new SortedMove() { Piece = p, TargetPosition = mv, Score = p.MaterialValue };
 
@@ -52,7 +53,6 @@ namespace Chess.NET.Shared.Model.Bot
                     }
                 }
 
-
                 if (checkOutMoves.Count > 0)
                 {
                     var bestMove = checkOutMoves.OrderByDescending(m => m.Score).First();
@@ -61,21 +61,37 @@ namespace Chess.NET.Shared.Model.Bot
             }
             else
             {
-                if (game.CanCastle(Color.Black, new Position(3, 8)))
+                if (Color == Color.Black)
                 {
-                    var king = game.Board.GetPiece(new Position(5, 8));
-                    return new PendingMove(king!, new Position(3, 8));
+                    if (game.CanCastle(Color.Black, new Position(3, 8)))
+                    {
+                        var king = game.Board.GetPiece(new Position(5, 8));
+                        return new PendingMove(king!, new Position(3, 8));
+                    }
+                    else if (game.CanCastle(Color.Black, new Position(7, 8)))
+                    {
+                        var king = game.Board.GetPiece(new Position(5, 8));
+                        return new PendingMove(king!, new Position(7, 8));
+                    }
                 }
-                else if (game.CanCastle(Color.Black, new Position(7, 8)))
+                else
                 {
-                    var king = game.Board.GetPiece(new Position(5, 8));
-                    return new PendingMove(king!, new Position(7, 8));
+                    if (game.CanCastle(Color.White, new Position(3, 1)))
+                    {
+                        var king = game.Board.GetPiece(new Position(5, 1));
+                        return new PendingMove(king!, new Position(3, 1));
+                    }
+                    else if (game.CanCastle(Color.White, new Position(7, 1)))
+                    {
+                        var king = game.Board.GetPiece(new Position(5, 1));
+                        return new PendingMove(king!, new Position(7, 1));
+                    }
                 }
-            }
+            }           
 
             foreach (var p in game.Board.Pieces)
             {
-                if (p.Color != Color.Black)
+                if (p.Color != Color)
                     continue;
 
                 var possibleMoves = p.GetPossibleMoves(game);
@@ -84,12 +100,20 @@ namespace Chess.NET.Shared.Model.Bot
                     var capturePiece = game.Board.GetPiece(mv);
                     if (capturePiece == null)
                     {
-                        sortedMoves.Add(new SortedMove
+                        var sm = new SortedMove
                         {
                             Piece = p,
                             TargetPosition = mv,
                             Score = 0
-                        });
+                        };
+
+                        if (game.IsCheck(Color.InvertColor(), p, mv))
+                            sm.Score += 500;
+
+                        if (p.Type == PieceType.King)
+                            sm.Score *= -1;
+
+                        sortedMoves.Add(sm);
                     }
                     else
                     {
@@ -97,16 +121,21 @@ namespace Chess.NET.Shared.Model.Bot
                             continue;
 
                         // Cannot caputre into check
-                        if (game.IsCheck(Color.Black, p, mv))
+                        if (game.IsCheck(Color, p, mv))
                             continue;
 
                         canCapture = true;
-                        sortedMoves.Add(new SortedMove
+                        var sm = new SortedMove
                         {
                             Piece = p,
                             TargetPosition = mv,
                             Score = capturePiece.MaterialValue
-                        });
+                        };
+
+                        if (game.IsCheck(Color.InvertColor(), p, mv))
+                            sm.Score += 500;
+
+                        sortedMoves.Add(sm);
                     }
                 }
             }

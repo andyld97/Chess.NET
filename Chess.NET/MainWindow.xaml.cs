@@ -18,7 +18,7 @@ namespace Chess.NET
     {
         private MoveNotationDisplay currentMoveNotationDisplay = null!;
         private IChessBot? opponent = null;
-        private bool isInitialized = false; 
+        private readonly bool isInitialized = false; 
         public static MainWindow W_INSTANCE { get; private set; } = null!;    
 
         #region Commands
@@ -319,7 +319,7 @@ namespace Chess.NET
             var pendingMove = PendingMove.Parse(moveMade.Move, (Board)Chessboard.Game.Board, Chessboard.Game, moveMade.Color);
             if (moveMade.Color != ownPieceColor)
             {
-                await Chessboard.Game.MoveAsync(pendingMove, true);
+                Chessboard.Game.Move(pendingMove, true);
                 Chessboard.RenderChessBoard(Chessboard.Game.Board, true);
             }
         }

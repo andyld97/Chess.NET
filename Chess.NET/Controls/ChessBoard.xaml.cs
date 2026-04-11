@@ -164,7 +164,7 @@ namespace Chess.NET.Controls
                 }
 
                 var pendingMove = new PendingMove(_pieceToMove!, destinationSquare, promotionType);
-                bool wasMoveAccepted = await game.MoveAsync(pendingMove);
+                bool wasMoveAccepted = game.Move(pendingMove);
 
                 ResetDrag();
                 RenderChessBoard(game.Board);
@@ -195,7 +195,7 @@ namespace Chess.NET.Controls
                         if (next == null)
                             break;
 
-                        foundValidMove = await game.MoveAsync(next);
+                        foundValidMove = game.Move(next);
                     }
                 }
 
@@ -311,7 +311,7 @@ namespace Chess.NET.Controls
             for (int i = 0; i < navigationCurrentMove; i++)
             {
                 var move = game.Moves[i];
-                await gm.MoveAsync(new PendingMove(gm.Board.GetPiece(move.From)!, move.To, move.PromotionType), false);
+                gm.Move(new PendingMove(gm.Board.GetPiece(move.From)!, move.To, move.PromotionType), false);
             }
 
             RenderChessBoard(gm.Board, false);

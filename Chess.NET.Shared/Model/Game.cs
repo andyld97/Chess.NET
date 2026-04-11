@@ -280,6 +280,10 @@ namespace Chess.NET.Shared.Model
 
         public bool IsStalemate(Color color)
         {
+            // Its important that this only can return true if the right player is next to move (Move Order)
+            if (color == PlayersTurn)
+                return false;
+
             // The same as checkmate but without the initial check
             foreach (var piece in board.Pieces.Where(p => p.Color == color))
             {
@@ -482,7 +486,7 @@ namespace Chess.NET.Shared.Model
             return true;
         }
 
-        public async Task<bool> MoveAsync(PendingMove? nxtMove, bool playSound = true)
+        public bool Move(PendingMove? nxtMove, bool playSound = true)
         {
             if (nxtMove == null) 
                 return false;
@@ -751,14 +755,14 @@ namespace Chess.NET.Shared.Model
         {
             return new Game
             {
-                board = (Board)this.board.Clone(),
-                isPuzzle = this.isPuzzle,
-                hasBlackCastled = this.hasBlackCastled,
-                hasWhiteCastled = this.hasWhiteCastled,
-                currentPuzzle = this.currentPuzzle,     // clone not important
+                board = (Board)board.Clone(),
+                isPuzzle = isPuzzle,
+                hasBlackCastled = hasBlackCastled,
+                hasWhiteCastled = hasWhiteCastled,
+                currentPuzzle = currentPuzzle,          // clone not important
                 opponent = null,                        // clone not important
-                positions = [.. this.positions],
-                IsGameOver = this.IsGameOver
+                positions = [.. positions],
+                IsGameOver = IsGameOver
             };
         }
 
