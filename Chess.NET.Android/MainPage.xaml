@@ -19,8 +19,8 @@
         </Grid.RowDefinitions>
 
         <StackLayout Orientation="Vertical" Padding="4" Background="WhiteSmoke">
-            <Label x:Name="TextPlayerTopName" Text="Opponent" FontAttributes="Bold" />
-            <Label x:Name="TextPlayerTopElo" Text="Elo: 800" />
+            <Label x:Name="TextPlayerTopName" Text="Opponent" FontAttributes="Bold" TextColor="Black" />
+            <Label x:Name="TextPlayerTopElo" Text="Elo: 800" TextColor="Black" />
         </StackLayout>        
 
         <controls:ChessBoard x:Name="Chessboard" Grid.Row="1" OnMoveMadeOnline="Chessboard_OnMoveMadeOnline" />
@@ -32,12 +32,12 @@
             </Grid.RowDefinitions>
             
             <StackLayout Orientation="Vertical" Padding="4" Background="WhiteSmoke">
-                <Label x:Name="TextPlayerBottomName" Text="You" FontAttributes="Bold" />
-                <Label x:Name="TextPlayerBottomElo" Text="Elo: 800" />
+                <Label x:Name="TextPlayerBottomName" Text="You" TextColor="Black" FontAttributes="Bold" />
+                <Label x:Name="TextPlayerBottomElo" Text="Elo: 800" TextColor="Black" />
             </StackLayout>
 
             <StackLayout Orientation="Vertical" Grid.Row="1">
-                <Button x:Name="ButtonRestart" Text="Restart Game" Clicked="ButtonRestart_Clicked" Margin="10" />
+                <Button x:Name="ButtonRestart" Text="Start Game" Clicked="ButtonRestart_Clicked" Margin="10" />
                 <Button x:Name="ButtonResign" Text="Resign" Clicked="ButtonResign_Clicked" Margin="10" IsVisible="False" />
             </StackLayout>
         </Grid>

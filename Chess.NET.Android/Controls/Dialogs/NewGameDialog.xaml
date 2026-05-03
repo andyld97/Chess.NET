@@ -13,25 +13,19 @@
             VerticalOptions="Center">
 
             <VerticalStackLayout Spacing="10">
-                <Label Text="Neues Spiel" FontSize="18" />
+                <Label TextColor="Black" Text="Neues Spiel" FontSize="18" />
 
-                <Label Text="Gegner auswählen" />
+                <Label TextColor="Black" Text="Gegner auswählen" />
 
-                <Picker x:Name="OpponentPicker" Title="Bitte wählen">
+                <Picker x:Name="OpponentPicker" TextColor="Black" Title="Bitte wählen">
                     <Picker.Items>
                         <x:String>Online</x:String>
                         <x:String>Bot</x:String>
                         <x:String>Spieler 2</x:String>
                     </Picker.Items>
-
                 </Picker>
-
-
-
-
-                <Button Text="OK" Clicked="Button_Clicked" />
+                <Button Text="OK" TextColor="Black" Clicked="Button_Clicked" />
             </VerticalStackLayout>
-
         </Frame>
     </Grid>
 </ContentPage>

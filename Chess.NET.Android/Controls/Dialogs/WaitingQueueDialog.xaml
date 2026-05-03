@@ -7,8 +7,8 @@
         <Grid InputTransparent="False">
             <Frame BackgroundColor="White" CornerRadius="12" Padding="20" HorizontalOptions="Center" VerticalOptions="Center">
                 <VerticalStackLayout Spacing="10" HorizontalOptions="Center">
-                    <ActivityIndicator IsRunning="True" />
-                    <Label Text="Bitte warten..." HorizontalOptions="Center" />
+                    <ActivityIndicator IsRunning="True" Color="Black" />
+                    <Label Text="Bitte warten..." HorizontalOptions="Center" TextColor="Black" />
                 </VerticalStackLayout>
             </Frame>
         </Grid>

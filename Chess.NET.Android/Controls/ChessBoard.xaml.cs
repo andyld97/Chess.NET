@@ -77,6 +77,7 @@ public partial class ChessBoard : ContentView
         this.opponent = opponent;
         game.StartNewGame(opponent);
         RenderChessBoard(game.Board, false);
+        ClearMoveIndicators();
         isOnline = false;
     }
 
