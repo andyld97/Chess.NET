@@ -1,4 +1,6 @@
-﻿namespace Chess.NET.Android
+﻿using Chess.NET.Android.Controls.Dialogs;
+
+namespace Chess.NET.Android
 {
     public partial class MainPage : ContentPage
     {
@@ -7,8 +9,9 @@
             InitializeComponent();
         }
 
-        private void ButtonRestart_Clicked(object sender, EventArgs e)
+        private async void ButtonRestart_Clicked(object sender, EventArgs e)
         {
+            await Navigation.PushModalAsync(new NewGameDialog());
             Chessboard.Restart();
         }
 

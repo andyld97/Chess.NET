@@ -1,5 +1,5 @@
-﻿using Chess.NET.Netcode;
-using Chess.NET.Shared.Model.Online;
+﻿using Chess.NET.Shared.Model.Online;
+using Chess.NET.Shared.Netcode;
 using System.Windows;
 
 namespace Chess.NET.Controls.Dialogs
