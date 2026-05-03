@@ -2,28 +2,22 @@ namespace Chess.NET.Android.Controls.Dialogs;
 
 public partial class NewGameDialog : ContentPage
 {
-	public NewGameDialog()
+    private readonly TaskCompletionSource<int> _tcs = new();
+
+    public Task<int> WaitForResultAsync() => _tcs.Task;
+
+
+    public int Result { get; private set; }
+
+    public NewGameDialog()
 	{
 		InitializeComponent();
 	}
 
     private async void Button_Clicked(object sender, EventArgs e)
     {
-		int selectedOption = OpponentPicker.SelectedIndex;
+        await Navigation.PopModalAsync();
 
-
-		if (selectedOption == 0)
-		{
-			// Search for an opponent online
-
-
-
-		}
-
-
-
-		await Navigation.PopAsync();
-
+        _tcs.SetResult(OpponentPicker.SelectedIndex);
     }
-
 }

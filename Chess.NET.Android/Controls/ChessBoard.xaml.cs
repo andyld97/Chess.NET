@@ -13,6 +13,8 @@ public partial class ChessBoard : ContentView
 {
     private bool isMirrored = false;
     private bool ignoreTapping = false;
+    private bool isOnline = false;
+    private Shared.Model.Color playerOnlineColor;
 
     private Game game = new Game();
 
@@ -20,6 +22,13 @@ public partial class ChessBoard : ContentView
 
     private Piece? _pieceToMove = null;
     private readonly BoardSquare<Grid>[,] _squares = new BoardSquare<Grid>[8, 8];
+
+    public delegate void onMoveMadeOnline(MoveNotation moveNotation);
+    public event onMoveMadeOnline? OnMoveMadeOnline;
+
+    public bool IsMirrored => isMirrored;
+
+    public Game Game => game;
 
     public ChessBoard()
     {
@@ -39,12 +48,10 @@ public partial class ChessBoard : ContentView
     {
         InitializeSquares();
 
-        opponent = new StupidoBot();
-
         game = new Game();
         game.OnPlaySound += Game_OnPlaySound;
         game.OnGameOver += Game_OnGameOver;
-        game.StartNewGame(opponent);
+        game.StartNewGame(null);
         RenderChessBoard(game.Board, false);        
     }
 
@@ -62,10 +69,16 @@ public partial class ChessBoard : ContentView
         RenderChessBoard(game.Board);
     }
 
-    public void Restart()
+    public void Restart(IChessBot? opponent)
     {
         game.StartNewGame(opponent);
         RenderChessBoard(game.Board, false);
+    }
+
+    public void SetOnline(Shared.Model.Color pieceColor)
+    {
+        isOnline = true;
+        playerOnlineColor = pieceColor;
     }
 
     #region Audio
@@ -196,6 +209,10 @@ public partial class ChessBoard : ContentView
         }
     }
 
+    #endregion
+
+    #region Moving
+
     private async void Tap_Tapped(object? sender, TappedEventArgs e)
     {
         if (ignoreTapping)
@@ -230,6 +247,12 @@ public partial class ChessBoard : ContentView
                 RenderChessBoard(game.Board, true);
                 ClearMoveIndicators();
                 _pieceToMove = null;
+
+                if (isOnline)
+                {
+                    OnMoveMadeOnline?.Invoke(game.Moves.LastOrDefault()!);
+                    return;
+                }
 
                 if (opponent != null)
                 {
@@ -274,6 +297,13 @@ public partial class ChessBoard : ContentView
             ClearMoveIndicators();
             _pieceToMove = null;
             return;
+        }
+
+        if (isOnline && playerOnlineColor != piece.Color)
+        {
+            ClearMoveIndicators();
+            _pieceToMove = null;
+            return; // illegal drag
         }
 
         _pieceToMove = piece;

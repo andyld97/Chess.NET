@@ -23,7 +23,7 @@
             <Label Text="Elo: 800" />
         </StackLayout>        
 
-        <controls:ChessBoard x:Name="Chessboard" Grid.Row="1" />
+        <controls:ChessBoard x:Name="Chessboard" Grid.Row="1" OnMoveMadeOnline="Chessboard_OnMoveMadeOnline" />
 
         <Grid Grid.Row="2">
             <Grid.RowDefinitions>
