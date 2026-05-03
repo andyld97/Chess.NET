@@ -1,14 +1,24 @@
-﻿using Android.App;
-using Chess.NET.Android.Controls.Dialogs;
+﻿using Chess.NET.Android.Controls.Dialogs;
 using Chess.NET.Shared.Model;
 using Chess.NET.Shared.Model.Bot;
 using Chess.NET.Shared.Model.Online;
 using Chess.NET.Shared.Netcode;
+#if ANDROID
+using A = Android;
+#endif
 
 namespace Chess.NET.Android
 {
     public partial class MainPage : ContentPage
     {
+        private IChessBot? opponent = null;
+
+        public MainPage()
+        {
+            InitializeComponent();
+            RefreshPlayerDisplay();
+        }
+
         #region Online Match
         private Client? client = null;
         private SignalRClient _networkClient = null!; 
@@ -17,15 +27,15 @@ namespace Chess.NET.Android
         private bool isOnlineMatch = false;
 
         private WaitingQueueDialog waitingQueueDialog;
-
+     
         private async Task StartOnlineMatchAsync()
         {
-            // TODO
-            //if (string.IsNullOrEmpty(Settings.Instance.Player1Name))
-            //{
-            //    MessageBox.Show(Properties.Resources.strPleaseSetAName, Properties.Resources.strError, MessageBoxButton.OK, MessageBoxImage.Error);
-            //    return;
-            //}
+            if (string.IsNullOrEmpty(Settings.Instance.Player1Name))
+            {
+                // TODO
+                // MessageBox.Show(Properties.Resources.strPleaseSetAName, Properties.Resources.strError, MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
 
             ownPieceColor = null;
             currentMatchInfo = null;  
@@ -39,7 +49,7 @@ namespace Chess.NET.Android
             {
                 waitingQueueDialog = new WaitingQueueDialog();
                 await Navigation.PushModalAsync(waitingQueueDialog);
-                client = await _networkClient.ConnectAsync("Player 1 (Android)" /*Settings.Instance.Player1Name*/, "500" /*Settings.Instance.Player1Elo*/);
+                client = await _networkClient.ConnectAsync($"{Settings.Instance.Player1Name} (Android)", Settings.Instance.Player1Elo);
  
                 if (client == null)
                 {
@@ -49,7 +59,8 @@ namespace Chess.NET.Android
             }
             catch (Exception ex)
             {
-                // TODO   MessageBox.Show(string.Format(Properties.Resources.strFailedToConnectToServer, ex.Message), Properties.Resources.strError, MessageBoxButton.OK, MessageBoxImage.Error);
+                // TODO
+                // MessageBox.Show(string.Format(Properties.Resources.strFailedToConnectToServer, ex.Message), Properties.Resources.strError, MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -58,12 +69,12 @@ namespace Chess.NET.Android
             MainThread.BeginInvokeOnMainThread(async () =>
             {
                 // TODO Chessboard.DisablePieces();
-                // TODO ButtonResign.Visibility = Visibility.Collapsed;
+                ButtonResign.IsVisible = false;
 
                 string playerWon = string.Empty;
 
                 if (matchEnd.ColorWins.HasValue && matchEnd.ColorWins == ownPieceColor)
-                    playerWon = "Player 1"; // TODO:  Settings.Instance.Player1Name;
+                    playerWon = Settings.Instance.Player1Name;
                 else if (matchEnd.ColorWins.HasValue)
                     playerWon = currentMatchInfo?.OpponentName ?? string.Empty;
 
@@ -72,19 +83,23 @@ namespace Chess.NET.Android
                 isOnlineMatch = false;
                 await _networkClient.DisconnectAsync();
 
-                // TODO
-                //await Task.Delay(50).ContinueWith(t =>
-                //{
-                //    Application.Current.Dispatcher.Invoke(() =>
-                //    {
-                //        // Only consider sounds that are normally not played using the Game-Class
-                //        if (matchEnd.Result == GameResult.Disconnected || matchEnd.Result == GameResult.Resign || matchEnd.Result == GameResult.Timeout)
-                //            Sound.Play(SoundType.Checkmate);
+               await Task.Delay(50).ContinueWith(t =>
+               {
+                   MainThread.BeginInvokeOnMainThread(async () =>
+                   {
+                       // Only consider sounds that are normally not played using the Game-Class
+                       if (matchEnd.Result == GameResult.Disconnected || matchEnd.Result == GameResult.Resign || matchEnd.Result == GameResult.Timeout)
+                          await Sound.Play(SoundType.Checkmate);
 
-                //        GameOverDialog gameOverDialog = new GameOverDialog(matchEnd.Result, matchEnd.ColorWins, playerWon) { Owner = this };
-                //        gameOverDialog.ShowDialog();
-                //    });
-                //});
+#if ANDROID
+                       A.Widget.Toast.MakeText(A.App.Application.Context, $"Game Over: {matchEnd.Result}. Won: {(matchEnd.ColorWins == null ? "-" : matchEnd.ColorWins.ToString())}", A.Widget.ToastLength.Long).Show();
+#endif
+
+                       // TODO
+                       /*GameOverDialog gameOverDialog = new GameOverDialog(matchEnd.Result, matchEnd.ColorWins, playerWon) { Owner = this };
+                       gameOverDialog.ShowDialog();*/
+                   });
+               });
 
             });
         }
@@ -105,13 +120,11 @@ namespace Chess.NET.Android
         private void _networkClient_OnMatchFound(MatchInfo match)
         {
             MainThread.BeginInvokeOnMainThread(async () =>
-            {
-                
+            {                
                 ButtonRestart.IsEnabled = false;
-                // TODO: ButtonResign.Visibility = Visibility.Visible;
+                ButtonResign.IsVisible = true;
                 isOnlineMatch = true;
                 await Navigation.PopModalAsync();
-
 
                 if (match.ClientColor == Chess.NET.Shared.Model.Color.Black)
                 {
@@ -132,16 +145,11 @@ namespace Chess.NET.Android
                 Chessboard.Game.StartNewGame(null);
                 Chessboard.RenderChessBoard(Chessboard.Game.Board, false);
                 Chessboard.SetOnline(ownPieceColor.Value);
-                // TODO RefreshPlayerDisplay();
+                RefreshPlayerDisplay();
             });
         }
 
         #endregion
-
-        public MainPage()
-        {
-            InitializeComponent();
-        }
 
         private async void ButtonRestart_Clicked(object sender, EventArgs e)
         {
@@ -151,13 +159,22 @@ namespace Chess.NET.Android
             var result = await dialog.WaitForResultAsync();
 
             if (result == 0)
+            {
+                opponent = null;
                 await StartOnlineMatchAsync();
+            }
             else
             {
                 if (result == 1)
-                    Chessboard.Restart(new StupidoBot());
+                {
+                    opponent = new StupidoBot();
+                    Chessboard.Restart(opponent);
+                }
                 else
+                {
+                    opponent = null;
                     Chessboard.Restart(null);
+                }
             }
         }
 
@@ -180,6 +197,144 @@ namespace Chess.NET.Android
                 // TODO: Wenn Move vom Server nicht akzeptiert wurde, ihn wieder lokal rückgängig machen!
 
                 //MessageBox.Show(string.Format(Properties.Resources.strFailedToMove, ex.Message), Properties.Resources.strError, MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private void RefreshPlayerDisplay()
+        {
+            var playerInfo = Chessboard.Game.GetPlayerInformation();
+
+            static string formatElo(int? value)
+            {
+                if (value == null)
+                    return "Elo: ????";
+                else
+                    return $"Elo: {value:D4}";
+            }
+
+            static string formatPlayerElo(string? value)
+            {
+                if (string.IsNullOrEmpty(value))
+                    return "Elo: ????";
+
+                return $"Elo: {value}";
+            }
+
+            string playerTopName = string.Empty;
+            string playerTopElo = string.Empty;
+            string playerBottomName = string.Empty;
+            string playerBottomElo = string.Empty;
+
+            if (isOnlineMatch)
+            {
+                if (!Chessboard.IsMirrored)
+                {
+                    if (ownPieceColor == Shared.Model.Color.White)
+                    {
+                        playerTopName = currentMatchInfo?.OpponentName ?? string.Empty;
+                        playerTopElo = formatPlayerElo(currentMatchInfo?.OpponentElo ?? string.Empty);
+
+                        playerBottomName = Helper.GetPlayerName(1);
+                        playerBottomElo = formatPlayerElo(Settings.Instance.Player1Elo);
+                    }
+                    else
+                    {
+                        playerBottomName = currentMatchInfo?.OpponentName ?? string.Empty;
+                        playerBottomElo = formatPlayerElo(currentMatchInfo?.OpponentElo ?? string.Empty);
+
+                        playerTopName = Helper.GetPlayerName(1);
+                        playerTopElo = formatPlayerElo(Settings.Instance.Player1Elo);
+                    }
+                }
+                else
+                {
+                    if (ownPieceColor == Shared.Model.Color.White)
+                    {
+                        playerTopName = Helper.GetPlayerName(1);
+                        playerTopElo = formatPlayerElo(Settings.Instance.Player1Elo);
+
+                        playerBottomName = currentMatchInfo?.OpponentName ?? string.Empty;
+                        playerBottomElo = formatPlayerElo(currentMatchInfo?.OpponentElo ?? string.Empty);
+                    }
+                    else
+                    {
+                        playerBottomName = Helper.GetPlayerName(1);
+                        playerBottomElo = formatPlayerElo(Settings.Instance.Player1Elo);
+
+                        playerTopName = currentMatchInfo?.OpponentName ?? string.Empty;
+                        playerTopElo = formatPlayerElo(currentMatchInfo?.OpponentElo ?? string.Empty);
+                    }
+                }
+            }
+            else if (opponent is not null)
+            {
+                // Bot
+                if (!Chessboard.IsMirrored)
+                {
+                    playerTopName = $"{opponent.Name} (Bot)";
+                    playerTopElo = formatElo(opponent.Elo);
+
+                    playerBottomName = Helper.GetPlayerName(1);
+                    playerBottomElo = formatPlayerElo(Settings.Instance.Player1Elo);
+                }
+                else
+                {
+                    playerTopName = Helper.GetPlayerName(1);
+                    playerTopElo = formatPlayerElo(Settings.Instance.Player1Elo);
+
+                    playerBottomName = $"{opponent.Name} (Bot)";
+                    playerBottomElo = formatElo(opponent.Elo);
+                }
+            }
+            else
+            {
+                // Player 2
+                if (!Chessboard.IsMirrored)
+                {
+                    playerTopName = Helper.GetPlayerName(2);
+                    playerTopElo = formatPlayerElo(Settings.Instance.Player2Elo);
+
+                    playerBottomName = Helper.GetPlayerName(1);
+                    playerBottomElo = formatPlayerElo(Settings.Instance.Player1Elo);
+                }
+                else
+                {
+                    playerTopName = Helper.GetPlayerName(1);
+                    playerTopElo = formatPlayerElo(Settings.Instance.Player1Elo);
+
+                    playerBottomName = Helper.GetPlayerName(2);
+                    playerBottomElo = formatPlayerElo(Settings.Instance.Player2Elo);
+                }
+            }
+
+            TextPlayerTopName.Text = playerTopName;
+            TextPlayerTopElo.Text = playerTopElo;
+            TextPlayerBottomName.Text = playerBottomName;
+            TextPlayerBottomElo.Text = playerBottomElo;
+
+            // TODO
+            //if (Chessboard.IsMirrored)
+            //{
+            //    TextPlayerInfoTop.Text = playerInfo.GetBlack();
+            //    TextPlayerInfoBottom.Text = playerInfo.GetWhite();
+            //}
+            //else
+            //{
+            //    TextPlayerInfoTop.Text = playerInfo.GetBlack();
+            //    TextPlayerInfoBottom.Text = playerInfo.GetWhite();
+            //}
+        }
+
+        private async void ButtonResign_Clicked(object sender, EventArgs e)
+        {
+            try
+            {
+                ArgumentNullException.ThrowIfNull(currentMatchInfo);
+                await APIClient.ResignAsync(currentMatchInfo.MatchId);
+            }
+            catch (Exception ex)
+            {
+                // TODO MessageBox.Show(string.Format(Properties.Resources.strFailedToResign, ex.Message), Properties.Resources.strError, MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
     }
