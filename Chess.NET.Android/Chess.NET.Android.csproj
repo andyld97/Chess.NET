@@ -74,19 +74,19 @@
 		<MauiImage Include="..\Chess.NET\resources\icons\themes\default\black\Rook.png" Link="Resources\Images\themes\default\black\rook_black.png" />
 
 
-		<MauiAsset Include="..\Chess.NET\resources\sounds\capture.mp3" Link="Resources\Raw\%(Filename)%(Extension)" LogicalName="%(Filename)%(Extension)"  />
+		<MauiAsset Include="..\Chess.NET\resources\sounds\capture.mp3" Link="Resources\Raw\%(Filename)%(Extension)" LogicalName="%(Filename)%(Extension)" />
 		<MauiAsset Include="..\Chess.NET\resources\sounds\castle.mp3" Link="Resources\Raw\%(Filename)%(Extension)" LogicalName="%(Filename)%(Extension)" />
 		<MauiAsset Include="..\Chess.NET\resources\sounds\check.mp3" Link="Resources\Raw\%(Filename)%(Extension)" LogicalName="%(Filename)%(Extension)" />
 		<MauiAsset Include="..\Chess.NET\resources\sounds\checkmate.mp3" Link="Resources\Raw\%(Filename)%(Extension)" LogicalName="%(Filename)%(Extension)" />
 		<MauiAsset Include="..\Chess.NET\resources\sounds\fail.mp3" Link="Resources\Raw\%(Filename)%(Extension)" LogicalName="%(Filename)%(Extension)" />
 		<MauiAsset Include="..\Chess.NET\resources\sounds\move.mp3" Link="Resources\Raw\%(Filename)%(Extension)" LogicalName="%(Filename)%(Extension)" />
 		<MauiAsset Include="..\Chess.NET\resources\sounds\solved.mp3" Link="Resources\Raw\%(Filename)%(Extension)" LogicalName="%(Filename)%(Extension)" />
-		<MauiAsset Include="..\Chess.NET\resources\sounds\stalemate.mp3" Link="Resources\Raw\%(Filename)%(Extension)" LogicalName="%(Filename)%(Extension)"  />
+		<MauiAsset Include="..\Chess.NET\resources\sounds\stalemate.mp3" Link="Resources\Raw\%(Filename)%(Extension)" LogicalName="%(Filename)%(Extension)" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
-		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="10.0.0" />
+		<PackageReference Include="Microsoft.Maui.Controls" Version="10.0.60" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="10.0.7" />
 		<PackageReference Include="Plugin.Maui.Audio" Version="4.0.0" />
 	</ItemGroup>
 

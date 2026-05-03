@@ -40,7 +40,7 @@ namespace Chess.NET.Online.Controllers
                 return Unauthorized();
 
             await match.MatchSemaphore.WaitAsync();
-            
+
             try
             {
                 var resignColor = match.GetColorByClientId(clientId);
@@ -53,7 +53,7 @@ namespace Chess.NET.Online.Controllers
             {
                 match.MatchSemaphore.Release();
             }
-        
+
             return Ok();
         }
 
@@ -105,7 +105,7 @@ namespace Chess.NET.Online.Controllers
                     return BadRequest(); // illegal move!
                 }
 
-                await match.Game.Move(pendingMove, false);
+                match.Game.Move(pendingMove, false);
                 _logger.LogInformation($"[{match.MatchId}]: Move {move} was made by {col}!");
                 return Ok();
             }
