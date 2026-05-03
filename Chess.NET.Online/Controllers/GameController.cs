@@ -92,22 +92,31 @@ namespace Chess.NET.Online.Controllers
                     return BadRequest(); // wrong player 
                 }
 
-                PendingMove? pendingMove = PendingMove.Parse(move, (Board)match.Game.Board, match.Game, col.Value!);
-                if (pendingMove == null)
+                _logger.LogDebug($"Parsing pending move: {move}");
+                try
                 {
-                    _logger.LogInformation($"[{match.MatchId}]: Move {move} by {col} not accepted: Move couldn't be parsed!");
+                    PendingMove? pendingMove = PendingMove.Parse(move, (Board)match.Game.Board, match.Game, col.Value!);
+                    if (pendingMove == null)
+                    {
+                        _logger.LogInformation($"[{match.MatchId}]: Move {move} by {col} not accepted: Move couldn't be parsed!");
+                        return BadRequest(); // move cannot be parsed!
+                    }
+
+                    if (!match.Game.IsMoveValid(pendingMove.Piece, pendingMove.To))
+                    {
+                        _logger.LogInformation($"[{match.MatchId}]: Move {move} by {col} not accepted: Illegal Move!");
+                        return BadRequest(); // illegal move!
+                    }
+
+                    match.Game.Move(pendingMove, false);
+                    _logger.LogInformation($"[{match.MatchId}]: Move {move} was made by {col}!");
+                    return Ok();
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError($"[{match.MatchId}]: Move {move} by {col} not accepted: Exception during parsing! {ex.Message}");
                     return BadRequest(); // move cannot be parsed!
                 }
-
-                if (!match.Game.IsMoveValid(pendingMove.Piece, pendingMove.To))
-                {
-                    _logger.LogInformation($"[{match.MatchId}]: Move {move} by {col} not accepted: Illegal Move!");
-                    return BadRequest(); // illegal move!
-                }
-
-                match.Game.Move(pendingMove, false);
-                _logger.LogInformation($"[{match.MatchId}]: Move {move} was made by {col}!");
-                return Ok();
             }
             finally
             {

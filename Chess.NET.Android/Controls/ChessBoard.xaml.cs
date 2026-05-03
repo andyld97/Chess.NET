@@ -220,7 +220,7 @@ public partial class ChessBoard : ContentView
                 return;
 
             }
-            var success = game.Move(new PendingMove(_pieceToMove, position, null));
+            var success = game.Move(new PendingMove(_pieceToMove, position, PieceType.Queen));
             if (success)
             {
                 RenderChessBoard(game.Board, true);
