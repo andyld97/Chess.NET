@@ -8,6 +8,10 @@
     <File Path="Store Packages/v1.0.1.0.msix" />
     <File Path="Store Packages/v1.0.2.0.msix" />
   </Folder>
+  <Project Path="Chess.NET.Android/Chess.NET.Android.csproj" Id="c090fdf9-b758-42ef-b26f-129679f45810">
+    <BuildType Solution="Store|*" Project="Debug" />
+    <Deploy Solution="Debug|*" />
+  </Project>
   <Project Path="Chess.NET.Online/Chess.NET.Online.csproj" Id="ae41e955-3749-4874-9a64-69500b579111" />
   <Project Path="Chess.NET.Shared/Chess.NET.Shared.csproj" Id="2a4744ad-35c1-43d3-a642-ae8cca7d41d5" />
   <Project Path="Chess.NET/Chess.NET.csproj" />

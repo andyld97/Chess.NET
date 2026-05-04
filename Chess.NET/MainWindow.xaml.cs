@@ -1,10 +1,10 @@
 ﻿using Chess.NET.Controls;
 using Chess.NET.Controls.Dialogs;
 using Chess.NET.Model;
-using Chess.NET.Netcode;
 using Chess.NET.Shared.Model;
 using Chess.NET.Shared.Model.Bot;
 using Chess.NET.Shared.Model.Online;
+using Chess.NET.Shared.Netcode;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -18,7 +18,7 @@ namespace Chess.NET
     {
         private MoveNotationDisplay currentMoveNotationDisplay = null!;
         private IChessBot? opponent = null;
-        private bool isInitialized = false; 
+        private readonly bool isInitialized = false; 
         public static MainWindow W_INSTANCE { get; private set; } = null!;    
 
         #region Commands
@@ -271,86 +271,102 @@ namespace Chess.NET
 
         private async void WaitingQueueDialog_Loaded(object sender, RoutedEventArgs e)
         {
-            client = await _networkClient.ConnectAsync();
-            waitingQueueDialog?.Client = client;
-
-            if (client == null)
+            try
             {
-                // Error
-                waitingQueueDialog?.FoundMatch = false;
-                waitingQueueDialog?.Loaded -= WaitingQueueDialog_Loaded;
-                waitingQueueDialog?.Close();
+                client = await _networkClient.ConnectAsync(Settings.Instance.Player1Name, Settings.Instance.Player1Elo);
+                waitingQueueDialog?.Client = client;
+
+                if (client == null)
+                {
+                    // Error
+                    waitingQueueDialog?.FoundMatch = false;
+                    waitingQueueDialog?.Loaded -= WaitingQueueDialog_Loaded;
+                    waitingQueueDialog?.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(string.Format(Properties.Resources.strFailedToConnectToServer, ex.Message), Properties.Resources.strError, MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
-        private void NetworkClient_OnMatchFound(MatchInfo match)
+        private async void NetworkClient_OnMatchFound(MatchInfo match)
         {
-            ButtonRestart.IsEnabled = false;
-            ButtonResign.Visibility = Visibility.Visible;
-            isOnlineMatch = true;
-            waitingQueueDialog?.FoundMatch = true; 
-            waitingQueueDialog?.Loaded -= WaitingQueueDialog_Loaded;
-            waitingQueueDialog?.Close();
-            waitingQueueDialog = null;
-
-            if (match.ClientColor == Color.Black)
+            await App.UiDispatcher.Invoke(async () =>
             {
-                if (!Chessboard.IsMirrored)
-                    Chessboard.Mirror();
+                ButtonRestart.IsEnabled = false;
+                ButtonResign.Visibility = Visibility.Visible;
+                isOnlineMatch = true;
+                waitingQueueDialog?.FoundMatch = true;
+                waitingQueueDialog?.Loaded -= WaitingQueueDialog_Loaded;
+                waitingQueueDialog?.Close();
+                waitingQueueDialog = null;
 
-                ownPieceColor = Color.Black;
-            }
-            else
-            {
-                if (Chessboard.IsMirrored)
-                    Chessboard.Mirror();
+                if (match.ClientColor == Color.Black)
+                {
+                    if (!Chessboard.IsMirrored)
+                        Chessboard.Mirror();
 
-                ownPieceColor = Color.White;
-            }
+                    ownPieceColor = Color.Black;
+                }
+                else
+                {
+                    if (Chessboard.IsMirrored)
+                        Chessboard.Mirror();
 
-            currentMatchInfo = match;
-            Chessboard.Game.StartNewGame(null);
-            Chessboard.SetOnline(ownPieceColor.Value);
-            RefreshPlayerDisplay();
+                    ownPieceColor = Color.White;
+                }
+
+                currentMatchInfo = match;
+                Chessboard.Game.StartNewGame(null);
+                Chessboard.SetOnline(ownPieceColor.Value);
+                RefreshPlayerDisplay();
+            });
         }
 
         private async void NetworkClient_OnMoveMade(MoveMade moveMade)
         {
-            var pendingMove = PendingMove.Parse(moveMade.Move, (Board)Chessboard.Game.Board, moveMade.Color);
-            if (moveMade.Color != ownPieceColor)
+            await App.UiDispatcher.Invoke(async () =>
             {
-                await Chessboard.Game.MoveAsync(pendingMove, true);
-                Chessboard.RenderChessBoard(Chessboard.Game.Board, true);
-            }
+                var pendingMove = PendingMove.Parse(moveMade.Move, (Board)Chessboard.Game.Board, Chessboard.Game, moveMade.Color);
+                if (moveMade.Color != ownPieceColor)
+                {
+                    Chessboard.Game.Move(pendingMove, true);
+                    Chessboard.RenderChessBoard(Chessboard.Game.Board, true);
+                }
+            });
         }
 
         private async void NetworkClient_OnMatchEnds(MatchEnd matchEnd)
         {
-            Chessboard.DisablePieces();
-            ButtonResign.Visibility = Visibility.Collapsed;
-
-            string playerWon = string.Empty;
-
-            if (matchEnd.ColorWins.HasValue && matchEnd.ColorWins == ownPieceColor)
-                playerWon = Settings.Instance.Player1Name;
-            else if (matchEnd.ColorWins.HasValue)
-                playerWon = currentMatchInfo?.OpponentName ?? string.Empty;
-
-            currentMatchInfo = null;
-            ButtonRestart.IsEnabled = true;
-            isOnlineMatch = false;
-            await _networkClient.DisconnectAsync();
-
-            await Task.Delay(50).ContinueWith(t =>
+            await App.UiDispatcher.Invoke(async () =>
             {
-                Application.Current.Dispatcher.Invoke(() =>
-                {
-                    // Only consider sounds that are normally not played using the Game-Class
-                    if (matchEnd.Result == GameResult.Disconnected || matchEnd.Result == GameResult.Resign || matchEnd.Result == GameResult.Timeout)
-                        Sound.Play(SoundType.Checkmate);
+                Chessboard.DisablePieces();
+                ButtonResign.Visibility = Visibility.Collapsed;
 
-                    GameOverDialog gameOverDialog = new GameOverDialog(matchEnd.Result, matchEnd.ColorWins, playerWon) { Owner = this };
-                    gameOverDialog.ShowDialog();
+                string playerWon = string.Empty;
+
+                if (matchEnd.ColorWins.HasValue && matchEnd.ColorWins == ownPieceColor)
+                    playerWon = Settings.Instance.Player1Name;
+                else if (matchEnd.ColorWins.HasValue)
+                    playerWon = currentMatchInfo?.OpponentName ?? string.Empty;
+
+                currentMatchInfo = null;
+                ButtonRestart.IsEnabled = true;
+                isOnlineMatch = false;
+                await _networkClient.DisconnectAsync();
+
+                await Task.Delay(50).ContinueWith(t =>
+                {
+                    Application.Current.Dispatcher.Invoke(() =>
+                    {
+                        // Only consider sounds that are normally not played using the Game-Class
+                        if (matchEnd.Result == GameResult.Disconnected || matchEnd.Result == GameResult.Resign || matchEnd.Result == GameResult.Timeout)
+                            Sound.Play(SoundType.Checkmate);
+
+                        GameOverDialog gameOverDialog = new GameOverDialog(matchEnd.Result, matchEnd.ColorWins, playerWon) { Owner = this };
+                        gameOverDialog.ShowDialog();
+                    });
                 });
             });
         }
@@ -360,11 +376,15 @@ namespace Chess.NET
             if (_networkClient == null || currentMatchInfo == null)
                 return;
 
-            var result = await _networkClient.MakeMoveAsync(currentMatchInfo.MatchId, moveNotation.FormatMove(false, false));
-
-            if (!result)
+            try
             {
+                await APIClient.MakeMoveAsync(currentMatchInfo.MatchId, moveNotation.FormatMove(false, false));               
+            }
+            catch (Exception ex)
+            {            
                 // TODO: Wenn Move vom Server nicht akzeptiert wurde, ihn wieder lokal rückgängig machen!
+             
+                MessageBox.Show(string.Format(Properties.Resources.strFailedToMove, ex.Message), Properties.Resources.strError, MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 

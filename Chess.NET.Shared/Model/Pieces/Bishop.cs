@@ -11,8 +11,10 @@
 
         }
         
-        public override List<Position> GetPossibleMoves(IBoard board)
+        public override List<Position> GetPossibleMoves(Game game)
         {
+            var board = game.Board;
+
             var moves = new List<Position>();   
             AddRay(moves, board, 1, 1); // diagonal
             AddRay(moves, board, 1, -1);

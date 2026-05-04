@@ -3,7 +3,7 @@ using System.Net.Http;
 using System.Text;
 using System.Text.Json;
 
-namespace Chess.NET.Netcode
+namespace Chess.NET.Shared.Netcode
 {
     public static class APIClient
     {

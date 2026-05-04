@@ -1,17 +1,12 @@
 ﻿using Chess.NET.Controls.Dialogs;
 using Chess.NET.Model;
-using Chess.NET.Model.GUI;
-using Chess.NET.Netcode;
 using Chess.NET.Shared;
 using Chess.NET.Shared.Model;
 using Chess.NET.Shared.Model.Bot;
-using Chess.NET.Shared.Model.Pieces;
-using System.Reflection;
+using Chess.NET.Shared.Model.GUI;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
 
 namespace Chess.NET.Controls
 {
@@ -20,7 +15,7 @@ namespace Chess.NET.Controls
     /// </summary>
     public partial class ChessBoard : UserControl
     {
-        private readonly BoardSquare[,] _squares = new BoardSquare[8, 8];
+        private readonly BoardSquare<Border>[,] _squares = new BoardSquare<Border>[8, 8];
         private readonly Game game = new Game();
 
         private readonly List<Border> rotatedBorders = [];
@@ -169,7 +164,7 @@ namespace Chess.NET.Controls
                 }
 
                 var pendingMove = new PendingMove(_pieceToMove!, destinationSquare, promotionType);
-                bool wasMoveAccepted = await game.MoveAsync(pendingMove);
+                bool wasMoveAccepted = game.Move(pendingMove);
 
                 ResetDrag();
                 RenderChessBoard(game.Board);
@@ -200,7 +195,7 @@ namespace Chess.NET.Controls
                         if (next == null)
                             break;
 
-                        foundValidMove = await game.MoveAsync(next);
+                        foundValidMove = game.Move(next);
                     }
                 }
 
@@ -316,7 +311,7 @@ namespace Chess.NET.Controls
             for (int i = 0; i < navigationCurrentMove; i++)
             {
                 var move = game.Moves[i];
-                await gm.MoveAsync(new PendingMove(gm.Board.GetPiece(move.From)!, move.To, move.PromotionType), false);
+                gm.Move(new PendingMove(gm.Board.GetPiece(move.From)!, move.To, move.PromotionType), false);
             }
 
             RenderChessBoard(gm.Board, false);
@@ -432,7 +427,7 @@ namespace Chess.NET.Controls
                     square.MouseMove += Square_MouseMove;
                     BoardGrid.Children.Add(square);
 
-                    _squares[file - 1, rank - 1] = new BoardSquare(file, rank, square);
+                    _squares[file - 1, rank - 1] = new BoardSquare<Border>(file, rank, square);
                 }
             }
         }

@@ -45,8 +45,9 @@
             return positions;   
         }
 
-        public override List<Position> GetPossibleMoves(IBoard board)
+        public override List<Position> GetPossibleMoves(Game game)
         {
+            var board = game.Board;
             List<Position> positions = GetKingPositionsIntern(Position);
 
             foreach (var position in positions.ToArray())
@@ -60,8 +61,26 @@
                     // Der König darf nicht auf ein Feld ziehen, das direkt anliegend zu dem gegnerischen König ist!
                     foreach (var nearKingPositions in GetKingPositionsIntern(position).Where(p => board.GetPiece(p) is King k && k.Color != Color))
                         positions.Remove(position);
-                }             
+                }
             }
+
+            // Short castles
+            if (Color == Color.White)
+            {
+                if (game.CanCastle(Color, Position.Parse("g1")))
+                    positions.Add(Position.Parse("g1"));
+            }
+            else if (game.CanCastle(Color, Position.Parse("g8")))
+                positions.Add(Position.Parse("g8"));
+
+            // Long castles
+            if (Color == Color.White)
+            {
+                if (game.CanCastle(Color, Position.Parse("c1")))
+                    positions.Add(Position.Parse("c1"));
+            }
+            else if (game.CanCastle(Color, Position.Parse("c8")))
+                positions.Add(Position.Parse("c8"));
 
             return positions;
         }

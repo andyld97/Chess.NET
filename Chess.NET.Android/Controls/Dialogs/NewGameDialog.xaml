@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Chess.NET.Android.Controls.Dialogs.NewGameDialog"
+             Title="New Game" BackgroundColor="#80000000">
+    <Grid>
+        <Frame
+            BackgroundColor="White"
+            CornerRadius="12"
+            Padding="20"
+            WidthRequest="300"
+            HorizontalOptions="Center"
+            VerticalOptions="Center">
+
+            <VerticalStackLayout Spacing="10">
+                <Label TextColor="Black" Text="Neues Spiel" FontSize="18" />
+
+                <Label TextColor="Black" Text="Gegner auswählen" />
+
+                <Picker x:Name="OpponentPicker" TextColor="Black" Title="Bitte wählen">
+                    <Picker.Items>
+                        <x:String>Online</x:String>
+                        <x:String>Bot</x:String>
+                        <x:String>Spieler 2</x:String>
+                    </Picker.Items>
+                </Picker>
+                <Button Text="OK" TextColor="Black" Clicked="Button_Clicked" />
+            </VerticalStackLayout>
+        </Frame>
+    </Grid>
+</ContentPage>

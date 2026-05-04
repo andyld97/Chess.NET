@@ -3,10 +3,10 @@ using Chess.NET.Shared.Model.Pieces;
 
 namespace Chess.NET.Shared.Model
 {
-    public class Game
+    public class Game : ICloneable
     {
         #region Private Members
-        private readonly Board board = new Board();
+        private Board board = new Board();
         private List<ChessPosition> positions = [];
         private Puzzle? currentPuzzle = null;
         private IChessBot? opponent = null;
@@ -44,7 +44,7 @@ namespace Chess.NET.Shared.Model
 
         #region EN PASSANT
 
-        private bool IsEnPassant(Color color, Piece piece, Position position)
+        public bool IsEnPassant(Color color, Piece piece, Position position)
         {
             if (piece.Type != PieceType.Pawn)
                 return false;            
@@ -218,8 +218,8 @@ namespace Chess.NET.Shared.Model
             // Hier wäre jetzt die Idee mit IsCheck zu arbeiten und zwar:
             // Spielbrett klonen ohne den zu rochierenden König
             // Den Weg des Königs durchgehen und bei jedem Feld prüfen ob IsCheck(move) true ist, falls ja not possible
-            var testCastleBoard = (Board)board.Clone();
-            var king = testCastleBoard.Pieces.First(p => p.Type == PieceType.King && p.Color == color);
+            var testCastleBoardGame = (Game)this.Clone();
+            var king = testCastleBoardGame.Board.Pieces.First(p => p.Type == PieceType.King && p.Color == color);
             if (king == null)
                 return false;
 
@@ -269,7 +269,7 @@ namespace Chess.NET.Shared.Model
 
             foreach (var piece in board.Pieces.Where(p => p.Color == color))
             {
-                foreach (var mv in piece.GetPossibleMoves(board))
+                foreach (var mv in piece.GetPossibleMoves(this))
                     if (!IsCheck(color, piece, mv))
                         return false;
             }
@@ -280,10 +280,14 @@ namespace Chess.NET.Shared.Model
 
         public bool IsStalemate(Color color)
         {
+            // Its important that this only can return true if the right player is next to move (Move Order)
+            if (color == PlayersTurn)
+                return false;
+
             // The same as checkmate but without the initial check
             foreach (var piece in board.Pieces.Where(p => p.Color == color))
             {
-                foreach (var mv in piece.GetPossibleMoves(board))
+                foreach (var mv in piece.GetPossibleMoves(this))
                     if (!IsCheck(color, piece, mv))
                         return false;
             }
@@ -294,25 +298,25 @@ namespace Chess.NET.Shared.Model
 
         public bool IsCheck(Color pieceColor)
         {
-            return board.IsCheck(pieceColor);
+            return board.IsCheck(pieceColor, this);
         }
 
         public bool IsCheck(Color color, Piece piece, Position target)
         {
-            var clone = (Board)board.Clone();
+            var clone = (Game)this.Clone();
 
             // passende Figur im Clone finden
-            var clonePiece = clone.Pieces.First(p => p.Color == piece.Color && p.Type == piece.Type && p.Position.Equals(piece.Position));
+            var clonePiece = clone.Board.Pieces.First(p => p.Color == piece.Color && p.Type == piece.Type && p.Position.Equals(piece.Position));
 
             // evtl. Capture entfernen
-            var captured = clone.GetPiece(target);
+            var captured = clone.Board.GetPiece(target);
             if (captured != null)
-                clone.Pieces.Remove(captured);
+                clone.Board.Pieces.Remove(captured);
 
             // Zug ausführen
             clonePiece.Position = target;
 
-            return clone.IsCheck(color);
+            return clone.Board.IsCheck(color, clone);
         }
 
         private void CheckFiftyMoveRule()
@@ -473,7 +477,7 @@ namespace Chess.NET.Shared.Model
             if (IsEnPassant(piece.Color, piece, position) && !IsCheck(PlayersTurn, piece, position))
                 return true;
 
-            if (!piece.GetPossibleMoves(board).Contains(position))
+            if (!piece.GetPossibleMoves(this).Contains(position))
                 return false;
 
             if (IsCheck(PlayersTurn, piece, position))
@@ -482,7 +486,7 @@ namespace Chess.NET.Shared.Model
             return true;
         }
 
-        public async Task<bool> MoveAsync(PendingMove? nxtMove, bool playSound = true)
+        public bool Move(PendingMove? nxtMove, bool playSound = true)
         {
             if (nxtMove == null) 
                 return false;
@@ -571,7 +575,7 @@ namespace Chess.NET.Shared.Model
                     if (piece.Type != PieceType.Pawn && piece.Type != PieceType.King && board.Pieces.Count(p => p.Color == piece.Color && p.Type == piece.Type) > 1)
                     {
                         // Check for Raxc6 or Rhxc6 or R2xc2
-                        var ambiguousPieces = board.Pieces.Where(p => p.Color == piece.Color && p.Type == piece.Type && p != piece && p.GetPossibleMoves(board).Contains(position));
+                        var ambiguousPieces = board.Pieces.Where(p => p.Color == piece.Color && p.Type == piece.Type && p != piece && p.GetPossibleMoves(this).Contains(position));
                         bool sameFile = ambiguousPieces.Any(p => p.Position.File == position.File);
                         bool sameRank = ambiguousPieces.Any(p => p.Position.Rank == position.Rank);
 
@@ -745,6 +749,21 @@ namespace Chess.NET.Shared.Model
         public override string ToString()
         {
             return board.ToString();
+        }
+
+        public object Clone()
+        {
+            return new Game
+            {
+                board = (Board)board.Clone(),
+                isPuzzle = isPuzzle,
+                hasBlackCastled = hasBlackCastled,
+                hasWhiteCastled = hasWhiteCastled,
+                currentPuzzle = currentPuzzle,          // clone not important
+                opponent = null,                        // clone not important
+                positions = [.. positions],
+                IsGameOver = IsGameOver
+            };
         }
 
         #endregion
