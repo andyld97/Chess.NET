@@ -18,7 +18,7 @@
         public static PendingMove? Parse(string san, Board board, Game game, Color color)
         {
             // 1) Remove check / checkmate markers
-            san = san.TrimEnd('+', '#');
+            san = san.TrimEnd('+', '#', '$');
 
             // 1.2) Check for castles
             if (san.Equals("o-o", StringComparison.CurrentCultureIgnoreCase))

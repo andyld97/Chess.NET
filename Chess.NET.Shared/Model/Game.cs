@@ -567,26 +567,26 @@ namespace Chess.NET.Shared.Model
             }
             else
             {
+                if (piece.Type != PieceType.Pawn && piece.Type != PieceType.King && board.Pieces.Count(p => p.Color == piece.Color && p.Type == piece.Type) > 1)
+                {
+                    // Check for Raxc6 or Rhxc6 or R2xc2
+                    var ambiguousPieces = board.Pieces.Where(p => p.Color == piece.Color && p.Type == piece.Type && p != piece && p.GetPossibleMoves(this).Contains(position));
+                    bool sameFile = ambiguousPieces.Any(p => p.Position.File == position.File);
+                    bool sameRank = ambiguousPieces.Any(p => p.Position.Rank == position.Rank);
+
+                    if (ambiguousPieces.Any())
+                    {
+                        if (!sameFile)
+                            disambiguation = ((char)('a' + piece.Position.File - 1)).ToString();
+                        else if (!sameRank)
+                            disambiguation = piece.Position.Rank.ToString();
+                    }
+                }
+
                 if (currentPiece != null)
                 {
                     // Capture!!
                     isCapture = true;
-
-                    if (piece.Type != PieceType.Pawn && piece.Type != PieceType.King && board.Pieces.Count(p => p.Color == piece.Color && p.Type == piece.Type) > 1)
-                    {
-                        // Check for Raxc6 or Rhxc6 or R2xc2
-                        var ambiguousPieces = board.Pieces.Where(p => p.Color == piece.Color && p.Type == piece.Type && p != piece && p.GetPossibleMoves(this).Contains(position));
-                        bool sameFile = ambiguousPieces.Any(p => p.Position.File == position.File);
-                        bool sameRank = ambiguousPieces.Any(p => p.Position.Rank == position.Rank);
-
-                        if (ambiguousPieces.Any())
-                        {
-                            if (!sameFile)
-                                disambiguation = ((char)('a' + piece.Position.File - 1)).ToString();
-                            else if (!sameRank)
-                                disambiguation = piece.Position.Rank.ToString();
-                        }
-                    }
 
                     board.CapturePiece(currentPiece);
 

@@ -1,5 +1,7 @@
-﻿using System.Globalization;
+﻿using Chess.NET.Shared.Model;
+using System.Globalization;
 using System.Windows;
+using System.Windows.Documents;
 using System.Windows.Threading;
 
 namespace Chess.NET
@@ -20,7 +22,7 @@ namespace Chess.NET
             //var cultureInfoTest = new CultureInfo("en-US");
             //Thread.CurrentThread.CurrentCulture =
             //Thread.CurrentThread.CurrentUICulture = cultureInfoTest;
-#endif
+#endif            
         }
     }
 }

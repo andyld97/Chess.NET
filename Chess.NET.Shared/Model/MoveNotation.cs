@@ -66,7 +66,7 @@
                 piece = string.Empty;
 
             // 3️) Bauernschlag braucht das File
-            string pawnFile = Piece.Type == PieceType.Pawn && IsCapture ? From.ToString()[..1] : string.Empty;
+            string pawnFile = (Piece.Type == PieceType.Pawn && IsCapture) ? From.ToString()[..1] : string.Empty;
 
             // 4️) Schlag
             string capture = IsCapture ? "x" : "";
