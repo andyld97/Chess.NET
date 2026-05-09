@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Chess.NET.Android.Controls.Dialogs.SettingsDialog"
+             BackgroundColor="#80000000">
+
+    <Border Background="{DynamicResource BackgroundColor}" StrokeShape="RoundRectangle" StrokeThickness="2" Stroke="{DynamicResource AccentColor}" Padding="20" WidthRequest="300" HorizontalOptions="Center" VerticalOptions="Center">
+        <VerticalStackLayout Spacing="10">
+
+            <VerticalStackLayout Padding="12" Spacing="8">
+                <Label Text="Spieler 1" TextColor="{DynamicResource TextColor}" FontSize="14"/>
+                <Entry x:Name="TextPlayer1" Placeholder="Name eingeben" TextColor="{DynamicResource TextColor}" PlaceholderColor="#6B7280" BackgroundColor="Transparent"/>
+            </VerticalStackLayout>
+
+
+            <VerticalStackLayout Padding="12" Spacing="8">
+                <Label Text="Spieler 2" TextColor="{DynamicResource TextColor}" FontSize="14" />
+                <Entry x:Name="TextPlayer2" Placeholder="Name eingeben" TextColor="{DynamicResource TextColor}" PlaceholderColor="#6B7280" BackgroundColor="Transparent"/>
+            </VerticalStackLayout>
+
+            <Button x:Name="ButtonOK" Text="OK" BackgroundColor="{DynamicResource AccentColor}" TextColor="{DynamicResource TextColor}" Clicked="ButtonOK_Clicked" />
+        </VerticalStackLayout>
+    </Border>
+</ContentPage>

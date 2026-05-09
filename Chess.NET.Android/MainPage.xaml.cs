@@ -360,5 +360,11 @@ namespace Chess.NET.Android
                 // TODO MessageBox.Show(string.Format(Properties.Resources.strFailedToResign, ex.Message), Properties.Resources.strError, MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
+
+        private async void MenuItemSettings_Clicked(object sender, EventArgs e)
+        {
+            var dialog = new SettingsDialog();
+            await Navigation.PushModalAsync(dialog);
+        }
     }
 }

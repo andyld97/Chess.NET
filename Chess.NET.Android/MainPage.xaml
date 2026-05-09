@@ -7,7 +7,7 @@
     <ContentPage.ToolbarItems>
         <ToolbarItem Text="Rotate" Clicked="ToolbarItem_Clicked" Order="Secondary" />
         <ToolbarItem Text="Puzzles" Order="Secondary" />
-        <ToolbarItem Text="Settings" Order="Secondary" />
+        <ToolbarItem x:Name="MenuItemSettings" Clicked="MenuItemSettings_Clicked" Text="Settings" Order="Secondary" />
         <ToolbarItem Text="About" Order="Secondary" />
     </ContentPage.ToolbarItems>
 

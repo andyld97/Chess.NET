@@ -101,6 +101,9 @@
 	  <MauiXaml Update="Controls\Dialogs\NewGameDialog.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
+	  <MauiXaml Update="Controls\Dialogs\SettingsDialog.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="Controls\Dialogs\WaitingQueueDialog.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
@@ -112,6 +115,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <Compile Update="Controls\Dialogs\SettingsDialog.xaml.cs">
+	    <DependentUpon>SettingsDialog.xaml</DependentUpon>
+	  </Compile>
 	  <Compile Update="Properties\Resources.Designer.cs">
 	    <DesignTime>True</DesignTime>
 	    <AutoGen>True</AutoGen>
