@@ -15,6 +15,9 @@
         <Style TargetType="{x:Type Label}">
             <Setter Property="TextColor" Value="{DynamicResource TextColor}" />
         </Style>
+        <Style TargetType="{x:Type Button}">
+            <Setter Property="TextColor" Value="{DynamicResource TextColor}" /> 
+        </Style>
     </ContentPage.Resources>
 
     <Grid VerticalOptions="Center">
