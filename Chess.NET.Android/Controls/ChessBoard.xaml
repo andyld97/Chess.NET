@@ -3,9 +3,9 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Chess.NET.Android.Controls.ChessBoard">
 
-    <Border x:Name="MainBorder" Stroke="Black" StrokeThickness="1">
+    <Border x:Name="MainBorder" Stroke="Black" StrokeThickness="0">
         <Grid RowSpacing="0" ColumnSpacing="0">
-            <Image Source="abstractpurple.jpg" Aspect="AspectFill" InputTransparent="True" />
+            <Image Source="abstractblue.png" Aspect="AspectFill" InputTransparent="True" />
 
             <Grid x:Name="BoardGrid" RowSpacing="0" ColumnSpacing="0">
                 <Grid.RowDefinitions>

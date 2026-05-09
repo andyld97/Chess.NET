@@ -1,6 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-
-namespace Chess.NET.Android
+﻿namespace Chess.NET.Android
 {
     public partial class App : Application
     {

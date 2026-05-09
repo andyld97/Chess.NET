@@ -3,29 +3,19 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Chess.NET.Android.Controls.Dialogs.NewGameDialog"
              Title="New Game" BackgroundColor="#80000000">
-    <Grid>
-        <Frame
-            BackgroundColor="White"
-            CornerRadius="12"
-            Padding="20"
-            WidthRequest="300"
-            HorizontalOptions="Center"
-            VerticalOptions="Center">
+    
+    <Border Background="{DynamicResource BackgroundColor}" StrokeShape="RoundRectangle" StrokeThickness="2" Stroke="{DynamicResource AccentColor}" Padding="20" WidthRequest="300" HorizontalOptions="Center" VerticalOptions="Center">
+        <VerticalStackLayout Spacing="10">
+            <Label TextColor="{DynamicResource TextColor}" Text="Neues Spiel starten" FontSize="18" />
 
-            <VerticalStackLayout Spacing="10">
-                <Label TextColor="Black" Text="Neues Spiel" FontSize="18" />
-
-                <Label TextColor="Black" Text="Gegner auswählen" />
-
-                <Picker x:Name="OpponentPicker" TextColor="Black" Title="Bitte wählen">
-                    <Picker.Items>
-                        <x:String>Online</x:String>
-                        <x:String>Bot</x:String>
-                        <x:String>Spieler 2</x:String>
-                    </Picker.Items>
-                </Picker>
-                <Button Text="OK" TextColor="Black" Clicked="Button_Clicked" />
-            </VerticalStackLayout>
-        </Frame>
-    </Grid>
+            <Picker x:Name="OpponentPicker" TextColor="{DynamicResource TextColor}" Title="Bitte wählen">
+                <Picker.Items>
+                    <x:String>Online</x:String>
+                    <x:String>Bot</x:String>
+                    <x:String>Spieler 2</x:String>
+                </Picker.Items>
+            </Picker>
+            <Button Text="OK" BackgroundColor="{DynamicResource AccentColor}" TextColor="{DynamicResource TextColor}" Clicked="Button_Clicked" />
+        </VerticalStackLayout>
+    </Border>
 </ContentPage>

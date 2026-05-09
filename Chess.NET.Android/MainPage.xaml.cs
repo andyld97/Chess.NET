@@ -17,6 +17,13 @@ namespace Chess.NET.Android
         {
             InitializeComponent();
             RefreshPlayerDisplay();
+
+            Chessboard.Game.OnMovedPiece += Game_OnMovedPiece; ;
+        }
+
+        private void Game_OnMovedPiece(MoveNotation move)
+        {
+            RefreshPlayerDisplay();
         }
 
         #region Online Match
@@ -48,6 +55,7 @@ namespace Chess.NET.Android
             try
             {
                 waitingQueueDialog = new WaitingQueueDialog();
+                waitingQueueDialog.OnWaitingQueueExited += WaitingQueueDialog_OnWaitingQueueExited;
                 await Navigation.PushModalAsync(waitingQueueDialog);
                 client = await _networkClient.ConnectAsync($"{Settings.Instance.Player1Name} (Android)", Settings.Instance.Player1Elo);
  
@@ -62,6 +70,19 @@ namespace Chess.NET.Android
                 // TODO
                 // MessageBox.Show(string.Format(Properties.Resources.strFailedToConnectToServer, ex.Message), Properties.Resources.strError, MessageBoxButton.OK, MessageBoxImage.Error);
             }
+        }
+
+        private async void WaitingQueueDialog_OnWaitingQueueExited()
+        {
+            try
+            {
+                if (client == null)
+                    return;
+
+                await APIClient.LeaveQueueAsync(client);
+            }
+            catch
+            { }
         }
 
         private async void _networkClient_OnMatchEnds(MatchEnd matchEnd)
@@ -176,11 +197,14 @@ namespace Chess.NET.Android
                     Chessboard.Restart(null);
                 }
             }
+
+            RefreshPlayerDisplay();
         }
 
         private void ToolbarItem_Clicked(object sender, EventArgs e)
         {
             Chessboard.Mirror();
+            RefreshPlayerDisplay();
         }
 
         private async void Chessboard_OnMoveMadeOnline(MoveNotation moveNotation)
@@ -312,17 +336,16 @@ namespace Chess.NET.Android
             TextPlayerBottomName.Text = playerBottomName;
             TextPlayerBottomElo.Text = playerBottomElo;
 
-            // TODO
-            //if (Chessboard.IsMirrored)
-            //{
-            //    TextPlayerInfoTop.Text = playerInfo.GetBlack();
-            //    TextPlayerInfoBottom.Text = playerInfo.GetWhite();
-            //}
-            //else
-            //{
-            //    TextPlayerInfoTop.Text = playerInfo.GetBlack();
-            //    TextPlayerInfoBottom.Text = playerInfo.GetWhite();
-            //}
+            if (Chessboard.IsMirrored)
+            {
+                TextPlayerInfoTop.Text = playerInfo.GetBlack();
+                TextPlayerInfoBottom.Text = playerInfo.GetWhite();
+            }
+            else
+            {
+                TextPlayerInfoTop.Text = playerInfo.GetBlack();
+                TextPlayerInfoBottom.Text = playerInfo.GetWhite();
+            }
         }
 
         private async void ButtonResign_Clicked(object sender, EventArgs e)

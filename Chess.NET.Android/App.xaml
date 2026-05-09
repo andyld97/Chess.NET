@@ -8,17 +8,6 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Resources/Styles/Colors.xaml" />
                 <ResourceDictionary Source="Resources/Styles/Styles.xaml" />
-                <ResourceDictionary>
-                    <SolidColorBrush x:Key="ChessLightSquare" Color="#54FFFFFF" />
-                    <SolidColorBrush x:Key="ChessDarkSquare" Color="#455695D9" />
-                    
-                    <LinearGradientBrush x:Key="ChessDarkSquareOld" StartPoint="0,0" EndPoint="0,1">
-                        <GradientStop Color="#455695D9" Offset="0.0"/>
-                        <GradientStop Color="#454E8AC6" Offset="1.0"/>
-                    </LinearGradientBrush>
-
-                    <SolidColorBrush x:Key="ChessHighlightSquare" Color="#54EBEB8C" />
-                </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>

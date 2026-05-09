@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
+using Microsoft.Maui.LifecycleEvents;
 using Plugin.Maui.Audio;
 
 namespace Chess.NET.Android
@@ -17,7 +18,7 @@ namespace Chess.NET.Android
                 });
 
 #if DEBUG
-    		builder.Logging.AddDebug();
+            builder.Logging.AddDebug();
 #endif
 
             builder.AddAudio();

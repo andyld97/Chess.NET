@@ -12,7 +12,13 @@ public partial class NewGameDialog : ContentPage
     public NewGameDialog()
 	{
 		InitializeComponent();
+        Loaded += NewGameDialog_Loaded;
 	}
+
+    private void NewGameDialog_Loaded(object? sender, EventArgs e)
+    {
+        OpponentPicker.SelectedIndex = 0; //TODO später aus den Settings laden (lastSelectedOpponent)
+    }
 
     private async void Button_Clicked(object sender, EventArgs e)
     {

@@ -213,57 +213,81 @@ public partial class ChessBoard : ContentView
 
         if (_pieceToMove != null)
         {
+            bool doNotMove = false;
+
             if (_pieceToMove.Color != game.PlayersTurn)
             {
                 ClearMoveIndicators();
                 _pieceToMove = null;
                 return;
-
-            }
-            var success = game.Move(new PendingMove(_pieceToMove, position, PieceType.Queen));
-            if (success)
-            {
-                RenderChessBoard(game.Board, true);
-                ClearMoveIndicators();
-                _pieceToMove = null;
-
-                if (isOnline)
-                {
-                    OnMoveMadeOnline?.Invoke(game.Moves.LastOrDefault()!);
-                    return;
-                }
-
-                if (opponent != null)
-                {
-                    ignoreTapping = true;
-                    await Task.Delay(1000);
-
-                    bool foundValidMove = false;
-                    while (!foundValidMove)
-                    {
-                        if (game.IsGameOver)
-                        {
-                            ignoreTapping = false;
-                            return;
-                        }
-
-                        var next = opponent.Move(game);
-                        if (next == null)
-                            break;
-
-                        foundValidMove = game.Move(next);
-                    }
-                }
-
-                RenderChessBoard(game.Board);
-                ignoreTapping = false;
-                return;
             }
             else
             {
-                ClearMoveIndicators();
-                _pieceToMove = null;
-                return;
+                // If a different piece is selected switch over to this piece 
+                // In this case it should be the right color so you cannot capture your own pieces
+                var targetSquarePiece = game.Board.GetPiece(position);
+
+                if (targetSquarePiece == _pieceToMove)
+                {
+                    ClearMoveIndicators();
+                    _pieceToMove = null;
+                    return;
+                }
+
+                if (targetSquarePiece != null && targetSquarePiece.Color == _pieceToMove.Color)
+                {
+                    doNotMove = true;
+                    ClearMoveIndicators();
+                }
+            }
+
+            if (!doNotMove)
+            {
+                var success = game.Move(new PendingMove(_pieceToMove, position, PieceType.Queen));
+                if (success)
+                {
+                    RenderChessBoard(game.Board, true);
+                    ClearMoveIndicators();
+                    _pieceToMove = null;
+
+                    if (isOnline)
+                    {
+                        OnMoveMadeOnline?.Invoke(game.Moves.LastOrDefault()!);
+                        return;
+                    }
+
+                    if (opponent != null)
+                    {
+                        ignoreTapping = true;
+                        await Task.Delay(1000);
+
+                        bool foundValidMove = false;
+                        while (!foundValidMove)
+                        {
+                            if (game.IsGameOver)
+                            {
+                                ignoreTapping = false;
+                                return;
+                            }
+
+                            var next = opponent.Move(game);
+                            if (next == null)
+                                break;
+
+                            foundValidMove = game.Move(next);
+                        }
+                    }
+
+                    RenderChessBoard(game.Board);
+                    ignoreTapping = false;
+                    return;
+                }
+                else
+                {
+                    ClearMoveIndicators();
+                    _pieceToMove = null;
+                    return;
+                }
             }
         }
 

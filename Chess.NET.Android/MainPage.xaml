@@ -2,7 +2,7 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:controls="clr-namespace:Chess.NET.Android.Controls"
-             x:Class="Chess.NET.Android.MainPage">
+             x:Class="Chess.NET.Android.MainPage" Background="{DynamicResource BackgroundColor}">
 
     <ContentPage.ToolbarItems>
         <ToolbarItem Text="Rotate" Clicked="ToolbarItem_Clicked" Order="Secondary" />
@@ -11,6 +11,12 @@
         <ToolbarItem Text="About" Order="Secondary" />
     </ContentPage.ToolbarItems>
 
+    <ContentPage.Resources>
+        <Style TargetType="{x:Type Label}">
+            <Setter Property="TextColor" Value="{DynamicResource TextColor}" />
+        </Style>
+    </ContentPage.Resources>
+
     <Grid VerticalOptions="Center">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -18,10 +24,19 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <StackLayout Orientation="Vertical" Padding="4" Background="WhiteSmoke">
-            <Label x:Name="TextPlayerTopName" Text="Opponent" FontAttributes="Bold" TextColor="Black" />
-            <Label x:Name="TextPlayerTopElo" Text="Elo: 800" TextColor="Black" />
-        </StackLayout>        
+        <Grid BackgroundColor="{DynamicResource AccentColor}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            
+            <StackLayout Orientation="Vertical" Padding="4" Margin="5,0,0,0">
+                <Label x:Name="TextPlayerTopName" Text="Opponent" FontAttributes="Bold" />
+                <Label x:Name="TextPlayerTopElo" Text="Elo: 800" />
+            </StackLayout>
+
+            <Label Grid.Column="1" Padding="4" x:Name="TextPlayerInfoTop" />
+        </Grid>
 
         <controls:ChessBoard x:Name="Chessboard" Grid.Row="1" OnMoveMadeOnline="Chessboard_OnMoveMadeOnline" />
 
@@ -30,15 +45,24 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
-            
-            <StackLayout Orientation="Vertical" Padding="4" Background="WhiteSmoke">
-                <Label x:Name="TextPlayerBottomName" Text="You" TextColor="Black" FontAttributes="Bold" />
-                <Label x:Name="TextPlayerBottomElo" Text="Elo: 800" TextColor="Black" />
-            </StackLayout>
 
-            <StackLayout Orientation="Vertical" Grid.Row="1">
-                <Button x:Name="ButtonRestart" Text="Start Game" Clicked="ButtonRestart_Clicked" Margin="10" />
-                <Button x:Name="ButtonResign" Text="Resign" Clicked="ButtonResign_Clicked" Margin="10" IsVisible="False" />
+            <Grid BackgroundColor="{DynamicResource AccentColor}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <StackLayout Orientation="Vertical" Padding="4" Margin="5,0,0,0">
+                    <Label x:Name="TextPlayerBottomName" Text="You" FontAttributes="Bold" />
+                    <Label x:Name="TextPlayerBottomElo" Text="Elo: 800" />
+                </StackLayout>
+
+                <Label Grid.Column="1" Padding="4" x:Name="TextPlayerInfoBottom" />
+            </Grid>
+
+            <StackLayout Orientation="Vertical" Grid.Row="1" Margin="5">
+                <Button x:Name="ButtonRestart" Text="Start Game" BackgroundColor="{DynamicResource AccentColor}" Clicked="ButtonRestart_Clicked" Margin="10" />
+                <Button x:Name="ButtonResign" Text="Resign" BackgroundColor="{DynamicResource AccentColor}" Clicked="ButtonResign_Clicked" Margin="10" IsVisible="False" />
             </StackLayout>
         </Grid>
     </Grid>

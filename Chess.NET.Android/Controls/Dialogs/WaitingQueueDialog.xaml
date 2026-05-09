@@ -5,12 +5,28 @@
              Title="Bitte warten" BackgroundColor="#80000000">
     <Grid>
         <Grid InputTransparent="False">
-            <Frame BackgroundColor="White" CornerRadius="12" Padding="20" HorizontalOptions="Center" VerticalOptions="Center">
-                <VerticalStackLayout Spacing="10" HorizontalOptions="Center">
-                    <ActivityIndicator IsRunning="True" Color="Black" />
-                    <Label Text="Bitte warten..." HorizontalOptions="Center" TextColor="Black" />
+            <Border BackgroundColor="{DynamicResource BackgroundColor}" Stroke="{DynamicResource AccentColor}" StrokeThickness="2" StrokeShape="RoundRectangle" Padding="20" HorizontalOptions="Center" VerticalOptions="Center">
+                <VerticalStackLayout Spacing="10" HorizontalOptions="Center" VerticalOptions="Center">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+
+                        <Label Text="Online Match" FontAttributes="Bold" FontSize="14" TextColor="{DynamicResource TextColor}" />
+
+                        <Label Text="✕" FontSize="20" Grid.Column="1" TextColor="Red" Margin="0,-5,0,0">
+                            <Label.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="OnCancelClicked"/>
+                            </Label.GestureRecognizers>
+                        </Label>
+                    </Grid>
+
+                    <ActivityIndicator IsRunning="True" Color="{DynamicResource TextColor}" />
+
+                    <Label Text="Gegner wird gesucht ..." HorizontalOptions="Center" TextColor="{DynamicResource TextColor}" />
                 </VerticalStackLayout>
-            </Frame>
+            </Border>
         </Grid>
     </Grid>
 </ContentPage>
