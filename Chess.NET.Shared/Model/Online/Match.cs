@@ -27,5 +27,10 @@ namespace Chess.NET.Shared.Model.Online
 
             return null;
         }
+
+        public override string ToString()
+        {
+            return $"{ClientWhite.PlayerName} vs. {ClientBlack.PlayerName}";
+        }
     }
 }

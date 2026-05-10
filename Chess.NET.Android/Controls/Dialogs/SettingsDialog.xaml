@@ -5,16 +5,14 @@
              BackgroundColor="#80000000">
 
     <Border Background="{DynamicResource BackgroundColor}" StrokeShape="RoundRectangle" StrokeThickness="2" Stroke="{DynamicResource AccentColor}" Padding="20" WidthRequest="300" HorizontalOptions="Center" VerticalOptions="Center">
-        <VerticalStackLayout Spacing="10">
-
-            <VerticalStackLayout Padding="12" Spacing="8">
-                <Label Text="Spieler 1" TextColor="{DynamicResource TextColor}" FontSize="14"/>
+        <VerticalStackLayout Spacing="6">
+            <VerticalStackLayout Padding="4" Spacing="6">
+                <Label Text="Spieler 1 (Name):" TextColor="{DynamicResource TextColor}" FontSize="14"/>
                 <Entry x:Name="TextPlayer1" Placeholder="Name eingeben" TextColor="{DynamicResource TextColor}" PlaceholderColor="#6B7280" BackgroundColor="Transparent"/>
             </VerticalStackLayout>
 
-
-            <VerticalStackLayout Padding="12" Spacing="8">
-                <Label Text="Spieler 2" TextColor="{DynamicResource TextColor}" FontSize="14" />
+            <VerticalStackLayout Padding="4" Spacing="6">
+                <Label Text="Spieler 2 (Name:)" TextColor="{DynamicResource TextColor}" FontSize="14" />
                 <Entry x:Name="TextPlayer2" Placeholder="Name eingeben" TextColor="{DynamicResource TextColor}" PlaceholderColor="#6B7280" BackgroundColor="Transparent"/>
             </VerticalStackLayout>
 

@@ -20,11 +20,13 @@ namespace Chess.NET.Online.Services
         private readonly ILogger<GameService> _logger;
         private readonly IHubContext<GameHub> _hub;
         private readonly List<Match> matches = [];
+        private readonly WebhookAPI.Webhook _webhook;
 
-        public GameService(ILogger<GameService> logger, IHubContext<GameHub> hub)
+        public GameService(ILogger<GameService> logger, IHubContext<GameHub> hub, WebhookAPI.Webhook webhook)
         {
             _logger = logger;
             _hub = hub;
+            _webhook = webhook;
         }
 
         public Match? GetMatch(string matchId)
@@ -100,6 +102,8 @@ namespace Chess.NET.Online.Services
 
                 // Notify clients that the match has ended
                 await _hub.Clients.Users([match.ClientWhite.ClientID, match.ClientBlack.ClientID]).SendAsync("GameOver", matchEnd);
+
+                await _webhook.PostWebHookAsync(WebhookAPI.Webhook.LogLevel.Info, $"[{match}]: Game Over: {matchLog}", "Chess");
             }
             finally
             {

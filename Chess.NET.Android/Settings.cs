@@ -9,6 +9,7 @@
             public static string Player2Elo = "500";
 
             public static string Player1Name => Preferences.Get("Player1", "Player 1");
+
             public static string Player2Name => Preferences.Get("Player2", "Player 2");
         }
     }

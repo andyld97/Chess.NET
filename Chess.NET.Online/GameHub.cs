@@ -31,6 +31,9 @@ namespace Chess.NET.Online
                 if (match != null)
                 {
                     _logger.LogInformation($"[{match.MatchId}]: Client {clientId} disconnected! Ending game!");
+
+                    // TODO: Webhook
+
                     Color? col = match.GetColorByClientId(clientId);
                     ArgumentNullException.ThrowIfNull(col);
 

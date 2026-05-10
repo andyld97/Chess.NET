@@ -1,6 +1,7 @@
 using Chess.NET.Online;
 using Chess.NET.Online.Services;
 using Microsoft.AspNetCore.SignalR;
+using WebhookAPI;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,6 +15,9 @@ builder.Services.AddOpenApi();
 builder.Services.AddSingleton<IUserIdProvider, ClientIdUserIdProvider>();
 builder.Services.AddSingleton<IMatchMakingService, MatchMakingService>();
 builder.Services.AddSingleton<IGameService, GameService>();
+
+string? url = builder.Configuration.GetSection("Webhook").GetValue<string>("Url");
+builder.Services.AddWebHookService(new WebhookOptions() { Application = "Chess.NET", Retry = true, Url = url });
 
 var app = builder.Build();
 

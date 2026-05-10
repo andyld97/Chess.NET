@@ -34,8 +34,13 @@ public partial class ChessBoard : ContentView
     {
         InitializeComponent();
 
+        MainBorder.IsVisible = false;
+
         SizeChanged += (_, _) =>
         {
+            if ((int)Width == (int)Height)
+                MainBorder.IsVisible = true;
+
             var size = Math.Round(Math.Min(Width, Height));
             MainBorder.WidthRequest = size;
             MainBorder.HeightRequest = size;

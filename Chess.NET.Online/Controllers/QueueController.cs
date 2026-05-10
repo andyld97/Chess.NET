@@ -13,13 +13,15 @@ namespace Chess.NET.Online.Controllers
         private readonly IHubContext<GameHub> _hub;
         private readonly ILogger<QueueController> _logger;
         private readonly IGameService _gameService;
+        private readonly WebhookAPI.Webhook _webhook;
 
-        public QueueController(ILogger<QueueController> logger, IMatchMakingService matchmaking, IHubContext<GameHub> hub, IGameService gameService)
+        public QueueController(ILogger<QueueController> logger, IMatchMakingService matchmaking, IHubContext<GameHub> hub, IGameService gameService, WebhookAPI.Webhook webhook)
         {
             _logger = logger;
             _matchmaking = matchmaking;
             _hub = hub;
             _gameService = gameService;
+            _webhook = webhook;
         }
 
         /// <summary>
@@ -40,9 +42,13 @@ namespace Chess.NET.Online.Controllers
 
             var match = _matchmaking.Join(client);
 
+            await _webhook.PostWebHookAsync(WebhookAPI.Webhook.LogLevel.Info, $"Client {client.PlayerName} joined the queue.", "Chess");
+
             if (match != null)
             {
                 _logger.LogInformation($"Found match: {match.ClientWhite.PlayerName} [WHITE] vs {match.ClientBlack.PlayerName} [BLACK]");
+
+                await _webhook.PostWebHookAsync(WebhookAPI.Webhook.LogLevel.Info, $"Found match: {match.ClientWhite.PlayerName} [WHITE] vs {match.ClientBlack.PlayerName} [BLACK]", "Chess");
 
                 MatchInfo matchInfoWhite = new MatchInfo
                 {
@@ -80,8 +86,9 @@ namespace Chess.NET.Online.Controllers
         /// was successfully removed.</returns>
         [HttpPost("Leave")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public IActionResult Leave([FromBody] Client client)
+        public async Task<IActionResult> Leave([FromBody] Client client)
         {
+            await _webhook.PostWebHookAsync(WebhookAPI.Webhook.LogLevel.Info, $"Client {client.PlayerName} left the queue.", "Chess");
             _matchmaking.Leave(client.ClientID, "Client left Queue");
             return Ok();
         }

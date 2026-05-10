@@ -10,11 +10,13 @@ namespace Chess.NET.Online.Controllers
     {
         private readonly ILogger<GameController> _logger;
         private readonly IGameService _gameService;
+        private readonly WebhookAPI.Webhook _webhook;
 
-        public GameController(ILogger<GameController> logger, IGameService gameService)
+        public GameController(ILogger<GameController> logger, IGameService gameService, WebhookAPI.Webhook webhook)
         {
             _logger = logger;
             _gameService = gameService;
+            _webhook = webhook;
         }
 
         /// <summary>
@@ -48,6 +50,8 @@ namespace Chess.NET.Online.Controllers
                     return BadRequest();
 
                 match.Game.Resign(resignColor.Value);
+
+                await _webhook.PostWebHookAsync(WebhookAPI.Webhook.LogLevel.Info, $"[{match}]: Player {resignColor} resigned.", "Chess");
             }
             finally
             {
@@ -109,12 +113,18 @@ namespace Chess.NET.Online.Controllers
                     }
 
                     match.Game.Move(pendingMove, false);
+
                     _logger.LogInformation($"[{match.MatchId}]: Move {move} was made by {col}!");
+
+                    await _webhook.PostWebHookAsync(WebhookAPI.Webhook.LogLevel.Info, $"[{match}]: Move {move} was made by {col}!", "Chess");
+
                     return Ok();
                 }
                 catch (Exception ex)
                 {
                     _logger.LogError($"[{match.MatchId}]: Move {move} by {col} not accepted: Exception during parsing! {ex.Message}");
+                    await _webhook.PostWebHookAsync(WebhookAPI.Webhook.LogLevel.Error, $"[{match}]: Move {move} by {col} not accepted: Exception during parsing! {ex.Message}", "Chess");
+
                     return BadRequest(); // move cannot be parsed!
                 }
             }
