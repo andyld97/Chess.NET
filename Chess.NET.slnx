@@ -7,6 +7,7 @@
   <Folder Name="/Store Packages/">
     <File Path="Store Packages/v1.0.1.0.msix" />
     <File Path="Store Packages/v1.0.2.0.msix" />
+    <File Path="Store Packages/v1.0.3.0.msix" />
   </Folder>
   <Project Path="Chess.NET.Android/Chess.NET.Android.csproj" Id="c090fdf9-b758-42ef-b26f-129679f45810">
     <BuildType Solution="Store|*" Project="Debug" />
