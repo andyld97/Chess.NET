@@ -339,8 +339,8 @@ namespace Chess.NET.Android
 
             if (Chessboard.IsMirrored)
             {
-                TextPlayerInfoTop.Text = playerInfo.GetBlack();
-                TextPlayerInfoBottom.Text = playerInfo.GetWhite();
+                TextPlayerInfoTop.Text = playerInfo.GetWhite();
+                TextPlayerInfoBottom.Text = playerInfo.GetBlack(); 
             }
             else
             {

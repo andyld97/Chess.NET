@@ -10,8 +10,8 @@ public partial class SettingsDialog : ContentPage
 
     private void SettingsDialog_Loaded(object? sender, EventArgs e)
     {
-        TextPlayer1.Text = Preferences.Get("Player1", "Player 1");
-        TextPlayer2.Text = Preferences.Get("Player2", "Player 2");
+        TextPlayer1.Text = Preferences.Get("Player1", Chess.NET.Android.Properties.Resources.strPlayer1);
+        TextPlayer2.Text = Preferences.Get("Player2", Chess.NET.Android.Properties.Resources.strPlayer2);
     }
 
     private async void ButtonOK_Clicked(object sender, EventArgs e)

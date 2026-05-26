@@ -549,13 +549,13 @@ namespace Chess.NET
 
             if (Chessboard.IsMirrored)
             {
-                TextPlayerInfoTop.Text = playerInfo.GetBlack();
-                TextPlayerInfoBottom.Text = playerInfo.GetWhite();
+                TextPlayerInfoTop.Text = playerInfo.GetWhite();
+                TextPlayerInfoBottom.Text = playerInfo.GetBlack();
             }
             else
             {
                 TextPlayerInfoTop.Text = playerInfo.GetBlack();
-                TextPlayerInfoBottom.Text = playerInfo.GetWhite();          
+                TextPlayerInfoBottom.Text = playerInfo.GetWhite();
             }
         }
 

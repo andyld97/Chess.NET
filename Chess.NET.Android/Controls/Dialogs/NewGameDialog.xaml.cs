@@ -6,7 +6,6 @@ public partial class NewGameDialog : ContentPage
 
     public Task<int> WaitForResultAsync() => _tcs.Task;
 
-
     public int Result { get; private set; }
 
     public NewGameDialog()
@@ -17,13 +16,19 @@ public partial class NewGameDialog : ContentPage
 
     private void NewGameDialog_Loaded(object? sender, EventArgs e)
     {
-        OpponentPicker.SelectedIndex = 0; //TODO später aus den Settings laden (lastSelectedOpponent)
+        OpponentPicker.SelectedIndex = Settings.Instance.LastSelectedGameMode;
+
+        OpponentPicker.Items.Add(Properties.Resources.strOnline);
+        OpponentPicker.Items.Add(Properties.Resources.strBot);
+        OpponentPicker.Items.Add(Properties.Resources.strPlayer2);
     }
 
     private async void Button_Clicked(object sender, EventArgs e)
     {
         await Navigation.PopModalAsync();
 
-        _tcs.SetResult(OpponentPicker.SelectedIndex);
+        int selectedIndex = OpponentPicker.SelectedIndex;
+        Preferences.Set("LastSelectedGameMode", selectedIndex);
+        _tcs.SetResult(selectedIndex);
     }
 }

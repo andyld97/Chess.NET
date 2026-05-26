@@ -2,21 +2,22 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Chess.NET.Android.Controls.Dialogs.SettingsDialog"
+             xmlns:res="clr-namespace:Chess.NET.Android.Properties"
              BackgroundColor="#80000000">
 
     <Border Background="{DynamicResource BackgroundColor}" StrokeShape="RoundRectangle" StrokeThickness="2" Stroke="{DynamicResource AccentColor}" Padding="20" WidthRequest="300" HorizontalOptions="Center" VerticalOptions="Center">
         <VerticalStackLayout Spacing="6">
             <VerticalStackLayout Padding="4" Spacing="6">
-                <Label Text="Spieler 1 (Name):" TextColor="{DynamicResource TextColor}" FontSize="14"/>
-                <Entry x:Name="TextPlayer1" Placeholder="Name eingeben" TextColor="{DynamicResource TextColor}" PlaceholderColor="#6B7280" BackgroundColor="Transparent"/>
+                <Label Text="{x:Static res:Resources.strPlayer1Name}" TextColor="{DynamicResource TextColor}" FontSize="14"/>
+                <Entry x:Name="TextPlayer1" Placeholder="{x:Static res:Resources.strPleaseEnterYourName}" TextColor="{DynamicResource TextColor}" PlaceholderColor="#6B7280" BackgroundColor="Transparent"/>
             </VerticalStackLayout>
 
             <VerticalStackLayout Padding="4" Spacing="6">
-                <Label Text="Spieler 2 (Name:)" TextColor="{DynamicResource TextColor}" FontSize="14" />
-                <Entry x:Name="TextPlayer2" Placeholder="Name eingeben" TextColor="{DynamicResource TextColor}" PlaceholderColor="#6B7280" BackgroundColor="Transparent"/>
+                <Label Text="{x:Static res:Resources.strPlayer2Name}" TextColor="{DynamicResource TextColor}" FontSize="14" />
+                <Entry x:Name="TextPlayer2" Placeholder="{x:Static res:Resources.strPleaseEnterYourName}" TextColor="{DynamicResource TextColor}" PlaceholderColor="#6B7280" BackgroundColor="Transparent"/>
             </VerticalStackLayout>
 
-            <Button x:Name="ButtonOK" Text="OK" BackgroundColor="{DynamicResource AccentColor}" TextColor="{DynamicResource TextColor}" Clicked="ButtonOK_Clicked" />
+            <Button x:Name="ButtonOK" Text="{x:Static res:Resources.strOK}" BackgroundColor="{DynamicResource AccentColor}" TextColor="{DynamicResource TextColor}" Clicked="ButtonOK_Clicked" />
         </VerticalStackLayout>
     </Border>
 </ContentPage>

@@ -2,13 +2,14 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:controls="clr-namespace:Chess.NET.Android.Controls"
+             xmlns:res="clr-namespace:Chess.NET.Android.Properties"
              x:Class="Chess.NET.Android.MainPage" Background="{DynamicResource BackgroundColor}">
 
     <ContentPage.ToolbarItems>
-        <ToolbarItem Text="Rotate" Clicked="ToolbarItem_Clicked" Order="Secondary" />
+        <ToolbarItem Text="{x:Static res:Resources.strRotate}" Clicked="ToolbarItem_Clicked" Order="Secondary" />
         <!--<ToolbarItem Text="Puzzles" Order="Secondary" />-->
-        <ToolbarItem x:Name="MenuItemSettings" Clicked="MenuItemSettings_Clicked" Text="Settings" Order="Secondary" />
-        <ToolbarItem Text="About" Order="Secondary" />
+        <ToolbarItem x:Name="MenuItemSettings" Clicked="MenuItemSettings_Clicked" Text="{x:Static res:Resources.strSettings}" Order="Secondary" />
+        <ToolbarItem Text="{x:Static res:Resources.strAbout}" Order="Secondary" />
     </ContentPage.ToolbarItems>
 
     <ContentPage.Resources>
@@ -64,8 +65,8 @@
             </Grid>
 
             <StackLayout Orientation="Vertical" Grid.Row="1" Margin="5">
-                <Button x:Name="ButtonRestart" Text="Start Game" BackgroundColor="{DynamicResource AccentColor}" Clicked="ButtonRestart_Clicked" Margin="10" />
-                <Button x:Name="ButtonResign" Text="Resign" BackgroundColor="{DynamicResource AccentColor}" Clicked="ButtonResign_Clicked" Margin="10" IsVisible="False" />
+                <Button x:Name="ButtonRestart" Text="{x:Static res:Resources.strStartGame}" BackgroundColor="{DynamicResource AccentColor}" Clicked="ButtonRestart_Clicked" Margin="10" />
+                <Button x:Name="ButtonResign" Text="{x:Static res:Resources.strResign}" BackgroundColor="{DynamicResource AccentColor}" Clicked="ButtonResign_Clicked" Margin="10" IsVisible="False" />
             </StackLayout>
         </Grid>
     </Grid>

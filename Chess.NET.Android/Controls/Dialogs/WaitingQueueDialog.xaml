@@ -2,7 +2,8 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Chess.NET.Android.Controls.Dialogs.WaitingQueueDialog"
-             Title="Bitte warten" BackgroundColor="#80000000">
+             xmlns:res="clr-namespace:Chess.NET.Android.Properties"
+             Title="{x:Static res:Resources.strPleaseWait}" BackgroundColor="#80000000">
     <Grid>
         <Grid InputTransparent="False">
             <Border BackgroundColor="{DynamicResource BackgroundColor}" Stroke="{DynamicResource AccentColor}" StrokeThickness="2" StrokeShape="RoundRectangle" Padding="20" HorizontalOptions="Center" VerticalOptions="Center">
@@ -13,7 +14,7 @@
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
 
-                        <Label Text="Online Match" FontAttributes="Bold" FontSize="14" TextColor="{DynamicResource TextColor}" />
+                        <Label Text="{x:Static res:Resources.strOnlineMatch}" FontAttributes="Bold" FontSize="14" TextColor="{DynamicResource TextColor}" />
 
                         <Label Text="✕" FontSize="20" Grid.Column="1" TextColor="Red" Margin="0,-5,0,0">
                             <Label.GestureRecognizers>
@@ -24,7 +25,7 @@
 
                     <ActivityIndicator IsRunning="True" Color="{DynamicResource TextColor}" />
 
-                    <Label Text="Gegner wird gesucht ..." HorizontalOptions="Center" TextColor="{DynamicResource TextColor}" />
+                    <Label Text="{x:Static res:Resources.strOpponentSearch}" HorizontalOptions="Center" TextColor="{DynamicResource TextColor}" />
                 </VerticalStackLayout>
             </Border>
         </Grid>

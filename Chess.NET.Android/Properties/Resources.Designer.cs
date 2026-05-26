@@ -61,6 +61,69 @@ namespace Chess.NET.Android.Properties {
         }
         
         /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die About ähnelt.
+        /// </summary>
+        public static string strAbout {
+            get {
+                return ResourceManager.GetString("strAbout", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Bot ähnelt.
+        /// </summary>
+        public static string strBot {
+            get {
+                return ResourceManager.GetString("strBot", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die New Game ähnelt.
+        /// </summary>
+        public static string strNewGame {
+            get {
+                return ResourceManager.GetString("strNewGame", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die OK ähnelt.
+        /// </summary>
+        public static string strOK {
+            get {
+                return ResourceManager.GetString("strOK", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Online ähnelt.
+        /// </summary>
+        public static string strOnline {
+            get {
+                return ResourceManager.GetString("strOnline", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Online Match ähnelt.
+        /// </summary>
+        public static string strOnlineMatch {
+            get {
+                return ResourceManager.GetString("strOnlineMatch", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Searching for opponent ... ähnelt.
+        /// </summary>
+        public static string strOpponentSearch {
+            get {
+                return ResourceManager.GetString("strOpponentSearch", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Sucht eine lokalisierte Zeichenfolge, die Player 1 ähnelt.
         /// </summary>
         public static string strPlayer1 {
@@ -70,11 +133,101 @@ namespace Chess.NET.Android.Properties {
         }
         
         /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Player 1 (Name): ähnelt.
+        /// </summary>
+        public static string strPlayer1Name {
+            get {
+                return ResourceManager.GetString("strPlayer1Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Sucht eine lokalisierte Zeichenfolge, die Player 2 ähnelt.
         /// </summary>
         public static string strPlayer2 {
             get {
                 return ResourceManager.GetString("strPlayer2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Player 2 (Name): ähnelt.
+        /// </summary>
+        public static string strPlayer2Name {
+            get {
+                return ResourceManager.GetString("strPlayer2Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Please choose ähnelt.
+        /// </summary>
+        public static string strPleaseChoose {
+            get {
+                return ResourceManager.GetString("strPleaseChoose", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Name eingeben ähnelt.
+        /// </summary>
+        public static string strPleaseEnterYourName {
+            get {
+                return ResourceManager.GetString("strPleaseEnterYourName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Please wait ähnelt.
+        /// </summary>
+        public static string strPleaseWait {
+            get {
+                return ResourceManager.GetString("strPleaseWait", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Resign ähnelt.
+        /// </summary>
+        public static string strResign {
+            get {
+                return ResourceManager.GetString("strResign", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Rotate ähnelt.
+        /// </summary>
+        public static string strRotate {
+            get {
+                return ResourceManager.GetString("strRotate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Settings ähnelt.
+        /// </summary>
+        public static string strSettings {
+            get {
+                return ResourceManager.GetString("strSettings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Start Game ähnelt.
+        /// </summary>
+        public static string strStartGame {
+            get {
+                return ResourceManager.GetString("strStartGame", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Start New Game ähnelt.
+        /// </summary>
+        public static string strStartNewGame {
+            get {
+                return ResourceManager.GetString("strStartNewGame", resourceCulture);
             }
         }
     }
