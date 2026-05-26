@@ -8,6 +8,8 @@ It includes (almost) full game rules, a WPF-based GUI, custom bot logic, and eve
 <a href="https://apps.microsoft.com/detail/9pfhww5dh8wg" target="_self" >
 	<img src="https://get.microsoft.com/images/en-us%20dark.svg" width="200"/>
 </a>
+<a href="https://play.google.com/store/apps/details?id=code.a.software.OpenChess"><img src='https://shiftme.ca-soft.net/images/google-play-badge-resized-en.png' alt='German badge' height="54"/></a>
+
 
 <svg xmlns="http://www.w3.org/2000/svg" fill="transparent"></svg>
 
