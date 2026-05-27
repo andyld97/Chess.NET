@@ -78,7 +78,7 @@ namespace Chess.NET.Online.Services
             {
                 matches.Remove(match);
 
-                string matchLog = $"[{matchId}] ended: ";
+                string matchLog = $"[{match.ClientWhite.PlayerName} vs {match.ClientBlack.PlayerName}] ended: ";
                 if (matchResult == GameResult.Stalemate)
                     matchLog += "Stalemate (Remis)";
                 else
@@ -103,7 +103,7 @@ namespace Chess.NET.Online.Services
                 // Notify clients that the match has ended
                 await _hub.Clients.Users([match.ClientWhite.ClientID, match.ClientBlack.ClientID]).SendAsync("GameOver", matchEnd);
 
-                await _webhook.PostWebHookAsync(WebhookAPI.Webhook.LogLevel.Info, $"[{match}]: Game Over: {matchLog}", "Chess");
+                await _webhook.PostWebHookAsync(WebhookAPI.Webhook.LogLevel.Info, $"Game Over: {matchLog}", "Chess");
             }
             finally
             {
