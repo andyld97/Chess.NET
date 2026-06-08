@@ -7,6 +7,8 @@ namespace Chess.NET.Online.Services
         Match? Join(Client client);
 
         void Leave(string clientId, string reason);
+
+        int GetQueueLength();
     }
 
     public class MatchMakingService : IMatchMakingService
@@ -19,6 +21,14 @@ namespace Chess.NET.Online.Services
         public MatchMakingService(ILogger<IMatchMakingService> logger)
         {
             _logger = logger;
+        }
+
+        public int GetQueueLength()
+        {
+            lock (sync)
+            {
+                return clients.Count;
+            }
         }
 
         public Match? Join(Client client)
@@ -59,8 +69,8 @@ namespace Chess.NET.Online.Services
                 var item = clients.FirstOrDefault(c => c.ClientID == clientId);
                 if (item != null)
                 {
-                    clients.Remove(item);
-                    _logger.LogInformation($"Client [{clientId}] ({item.PlayerName}) leaved waiting queue due to reason: {reason}");
+                    bool result = clients.Remove(item);
+                    _logger.LogInformation($"Client [{clientId}] ({item.PlayerName}) leaved waiting queue due to reason: {reason}. Queue-Count: {clients.Count}");
                 }
             }
         }

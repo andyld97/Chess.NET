@@ -42,7 +42,7 @@ namespace Chess.NET.Online.Controllers
 
             var match = _matchmaking.Join(client);
 
-            await _webhook.PostWebHookAsync(WebhookAPI.Webhook.LogLevel.Info, $"Client {client.PlayerName} joined the queue.", "Chess");
+            await _webhook.PostWebHookAsync(WebhookAPI.Webhook.LogLevel.Info, $"Client {client.PlayerName} joined the queue. Queue-Count: {_matchmaking.GetQueueLength()}", "Chess");
 
             if (match != null)
             {
@@ -88,8 +88,8 @@ namespace Chess.NET.Online.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IActionResult> Leave([FromBody] Client client)
         {
-            await _webhook.PostWebHookAsync(WebhookAPI.Webhook.LogLevel.Info, $"Client {client.PlayerName} left the queue.", "Chess");
             _matchmaking.Leave(client.ClientID, "Client left Queue");
+            await _webhook.PostWebHookAsync(WebhookAPI.Webhook.LogLevel.Info, $"Client {client.PlayerName} left the queue. Queue-Count: {_matchmaking.GetQueueLength()}", "Chess");
             return Ok();
         }
     }
