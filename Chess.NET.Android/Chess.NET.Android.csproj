@@ -59,19 +59,19 @@
 
 	<ItemGroup>
 		<!-- Link to Resources (EmbeddedResource are really slow :( )-->
-		<MauiImage Include="..\Chess.NET\resources\icons\themes\default\white\Bishop.png" Link="Resources\Images\themes\default\white\bishop_white.png" />
-		<MauiImage Include="..\Chess.NET\resources\icons\themes\default\white\King.png" Link="Resources\Images\themes\default\white\king_white.png" />
-		<MauiImage Include="..\Chess.NET\resources\icons\themes\default\white\Knight.png" Link="Resources\Images\themes\default\white\knight_white.png" />
-		<MauiImage Include="..\Chess.NET\resources\icons\themes\default\white\Pawn.png" Link="Resources\Images\themes\default\white\pawn_white.png" />
-		<MauiImage Include="..\Chess.NET\resources\icons\themes\default\white\Queen.png" Link="Resources\Images\themes\default\white\queen_white.png" />
-		<MauiImage Include="..\Chess.NET\resources\icons\themes\default\white\Rook.png" Link="Resources\Images\themes\default\white\rook_white.png" />
+		<MauiImage Include="..\Chess.NET.Shared\resources\icons\themes\default\white\Bishop.png" Link="Resources\Images\themes\default\white\bishop_white.png" />
+		<MauiImage Include="..\Chess.NET.Shared\resources\icons\themes\default\white\King.png" Link="Resources\Images\themes\default\white\king_white.png" />
+		<MauiImage Include="..\Chess.NET.Shared\resources\icons\themes\default\white\Knight.png" Link="Resources\Images\themes\default\white\knight_white.png" />
+		<MauiImage Include="..\Chess.NET.Shared\resources\icons\themes\default\white\Pawn.png" Link="Resources\Images\themes\default\white\pawn_white.png" />
+		<MauiImage Include="..\Chess.NET.Shared\resources\icons\themes\default\white\Queen.png" Link="Resources\Images\themes\default\white\queen_white.png" />
+		<MauiImage Include="..\Chess.NET.Shared\resources\icons\themes\default\white\Rook.png" Link="Resources\Images\themes\default\white\rook_white.png" />
 
-		<MauiImage Include="..\Chess.NET\resources\icons\themes\default\black\Bishop.png" Link="Resources\Images\themes\default\black\bishop_black.png" />
-		<MauiImage Include="..\Chess.NET\resources\icons\themes\default\black\King.png" Link="Resources\Images\themes\default\black\king_black.png" />
-		<MauiImage Include="..\Chess.NET\resources\icons\themes\default\black\Knight.png" Link="Resources\Images\themes\default\black\knight_black.png" />
-		<MauiImage Include="..\Chess.NET\resources\icons\themes\default\black\Pawn.png" Link="Resources\Images\themes\default\black\pawn_black.png" />
-		<MauiImage Include="..\Chess.NET\resources\icons\themes\default\black\Queen.png" Link="Resources\Images\themes\default\black\queen_black.png" />
-		<MauiImage Include="..\Chess.NET\resources\icons\themes\default\black\Rook.png" Link="Resources\Images\themes\default\black\rook_black.png" />
+		<MauiImage Include="..\Chess.NET.Shared\resources\icons\themes\default\black\Bishop.png" Link="Resources\Images\themes\default\black\bishop_black.png" />
+		<MauiImage Include="..\Chess.NET.Shared\resources\icons\themes\default\black\King.png" Link="Resources\Images\themes\default\black\king_black.png" />
+		<MauiImage Include="..\Chess.NET.Shared\resources\icons\themes\default\black\Knight.png" Link="Resources\Images\themes\default\black\knight_black.png" />
+		<MauiImage Include="..\Chess.NET.Shared\resources\icons\themes\default\black\Pawn.png" Link="Resources\Images\themes\default\black\pawn_black.png" />
+		<MauiImage Include="..\Chess.NET.Shared\resources\icons\themes\default\black\Queen.png" Link="Resources\Images\themes\default\black\queen_black.png" />
+		<MauiImage Include="..\Chess.NET.Shared\resources\icons\themes\default\black\Rook.png" Link="Resources\Images\themes\default\black\rook_black.png" />
 
 
 		<MauiAsset Include="..\Chess.NET\resources\sounds\capture.mp3" Link="Resources\Raw\%(Filename)%(Extension)" LogicalName="%(Filename)%(Extension)" />

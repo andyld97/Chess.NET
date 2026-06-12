@@ -9,5 +9,33 @@
 
 	<ItemGroup>
 		<PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="10.0.8" />
+		<PackageReference Include="SkiaSharp" Version="3.119.4" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <EmbeddedResource Include="resources\icons\themes\comic\black\Bishop.png" />
+	  <EmbeddedResource Include="resources\icons\themes\comic\black\King.png" />
+	  <EmbeddedResource Include="resources\icons\themes\comic\black\Knight.png" />
+	  <EmbeddedResource Include="resources\icons\themes\comic\black\Pawn.png" />
+	  <EmbeddedResource Include="resources\icons\themes\comic\black\Queen.png" />
+	  <EmbeddedResource Include="resources\icons\themes\comic\black\Rook.png" />
+	  <EmbeddedResource Include="resources\icons\themes\comic\white\Bishop.png" />
+	  <EmbeddedResource Include="resources\icons\themes\comic\white\King.png" />
+	  <EmbeddedResource Include="resources\icons\themes\comic\white\Knight.png" />
+	  <EmbeddedResource Include="resources\icons\themes\comic\white\Pawn.png" />
+	  <EmbeddedResource Include="resources\icons\themes\comic\white\Queen.png" />
+	  <EmbeddedResource Include="resources\icons\themes\comic\white\Rook.png" />
+	  <EmbeddedResource Include="resources\icons\themes\default\black\Bishop.png" />
+	  <EmbeddedResource Include="resources\icons\themes\default\black\King.png" />
+	  <EmbeddedResource Include="resources\icons\themes\default\black\Knight.png" />
+	  <EmbeddedResource Include="resources\icons\themes\default\black\Pawn.png" />
+	  <EmbeddedResource Include="resources\icons\themes\default\black\Queen.png" />
+	  <EmbeddedResource Include="resources\icons\themes\default\black\Rook.png" />
+	  <EmbeddedResource Include="resources\icons\themes\default\white\Bishop.png" />
+	  <EmbeddedResource Include="resources\icons\themes\default\white\King.png" />
+	  <EmbeddedResource Include="resources\icons\themes\default\white\Knight.png" />
+	  <EmbeddedResource Include="resources\icons\themes\default\white\Pawn.png" />
+	  <EmbeddedResource Include="resources\icons\themes\default\white\Queen.png" />
+	  <EmbeddedResource Include="resources\icons\themes\default\white\Rook.png" />
 	</ItemGroup>
 </Project>

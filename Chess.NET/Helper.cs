@@ -1,5 +1,6 @@
 ﻿using Chess.NET.Model;
 using Chess.NET.Shared.Model;
+using System.Reflection;
 using System.Windows;
 using System.Windows.Media.Imaging;
 
@@ -56,14 +57,11 @@ namespace Chess.NET
                 return value1;
 
             string col = (color == Color.White ? "white" : "black");
-            string appName = "Chess.NET";
-#if STORE
-            appName = "OpenChess";
-#endif
+            string key = $"Chess.NET.Shared.resources.icons.themes.{theme.ToString().ToLower()}.{col}.{pieceType}.png";
 
             BitmapImage bi = new BitmapImage { CacheOption = BitmapCacheOption.OnLoad };
             bi.BeginInit();
-            bi.UriSource = new Uri($"pack://application:,,,/{appName};component/resources/icons/themes/{theme.ToString().ToLower()}/{col}/{pieceType}.png");
+            bi.StreamSource = typeof(Chess.NET.Shared.Helper).Assembly.GetManifestResourceStream(key);
             bi.EndInit();
             bi.Freeze();
 

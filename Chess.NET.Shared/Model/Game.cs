@@ -1,5 +1,7 @@
 ﻿using Chess.NET.Shared.Model.Bot;
 using Chess.NET.Shared.Model.Pieces;
+using SkiaSharp;
+using System.Reflection;
 
 namespace Chess.NET.Shared.Model
 {
