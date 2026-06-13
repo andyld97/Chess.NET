@@ -412,6 +412,13 @@ namespace Chess.NET
         {
             Chessboard.Mirror();
             RefreshPlayerDisplay();
+
+
+#if DEBUG
+            
+            var test = new Chess.NET.Shared.Renderer(64, Chessboard.Game.Moves.LastOrDefault().From, Chessboard.Game.Moves.LastOrDefault().To).Render(Chessboard.Game.Board as Board, "default");
+            System.IO.File.WriteAllBytes(@"D:\board.png", test);
+#endif
         }
 
         private async void ButtonJumpToStart_Click(object sender, RoutedEventArgs e)

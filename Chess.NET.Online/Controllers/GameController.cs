@@ -1,6 +1,7 @@
 ﻿using Chess.NET.Online.Services;
 using Chess.NET.Shared.Model;
 using Microsoft.AspNetCore.Mvc;
+using System.Net.Http.Headers;
 
 namespace Chess.NET.Online.Controllers
 {
@@ -10,13 +11,23 @@ namespace Chess.NET.Online.Controllers
     {
         private readonly ILogger<GameController> _logger;
         private readonly IGameService _gameService;
+        private readonly IConfiguration _configuration;
         private readonly WebhookAPI.Webhook _webhook;
 
-        public GameController(ILogger<GameController> logger, IGameService gameService, WebhookAPI.Webhook webhook)
+        private readonly bool webHook_SendImages = false;
+        private readonly string webHook_ImageURL = string.Empty;    
+        private readonly string webHook_APIKey = string.Empty;
+
+        public GameController(ILogger<GameController> logger, IGameService gameService, WebhookAPI.Webhook webhook, IConfiguration configuration)
         {
             _logger = logger;
             _gameService = gameService;
             _webhook = webhook;
+            _configuration = configuration;
+
+            webHook_SendImages = configuration.GetValue<bool>("Webhook:Images:enabled");
+            webHook_ImageURL = configuration.GetValue<string>("Webhook:Images:url") ?? string.Empty;
+            webHook_APIKey = configuration.GetValue<string>("Webhook:Images:api-key") ?? string.Empty;
         }
 
         /// <summary>
@@ -116,7 +127,16 @@ namespace Chess.NET.Online.Controllers
 
                     _logger.LogInformation($"[{match.MatchId}]: Move {move} was made by {col}!");
 
-                    await _webhook.PostWebHookAsync(WebhookAPI.Webhook.LogLevel.Info, $"[{match}]: Move {move} was made by {col}!", "Chess");
+                    if (!webHook_SendImages)
+                        await _webhook.PostWebHookAsync(WebhookAPI.Webhook.LogLevel.Info, $"[{match}]: Move {move} was made by {col}!", "Chess");
+                    else
+                    {
+                        var lastMove = match.Game.Moves.LastOrDefault();
+                        var renderer = new Chess.NET.Shared.Renderer(64, lastMove?.From ?? null, lastMove?.To ?? null);
+                        var image = renderer.Render(match.Game.Board as Board, "default");
+
+                        _ = Task.Run(() => SendGameStatusAsync(image, $"{match}: {move}"));
+                    }
 
                     return Ok();
                 }
@@ -131,6 +151,29 @@ namespace Chess.NET.Online.Controllers
             finally
             {
                 match.MatchSemaphore.Release();
+            }
+        }
+
+        private async Task<HttpResponseMessage> SendGameStatusAsync(byte[] imageBytes, string text, string fileName = "image.png")
+        {
+            try
+            {
+                using var httpClient = new HttpClient();
+                httpClient.DefaultRequestHeaders.Add("X-API-KEY", webHook_APIKey);
+
+                using var content = new MultipartFormDataContent();
+
+                var imageContent = new ByteArrayContent(imageBytes);
+                imageContent.Headers.ContentType = new MediaTypeHeaderValue("image/png");
+                content.Add(imageContent, "image", fileName);
+                content.Add(new StringContent(text), "text");
+
+                return await httpClient.PostAsync(webHook_ImageURL, content);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Failed to send game status with image: {ex}");
+                return new HttpResponseMessage(System.Net.HttpStatusCode.InternalServerError);
             }
         }
     }
