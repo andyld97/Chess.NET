@@ -14,10 +14,18 @@ namespace Chess.NET.Android
     [Activity(Theme = "@style/Maui.SplashTheme", MainLauncher = true, LaunchMode = LaunchMode.SingleTop, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation | ConfigChanges.UiMode | ConfigChanges.ScreenLayout | ConfigChanges.SmallestScreenSize | ConfigChanges.Density)]
     public class MainActivity : MauiAppCompatActivity
     {
+        public static event Action? Paused;
+
         protected override void OnCreate(Bundle? savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
             StatusBarInsetsListener.SetStatusBarBackground(this);
+        }
+
+        protected override void OnPause()
+        {
+            base.OnPause();
+            Paused?.Invoke();
         }
     }
 

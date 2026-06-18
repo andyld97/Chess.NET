@@ -8,6 +8,8 @@ namespace Chess.NET.Shared.Netcode
         public static readonly string CLIENT_ID = Guid.NewGuid().ToString();
         private HubConnection? connection = null;
 
+        public HubConnection? Connection => connection;
+
         #region Events
 
         public delegate void onMatchFound(MatchInfo match);

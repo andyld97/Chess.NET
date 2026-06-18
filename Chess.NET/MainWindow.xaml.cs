@@ -352,8 +352,7 @@ namespace Chess.NET
                     playerWon = currentMatchInfo?.OpponentName ?? string.Empty;
 
                 currentMatchInfo = null;
-                ButtonRestart.IsEnabled = true;
-                isOnlineMatch = false;
+                ButtonRestart.IsEnabled = true;               
                 await _networkClient.DisconnectAsync();
 
                 await Task.Delay(50).ContinueWith(t =>
@@ -366,6 +365,7 @@ namespace Chess.NET
 
                         GameOverDialog gameOverDialog = new GameOverDialog(matchEnd.Result, matchEnd.ColorWins, playerWon) { Owner = this };
                         gameOverDialog.ShowDialog();
+                        isOnlineMatch = false;
                     });
                 });
             });

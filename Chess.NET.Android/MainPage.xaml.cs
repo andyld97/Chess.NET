@@ -3,6 +3,8 @@ using Chess.NET.Shared.Model;
 using Chess.NET.Shared.Model.Bot;
 using Chess.NET.Shared.Model.Online;
 using Chess.NET.Shared.Netcode;
+using Microsoft.AspNetCore.SignalR.Client;
+
 
 #if ANDROID
 using A = Android;
@@ -20,6 +22,33 @@ namespace Chess.NET.Android
             RefreshPlayerDisplay();
 
             Chessboard.Game.OnMovedPiece += Game_OnMovedPiece;
+#if ANDROID
+            MainActivity.Paused += MainActivity_Paused;
+#endif
+        }
+
+        private async void MainActivity_Paused()
+        {
+            if (isOnlineMatch && _networkClient != null)
+            {
+                try
+                {
+                    await _networkClient.DisconnectAsync();
+                }
+                catch
+                {
+
+                }
+                finally
+                {
+                    ButtonRestart.IsEnabled = true;
+                    ButtonResign.IsVisible = false;
+                    currentMatchInfo = null;
+                    client = null;
+                    ownPieceColor = null;
+                    _networkClient = null;
+                }
+            }
         }
 
         private void Game_OnMovedPiece(MoveNotation move)
@@ -29,7 +58,7 @@ namespace Chess.NET.Android
 
         #region Online Match
         private Client? client = null;
-        private SignalRClient _networkClient = null!; 
+        private SignalRClient? _networkClient = null!; 
         private Shared.Model.Color? ownPieceColor = null;
         private MatchInfo? currentMatchInfo = null;
         private bool isOnlineMatch = false;
@@ -142,7 +171,7 @@ namespace Chess.NET.Android
         private void _networkClient_OnMatchFound(MatchInfo match)
         {
             MainThread.BeginInvokeOnMainThread(async () =>
-            {                
+            {
                 ButtonRestart.IsEnabled = false;
                 ButtonResign.IsVisible = true;
                 isOnlineMatch = true;
