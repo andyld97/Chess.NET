@@ -28,7 +28,7 @@ namespace Chess.NET.Controls
         private bool canMove = false;
         private bool isNavigationAllowed = true;
         private bool isOnline = false;
-        private Shared.Model.Color playerOnlineColor = Shared.Model.Color.White;
+        private Shared.Model.Color? playerOnlineColor = null;
 
         public delegate void onMoveMadeOnline(MoveNotation moveNotation);
         public event onMoveMadeOnline? OnMoveMadeOnline;
@@ -95,6 +95,12 @@ namespace Chess.NET.Controls
         {
             isOnline = true;
             playerOnlineColor = pieceColor;
+        }
+
+        public void ResetOnline()
+        {
+            isOnline = false;
+            playerOnlineColor = null;
         }
 
         public void Mirror()

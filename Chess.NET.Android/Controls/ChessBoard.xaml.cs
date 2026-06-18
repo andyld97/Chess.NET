@@ -14,7 +14,7 @@ public partial class ChessBoard : ContentView
     private bool isMirrored = false;
     private bool ignoreTapping = false;
     private bool isOnline = false;
-    private Shared.Model.Color playerOnlineColor;
+    private Shared.Model.Color? playerOnlineColor = null;
 
     private Game game = new Game();
 
@@ -91,6 +91,13 @@ public partial class ChessBoard : ContentView
         isOnline = true;
         playerOnlineColor = pieceColor;
     }
+
+    public void ResetOnline()
+    {
+        isOnline = false;
+        playerOnlineColor = null;
+    }
+
 
     private async void Game_OnPlaySound(SoundType type)
     {

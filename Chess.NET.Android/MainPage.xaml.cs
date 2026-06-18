@@ -62,7 +62,7 @@ namespace Chess.NET.Android
         private Shared.Model.Color? ownPieceColor = null;
         private MatchInfo? currentMatchInfo = null;
         private bool isOnlineMatch = false;
-
+        private bool rotatedBoard = false;
         private WaitingQueueDialog waitingQueueDialog;
      
         private async Task StartOnlineMatchAsync()
@@ -131,7 +131,7 @@ namespace Chess.NET.Android
 
                 currentMatchInfo = null;
                 ButtonRestart.IsEnabled = true;
-                isOnlineMatch = false;
+                Chessboard.ResetOnline();
                 await _networkClient.DisconnectAsync();
 
                await Task.Delay(50).ContinueWith(t =>
@@ -149,6 +149,8 @@ namespace Chess.NET.Android
                        // TODO
                        /*GameOverDialog gameOverDialog = new GameOverDialog(matchEnd.Result, matchEnd.ColorWins, playerWon) { Owner = this };
                        gameOverDialog.ShowDialog();*/
+
+                       isOnlineMatch = false;
                    });
                });
 
@@ -180,14 +182,20 @@ namespace Chess.NET.Android
                 if (match.ClientColor == Chess.NET.Shared.Model.Color.Black)
                 {
                     if (!Chessboard.IsMirrored)
+                    {
                         Chessboard.Mirror();
+                        rotatedBoard = true;
+                    }
 
                     ownPieceColor = Shared.Model.Color.Black;
                 }
                 else
                 {
                     if (Chessboard.IsMirrored)
+                    {
                         Chessboard.Mirror();
+                        rotatedBoard = true;
+                    }
 
                     ownPieceColor = Shared.Model.Color.White;
                 }
@@ -208,6 +216,12 @@ namespace Chess.NET.Android
             await Navigation.PushModalAsync(dialog);
 
             var result = await dialog.WaitForResultAsync();
+
+            if (rotatedBoard)
+            {
+                rotatedBoard = false;
+                Chessboard.Mirror();
+            }
 
             if (result == 0)
             {

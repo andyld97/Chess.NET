@@ -194,6 +194,12 @@ namespace Chess.NET
             if (isOnlineMatch)
                 return;
 
+            if (rotatedBoard)
+            {
+                rotatedBoard = false;
+                Chessboard.Mirror();
+            }
+
             // First item should always stay in list
             for (int i = ListMoves.Items.Count - 1; i >= 1; i--)
                 ListMoves.Items.RemoveAt(i);
@@ -246,6 +252,7 @@ namespace Chess.NET
         private MatchInfo? currentMatchInfo = null;
         private Client? client = null;
         private bool isOnlineMatch = false;
+        private bool rotatedBoard = false;
 
         private async Task StartOnlineMatchAsync()
         {
@@ -305,14 +312,20 @@ namespace Chess.NET
                 if (match.ClientColor == Color.Black)
                 {
                     if (!Chessboard.IsMirrored)
+                    {
                         Chessboard.Mirror();
+                        rotatedBoard = true;
+                    }
 
                     ownPieceColor = Color.Black;
                 }
                 else
                 {
                     if (Chessboard.IsMirrored)
+                    {
                         Chessboard.Mirror();
+                        rotatedBoard = true;
+                    }
 
                     ownPieceColor = Color.White;
                 }
@@ -342,6 +355,7 @@ namespace Chess.NET
             await App.UiDispatcher.Invoke(async () =>
             {
                 Chessboard.DisablePieces();
+                Chessboard.ResetOnline();
                 ButtonResign.Visibility = Visibility.Collapsed;
 
                 string playerWon = string.Empty;
