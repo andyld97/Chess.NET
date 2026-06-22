@@ -5,6 +5,7 @@ using Chess.NET.Shared.Model;
 using Chess.NET.Shared.Model.Bot;
 using Chess.NET.Shared.Model.Online;
 using Chess.NET.Shared.Netcode;
+using System.Net.NetworkInformation;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;

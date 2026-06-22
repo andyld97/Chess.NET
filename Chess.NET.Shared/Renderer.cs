@@ -31,6 +31,12 @@ namespace Chess.NET.Shared
             IsAntialias = true
         };
 
+        private readonly SKPaint playerAreaBackground = new SKPaint
+        {
+            Color = new SKColor(92, 64, 51),
+            IsAntialias = true
+        };
+
         public Renderer(int squareSize = 64, Position? hightlightSquare1 =null, Position? hightlightSquare2 = null)
         {
             this.squareSize = squareSize;
@@ -38,17 +44,24 @@ namespace Chess.NET.Shared
             this.hightlightSquare2 = hightlightSquare2;
         }
 
-        public byte[] Render(Board board, string theme)
+        public byte[] Render(Board board, string theme, string player1Name, string player1Elo, string player2Name, string player2Elo)
         {
-            int size = boardSize * squareSize;
+            const int playerAreaOffset = 50;
 
-            using var bitmap = new SKBitmap(size, size);
+            int fieldSize = boardSize * squareSize;
+            int width = fieldSize;
+            int height = fieldSize + (2 * playerAreaOffset);
+
+            using var bitmap = new SKBitmap(width, height);
             using var canvas = new SKCanvas(bitmap);
 
             canvas.Clear(SKColors.Black);
 
-            DrawBoard(canvas);
-            DrawPieces(canvas, board, theme);
+            DrawBoard(canvas, playerAreaOffset);
+            DrawPieces(canvas, board, playerAreaOffset, theme);
+
+            DrawPlayerArea(canvas, width, 0, playerAreaOffset, player1Name, player1Elo);
+            DrawPlayerArea(canvas, width, height - playerAreaOffset, playerAreaOffset, player2Name, player2Elo);
 
             using var image = SKImage.FromBitmap(bitmap);
             using var data = image.Encode(SKEncodedImageFormat.Png, 100);
@@ -56,7 +69,25 @@ namespace Chess.NET.Shared
             return data.ToArray();
         }
 
-        private void DrawBoard(SKCanvas canvas)
+        private void DrawPlayerArea(SKCanvas canvas, int width, int yOffset, int playerAreaSize, string playerName, string playerElo)
+        {
+            const int margin = 5;
+        
+            canvas.DrawRect(new SKRect(0, yOffset, width, yOffset + playerAreaSize), playerAreaBackground);
+            
+            yOffset += margin;
+
+            using var font = new SKFont { Size = 16 };
+            using var paint = new SKPaint() { Color = SKColors.White, IsAntialias = true };
+
+            float nameBaseline = yOffset + font.Size;
+            float eloBaseline = nameBaseline + font.Size + 4;
+
+            canvas.DrawText(TruncateText(playerName, font, paint, width - (2 * margin)), new SKPoint(2 * margin, nameBaseline), font, paint);
+            canvas.DrawText(TruncateText($"Elo: {playerElo}", font, paint, width - (2 * margin)), new SKPoint(2 * margin, eloBaseline), font, paint);
+        }
+
+        private void DrawBoard(SKCanvas canvas, int yOffset)
         {
             for (int y = 0; y < boardSize; y++)
             {
@@ -68,14 +99,14 @@ namespace Chess.NET.Shared
                     pos = pos.Mirror();
 
                     if (pos == highlightSquare1 || pos == hightlightSquare2)
-                        canvas.DrawRect(x * squareSize, y * squareSize, squareSize, squareSize, highlightSquare);
+                        canvas.DrawRect(x * squareSize, yOffset + (y * squareSize), squareSize, squareSize, highlightSquare);
                     else 
-                        canvas.DrawRect(x * squareSize, y * squareSize, squareSize, squareSize, paint);
+                        canvas.DrawRect(x * squareSize, yOffset + (y * squareSize), squareSize, squareSize, paint);
                 }
             }
         }
 
-        private void DrawPieces(SKCanvas canvas, Board board, string theme)
+        private void DrawPieces(SKCanvas canvas, Board board, int yOffset, string theme)
         {
             var sampling = new SKSamplingOptions(SKFilterMode.Linear, SKMipmapMode.Linear);
             using var paint = new SKPaint(); 
@@ -86,8 +117,6 @@ namespace Chess.NET.Shared
                 {
                     var pos = new Position(x + 1, y + 1);
                     pos = pos.Mirror();
-
-                    Debug.WriteLine(pos.ToString());
 
                     var piece = board.GetPiece(pos);
                     if (piece == null) continue;
@@ -108,7 +137,7 @@ namespace Chess.NET.Shared
 
                     // Center piece
                     float offsetX = (squareSize - finalWidth) / 2f;
-                    float offsetY = (squareSize - finalHeight) / 2f;
+                    float offsetY = yOffset + ((squareSize - finalHeight) / 2f);
 
                     // Create final destination rectangle
                     var destRect = new SKRect(
@@ -147,6 +176,23 @@ namespace Chess.NET.Shared
             var asm = typeof(Renderer).Assembly;
             using var stream = asm.GetManifestResourceStream(resourceName) ?? throw new Exception($"Missing resource: {resourceName}");
             return SKBitmap.Decode(stream);
+        }
+
+        private static string TruncateText(string text, SKFont font, SKPaint paint, float maxWidth)
+        {
+            if (font.MeasureText(text, paint) <= maxWidth) return text;
+
+            string ellipsis = "...";
+            float ellipsisWidth = font.MeasureText(ellipsis, paint);
+
+            for (int i = text.Length - 1; i > 0; i--)
+            {
+                string candidate = text[..i];
+                if (font.MeasureText(candidate, paint) + ellipsisWidth <= maxWidth)
+                    return candidate + ellipsis;
+            }
+
+            return ellipsis;
         }
     }
 }

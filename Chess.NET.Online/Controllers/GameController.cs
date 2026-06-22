@@ -133,9 +133,9 @@ namespace Chess.NET.Online.Controllers
                     {
                         var lastMove = match.Game.Moves.LastOrDefault();
                         var renderer = new Chess.NET.Shared.Renderer(64, lastMove?.From ?? null, lastMove?.To ?? null);
-                        var image = renderer.Render(match.Game.Board as Board, "default");
+                        var image = renderer.Render(match.Game.Board as Board, "default", match.ClientWhite.PlayerName, match.ClientWhite.PlayerElo, match.ClientBlack.PlayerName, match.ClientBlack.PlayerElo);
 
-                        _ = Task.Run(() => SendGameStatusAsync(image, $"{match}: {move}"));
+                        _ = Task.Run(() => SendGameStatusAsync(image, $"{Math.Ceiling(match.Game.Moves.Count / 2.0)}. {move}"));
                     }
 
                     return Ok();
