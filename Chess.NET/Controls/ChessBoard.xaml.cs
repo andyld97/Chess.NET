@@ -47,6 +47,7 @@ namespace Chess.NET.Controls
 
         public void LoadPuzzle(Puzzle puzzle)
         {
+            game.Moves.Clear();
             game.LoadPuzzle(puzzle);
 
             RenderChessBoard(game.Board);

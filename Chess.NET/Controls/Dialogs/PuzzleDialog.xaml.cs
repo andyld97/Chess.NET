@@ -179,7 +179,7 @@ namespace Chess.NET.Controls.Dialogs
             Chessboard.LoadPuzzle(currentPuzzle);
             Chessboard.RenderChessBoard(Chessboard.Game.Board, false);
             Chessboard.DisableNavigation();
-            Chessboard.EnablePieces();
+            Chessboard.EnablePieces();         
             currentPuzzleMove = 0;
         }
 
