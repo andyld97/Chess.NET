@@ -60,8 +60,8 @@ namespace Chess.NET.Shared
             DrawBoard(canvas, playerAreaOffset);
             DrawPieces(canvas, board, playerAreaOffset, theme);
 
-            DrawPlayerArea(canvas, width, 0, playerAreaOffset, player1Name, player1Elo);
-            DrawPlayerArea(canvas, width, height - playerAreaOffset, playerAreaOffset, player2Name, player2Elo);
+            DrawPlayerArea(canvas, width, 0, playerAreaOffset, player2Name, player2Elo);
+            DrawPlayerArea(canvas, width, height - playerAreaOffset, playerAreaOffset, player1Name, player1Elo);
 
             using var image = SKImage.FromBitmap(bitmap);
             using var data = image.Encode(SKEncodedImageFormat.Png, 100);
