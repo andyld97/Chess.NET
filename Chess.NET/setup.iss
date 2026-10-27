@@ -7,7 +7,7 @@
 ; (To generate a new GUID, click Tools | Generate GUID inside the IDE.)
 AppId={{0B6B6EDD-4A0F-4E0C-BCEB-A0C638FF6C8E}
 AppName=Chess.NET
-AppVersion=1.0.3
+AppVersion=1.0.4
 AppPublisher=Code A Software
 AppPublisherURL=https://ca-soft.net/
 AppSupportURL=https://ca-soft.net/
@@ -42,6 +42,7 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 Source: "bin\Release\net10.0-windows\publish\Chess.NET.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "bin\Release\net10.0-windows\publish\de\*"; DestDir: "{app}\de"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "bin\Release\net10.0-windows\publish\resources\*"; DestDir: "{app}\resources"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "bin\Release\net10.0-windows\publish\runtimes\*"; DestDir: "{app}\resources"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "bin\Release\net10.0-windows\publish\Chess.NET.deps.json"; DestDir: "{app}"; Flags: ignoreversion
 Source: "bin\Release\net10.0-windows\publish\Chess.NET.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "bin\Release\net10.0-windows\publish\Chess.NET.exe"; DestDir: "{app}"; Flags: ignoreversion

@@ -16,12 +16,12 @@ namespace Chess.NET
         private void Application_Startup(object sender, StartupEventArgs e)
         {
             UiDispatcher = Dispatcher.CurrentDispatcher;
-#if DEBUG
+#if DEBUG || STORE
             // For english screenshots:
 
-            //var cultureInfoTest = new CultureInfo("en-US");
-            //Thread.CurrentThread.CurrentCulture =
-            //Thread.CurrentThread.CurrentUICulture = cultureInfoTest;
+             // var cultureInfoTest = new CultureInfo("en-US");
+             // Thread.CurrentThread.CurrentCulture =
+             //Thread.CurrentThread.CurrentUICulture = cultureInfoTest;
 #endif            
         }
     }
