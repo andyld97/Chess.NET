@@ -1,11 +1,11 @@
 ﻿using Chess.NET.Controls;
 using Chess.NET.Controls.Dialogs;
 using Chess.NET.Model;
+using Chess.NET.Shared;
 using Chess.NET.Shared.Model;
 using Chess.NET.Shared.Model.Bot;
 using Chess.NET.Shared.Model.Online;
 using Chess.NET.Shared.Netcode;
-using System.Net.NetworkInformation;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -51,6 +51,7 @@ namespace Chess.NET
             Chessboard.Game.OnMovedPiece += Game_MovedPiece;
             Chessboard.Game.OnGameOver += Game_OnGameOver;
             Chessboard.Game.OnPlaySound += Game_OnPlaySound;
+            Chessboard.Game.OnUpdatePlayerTime += Game_OnUpdatePlayerTime;
 
             // Assign commands
             MoveLeftCommand = new RelayCommand(async () => await Chessboard.ShowPreviousMoveAsync());
@@ -112,6 +113,58 @@ namespace Chess.NET
         #endregion
 
         #region Game Events
+
+        private void Game_OnUpdatePlayerTime(TimeSpan playerWhiteTime, TimeSpan playerBlackTime)
+        {
+            Application.Current?.Dispatcher?.Invoke(() =>
+            {
+                if (Chessboard.IsMirrored)
+                {
+                    TextPlayerTopTimeControl.Text = playerWhiteTime.ToString(@"mm\:ss");
+                    TextPlayerBottomTimeControl.Text = playerBlackTime.ToString(@"mm\:ss");
+                }
+                else
+                {
+                    TextPlayerTopTimeControl.Text = playerBlackTime.ToString(@"mm\:ss");
+                    TextPlayerBottomTimeControl.Text = playerWhiteTime.ToString(@"mm\:ss");
+                }
+
+                UpdatePlayerTurnColor();
+            });
+        }
+
+        private void UpdatePlayerTurnColor()
+        {
+            if (Chessboard.Game.PlayersTurn == Color.White)
+            {
+                if (Chessboard.IsMirrored)
+                {
+                    // White is on top
+                    BorderTimeControlTop.Background = (System.Windows.Media.SolidColorBrush)FindResource("PlayerTimeColor");
+                    BorderTimeControlBottom.Background = (System.Windows.Media.SolidColorBrush)FindResource("PlayerTimeDefaultColor");
+                }
+                else
+                {
+                    BorderTimeControlTop.Background = (System.Windows.Media.SolidColorBrush)FindResource("PlayerTimeDefaultColor");
+                    BorderTimeControlBottom.Background = (System.Windows.Media.SolidColorBrush)FindResource("PlayerTimeColor");
+                }
+            }
+            else
+            {
+                if (Chessboard.IsMirrored)
+                {
+                    // White is on top
+                    BorderTimeControlBottom.Background = (System.Windows.Media.SolidColorBrush)FindResource("PlayerTimeColor");
+                    BorderTimeControlTop.Background = (System.Windows.Media.SolidColorBrush)FindResource("PlayerTimeDefaultColor");
+                }
+                else
+                {
+                    BorderTimeControlBottom.Background = (System.Windows.Media.SolidColorBrush)FindResource("PlayerTimeDefaultColor");
+                    BorderTimeControlTop.Background = (System.Windows.Media.SolidColorBrush)FindResource("PlayerTimeColor");
+                }
+            }
+        }
+
         private async void Game_OnGameOver(GameResult result, Color? colorWon)
         {
             if (isOnlineMatch)
@@ -332,7 +385,7 @@ namespace Chess.NET
                 }
 
                 currentMatchInfo = match;
-                Chessboard.Game.StartNewGame(null);
+                Chessboard.Game.StartNewGame(null, true);
                 Chessboard.SetOnline(ownPieceColor.Value);
                 RefreshPlayerDisplay();
             });
@@ -451,127 +504,39 @@ namespace Chess.NET
 
         private void RefreshPlayerDisplay()
         {
-            // TODO: Wenn in NavigationMode muss das auch nochmal aufgerufen werden, aber dann seine Infos von dem "anderen" Game beziehen.
             var playerInfo = Chessboard.Game.GetPlayerInformation();
+            string ownName = Helper.GetPlayerName(1);
+            string ownElo = PlayerDisplayHelper.FormatElo(Settings.Instance.Player1Elo);
 
-            static string formatElo(int? value)
-            {
-                if (value == null)
-                    return "Elo: ????";
-                else
-                    return $"Elo: {value:D4}";
-            }
-
-            static string formatPlayerElo(string? value)
-            {
-                if (string.IsNullOrEmpty(value))
-                    return "Elo: ????";
-
-                return $"Elo: {value}";
-            }
-
-            string playerTopName = string.Empty;
-            string playerTopElo = string.Empty;
-            string playerBottomName = string.Empty;
-            string playerBottomElo = string.Empty;
-
+            string otherName, otherElo;
             if (isOnlineMatch)
             {
-                if (!Chessboard.IsMirrored)
-                {
-                    if (ownPieceColor == Color.White)
-                    {
-                        playerTopName = currentMatchInfo?.OpponentName ?? string.Empty;
-                        playerTopElo = formatPlayerElo(currentMatchInfo?.OpponentElo ?? string.Empty);
-
-                        playerBottomName = Helper.GetPlayerName(1);
-                        playerBottomElo = formatPlayerElo(Settings.Instance.Player1Elo);
-                    }
-                    else
-                    {
-                        playerBottomName = currentMatchInfo?.OpponentName ?? string.Empty;
-                        playerBottomElo = formatPlayerElo(currentMatchInfo?.OpponentElo ?? string.Empty);
-
-                        playerTopName = Helper.GetPlayerName(1);
-                        playerTopElo = formatPlayerElo(Settings.Instance.Player1Elo);
-                    }
-                }
-                else
-                {
-                    if (ownPieceColor == Color.White)
-                    {
-                        playerTopName = Helper.GetPlayerName(1);
-                        playerTopElo = formatPlayerElo(Settings.Instance.Player1Elo);
-
-                        playerBottomName = currentMatchInfo?.OpponentName ?? string.Empty;
-                        playerBottomElo = formatPlayerElo(currentMatchInfo?.OpponentElo ?? string.Empty);
-                    }
-                    else
-                    {
-                        playerBottomName = Helper.GetPlayerName(1);
-                        playerBottomElo = formatPlayerElo(Settings.Instance.Player1Elo);
-
-                        playerTopName = currentMatchInfo?.OpponentName ?? string.Empty;
-                        playerTopElo = formatPlayerElo(currentMatchInfo?.OpponentElo ?? string.Empty);
-                    }
-                }
+                otherName = currentMatchInfo?.OpponentName ?? string.Empty;
+                otherElo = PlayerDisplayHelper.FormatElo(currentMatchInfo?.OpponentElo);
             }
             else if (opponent is not null)
             {
-                // Bot
-                if (!Chessboard.IsMirrored)
-                {
-                    playerTopName = $"{opponent.Name} (Bot)";               
-                    playerTopElo = formatElo(opponent.Elo);
-
-                    playerBottomName = Helper.GetPlayerName(1);
-                    playerBottomElo = formatPlayerElo(Settings.Instance.Player1Elo);
-                }
-                else
-                {
-                    playerTopName = Helper.GetPlayerName(1);
-                    playerTopElo = formatPlayerElo(Settings.Instance.Player1Elo);
-
-                    playerBottomName = $"{opponent.Name} (Bot)";
-                    playerBottomElo = formatElo(opponent.Elo);
-                }
+                otherName = $"{opponent.Name} (Bot)";
+                otherElo = PlayerDisplayHelper.FormatElo(opponent.Elo);
             }
             else
             {
-                // Player 2
-                if (!Chessboard.IsMirrored)
-                {
-                    playerTopName = Helper.GetPlayerName(2);
-                    playerTopElo = formatPlayerElo(Settings.Instance.Player2Elo);
-
-                    playerBottomName = Helper.GetPlayerName(1);
-                    playerBottomElo = formatPlayerElo(Settings.Instance.Player1Elo);
-                }
-                else
-                {
-                    playerTopName = Helper.GetPlayerName(1);
-                    playerTopElo = formatPlayerElo(Settings.Instance.Player1Elo);
-
-                    playerBottomName = Helper.GetPlayerName(2);
-                    playerBottomElo = formatPlayerElo(Settings.Instance.Player2Elo);
-                }
+                otherName = Helper.GetPlayerName(2);
+                otherElo = PlayerDisplayHelper.FormatElo(Settings.Instance.Player2Elo);
             }
 
-            TextPlayerTopName.Text = playerTopName;
-            TextPlayerTopElo.Text = playerTopElo;
-            TextPlayerBottomName.Text = playerBottomName;
-            TextPlayerBottomElo.Text = playerBottomElo;
+            var d = PlayerDisplayHelper.GetPlayerDisplay(ownName, ownElo, otherName, otherElo, Chessboard.IsMirrored, isOnlineMatch && ownPieceColor == Shared.Model.Color.Black, playerInfo.GetWhite(), playerInfo.GetBlack(), Chessboard.Game.PlayerWhiteTime, Chessboard.Game.PlayerBlackTime);
 
-            if (Chessboard.IsMirrored)
-            {
-                TextPlayerInfoTop.Text = playerInfo.GetWhite();
-                TextPlayerInfoBottom.Text = playerInfo.GetBlack();
-            }
-            else
-            {
-                TextPlayerInfoTop.Text = playerInfo.GetBlack();
-                TextPlayerInfoBottom.Text = playerInfo.GetWhite();
-            }
+            TextPlayerTopName.Text = d.TopName;
+            TextPlayerTopElo.Text = d.TopElo;
+            TextPlayerInfoTop.Text = d.TopInfo;
+            TextPlayerBottomName.Text = d.BottomName;
+            TextPlayerBottomElo.Text = d.BottomElo;
+            TextPlayerInfoBottom.Text = d.BottomInfo;
+            TextPlayerTopTimeControl.Text = d.TopTime.ToString(@"mm\:ss");
+            TextPlayerBottomTimeControl.Text = d.TimeBottom.ToString(@"mm\:ss");
+
+            UpdatePlayerTurnColor();
         }
 
         #region Menu

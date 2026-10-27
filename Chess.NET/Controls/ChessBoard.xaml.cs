@@ -445,44 +445,47 @@ namespace Chess.NET.Controls
             if (isPuzzle)
                 return;
 
-            // Rotate king(s)
-            if (colorWon != null && (result == GameResult.Checkmate || result == GameResult.Resign))
+            Dispatcher?.Invoke(() =>
             {
-                var king = game.Board.Pieces.FirstOrDefault(p => p.Type == PieceType.King && p.Color == colorWon.Value.InvertColor());
-                if (king == null)
+                // Rotate king(s)
+                if (colorWon != null && (result == GameResult.Checkmate || result == GameResult.Resign))
+                {
+                    var king = game.Board.Pieces.FirstOrDefault(p => p.Type == PieceType.King && p.Color == colorWon.Value.InvertColor());
+                    if (king == null)
+                        return;
+
+                    var kingSquare = _squares[king.Position.File - 1, king.Position.Rank - 1];
+                    var border = kingSquare.Border;
+
+                    border.RenderTransformOrigin = new Point(0.5, 0.5);
+                    border.RenderTransform = new RotateTransform(180);
+
+                    rotatedBorders.Add(border);
+                    return;
+                }
+
+                // Rotate both kings since its a draw
+                var kingWhite = game.Board.Pieces.FirstOrDefault(p => p.Type == PieceType.King && p.Color == Shared.Model.Color.White);
+                var kingBlack = game.Board.Pieces.FirstOrDefault(p => p.Type == PieceType.King && p.Color == Shared.Model.Color.Black);
+                if (kingWhite == null || kingBlack == null)
                     return;
 
-                var kingSquare = _squares[king.Position.File - 1, king.Position.Rank - 1];
-                var border = kingSquare.Border;
+                var kingSquareWhite = _squares[kingWhite.Position.File - 1, kingWhite.Position.Rank - 1];
+                var borderKingWite = kingSquareWhite.Border;
 
-                border.RenderTransformOrigin = new Point(0.5, 0.5);
-                border.RenderTransform = new RotateTransform(180);
-
-                rotatedBorders.Add(border);    
-                return;
-            }
-
-            // Rotate both kings since its a draw
-            var kingWhite = game.Board.Pieces.FirstOrDefault(p => p.Type == PieceType.King && p.Color ==  Shared.Model.Color.White);
-            var kingBlack = game.Board.Pieces.FirstOrDefault(p => p.Type == PieceType.King && p.Color == Shared.Model.Color.Black);
-            if (kingWhite == null || kingBlack == null)
-                return;
-
-            var kingSquareWhite = _squares[kingWhite.Position.File - 1, kingWhite.Position.Rank - 1];
-            var borderKingWite = kingSquareWhite.Border;
-
-            borderKingWite.RenderTransformOrigin = new Point(0.5, 0.5);
-            borderKingWite.RenderTransform = new RotateTransform(180);
+                borderKingWite.RenderTransformOrigin = new Point(0.5, 0.5);
+                borderKingWite.RenderTransform = new RotateTransform(180);
 
 
-            var kingSquareBlack = _squares[kingBlack.Position.File - 1, kingBlack.Position.Rank - 1];
-            var borderKingBlack = kingSquareBlack.Border;
+                var kingSquareBlack = _squares[kingBlack.Position.File - 1, kingBlack.Position.Rank - 1];
+                var borderKingBlack = kingSquareBlack.Border;
 
-            borderKingBlack.RenderTransformOrigin = new Point(0.5, 0.5);
-            borderKingBlack.RenderTransform = new RotateTransform(180);
+                borderKingBlack.RenderTransformOrigin = new Point(0.5, 0.5);
+                borderKingBlack.RenderTransform = new RotateTransform(180);
 
-            rotatedBorders.Add(borderKingWite);
-            rotatedBorders.Add(borderKingBlack);
+                rotatedBorders.Add(borderKingWite);
+                rotatedBorders.Add(borderKingBlack);
+            });
         }
 
 

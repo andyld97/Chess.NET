@@ -4,6 +4,7 @@
              xmlns:local="clr-namespace:Chess.NET"
              StartupUri="MainWindow.xaml" Startup="Application_Startup">
     <Application.Resources>
-         
+        <SolidColorBrush x:Key="PlayerTimeDefaultColor" Color="#FF5C5A5A" />
+        <SolidColorBrush x:Key="PlayerTimeColor" Color="#2B2B2B" />
     </Application.Resources>
 </Application>

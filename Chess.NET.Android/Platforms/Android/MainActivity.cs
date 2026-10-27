@@ -67,5 +67,4 @@ namespace Chess.NET.Android
             controller.AppearanceLightStatusBars = false; // false = weiße Icons
         }
     }
-
 }

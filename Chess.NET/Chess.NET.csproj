@@ -8,8 +8,8 @@
 		<UseWPF>true</UseWPF>
 		<Copyright>Chess.NET © 2026</Copyright>
 		<ApplicationIcon>icon.ico</ApplicationIcon>
-		<AssemblyVersion>1.0.3</AssemblyVersion>
-		<FileVersion>1.0.3</FileVersion>
+		<AssemblyVersion>1.0.4</AssemblyVersion>
+		<FileVersion>1.0.4</FileVersion>
 		<Company>Code A Software</Company>
 		<ApplicationManifest>app.manifest</ApplicationManifest>
 		<Configurations>Debug;Release;Store</Configurations>
@@ -70,7 +70,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="10.0.10" />
+		<PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="10.0.14" />
 	</ItemGroup>
 
 	<ItemGroup>

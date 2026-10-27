@@ -36,4 +36,11 @@
         Abstract,
         AbstractPurple
     }
+
+    public enum TimeControl
+    {
+        Bullet1, 
+        Blitz3,
+        Blitz10
+    }
 }

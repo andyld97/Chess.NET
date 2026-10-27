@@ -1,4 +1,5 @@
 ﻿using Chess.NET.Android.Controls.Dialogs;
+using Chess.NET.Shared;
 using Chess.NET.Shared.Model;
 using Chess.NET.Shared.Model.Bot;
 using Chess.NET.Shared.Model.Online;
@@ -201,7 +202,7 @@ namespace Chess.NET.Android
                 }
 
                 currentMatchInfo = match;
-                Chessboard.Game.StartNewGame(null);
+                Chessboard.Game.StartNewGame(null, true);
                 Chessboard.RenderChessBoard(Chessboard.Game.Board, false);
                 Chessboard.SetOnline(ownPieceColor.Value);
                 RefreshPlayerDisplay();
@@ -271,125 +272,34 @@ namespace Chess.NET.Android
         private void RefreshPlayerDisplay()
         {
             var playerInfo = Chessboard.Game.GetPlayerInformation();
+            string ownName = Helper.GetPlayerName(1);
+            string ownElo = PlayerDisplayHelper.FormatElo(Settings.Instance.Player1Elo);
 
-            static string formatElo(int? value)
-            {
-                if (value == null)
-                    return "Elo: ????";
-                else
-                    return $"Elo: {value:D4}";
-            }
-
-            static string formatPlayerElo(string? value)
-            {
-                if (string.IsNullOrEmpty(value))
-                    return "Elo: ????";
-
-                return $"Elo: {value}";
-            }
-
-            string playerTopName = string.Empty;
-            string playerTopElo = string.Empty;
-            string playerBottomName = string.Empty;
-            string playerBottomElo = string.Empty;
-
+            string otherName, otherElo;
             if (isOnlineMatch)
             {
-                if (!Chessboard.IsMirrored)
-                {
-                    if (ownPieceColor == Shared.Model.Color.White)
-                    {
-                        playerTopName = currentMatchInfo?.OpponentName ?? string.Empty;
-                        playerTopElo = formatPlayerElo(currentMatchInfo?.OpponentElo ?? string.Empty);
-
-                        playerBottomName = Helper.GetPlayerName(1);
-                        playerBottomElo = formatPlayerElo(Settings.Instance.Player1Elo);
-                    }
-                    else
-                    {
-                        playerBottomName = currentMatchInfo?.OpponentName ?? string.Empty;
-                        playerBottomElo = formatPlayerElo(currentMatchInfo?.OpponentElo ?? string.Empty);
-
-                        playerTopName = Helper.GetPlayerName(1);
-                        playerTopElo = formatPlayerElo(Settings.Instance.Player1Elo);
-                    }
-                }
-                else
-                {
-                    if (ownPieceColor == Shared.Model.Color.White)
-                    {
-                        playerTopName = Helper.GetPlayerName(1);
-                        playerTopElo = formatPlayerElo(Settings.Instance.Player1Elo);
-
-                        playerBottomName = currentMatchInfo?.OpponentName ?? string.Empty;
-                        playerBottomElo = formatPlayerElo(currentMatchInfo?.OpponentElo ?? string.Empty);
-                    }
-                    else
-                    {
-                        playerBottomName = Helper.GetPlayerName(1);
-                        playerBottomElo = formatPlayerElo(Settings.Instance.Player1Elo);
-
-                        playerTopName = currentMatchInfo?.OpponentName ?? string.Empty;
-                        playerTopElo = formatPlayerElo(currentMatchInfo?.OpponentElo ?? string.Empty);
-                    }
-                }
+                otherName = currentMatchInfo?.OpponentName ?? string.Empty;
+                otherElo = PlayerDisplayHelper.FormatElo(currentMatchInfo?.OpponentElo);
             }
             else if (opponent is not null)
             {
-                // Bot
-                if (!Chessboard.IsMirrored)
-                {
-                    playerTopName = $"{opponent.Name} (Bot)";
-                    playerTopElo = formatElo(opponent.Elo);
-
-                    playerBottomName = Helper.GetPlayerName(1);
-                    playerBottomElo = formatPlayerElo(Settings.Instance.Player1Elo);
-                }
-                else
-                {
-                    playerTopName = Helper.GetPlayerName(1);
-                    playerTopElo = formatPlayerElo(Settings.Instance.Player1Elo);
-
-                    playerBottomName = $"{opponent.Name} (Bot)";
-                    playerBottomElo = formatElo(opponent.Elo);
-                }
+                otherName = $"{opponent.Name} (Bot)";
+                otherElo = PlayerDisplayHelper.FormatElo(opponent.Elo);
             }
             else
             {
-                // Player 2
-                if (!Chessboard.IsMirrored)
-                {
-                    playerTopName = Helper.GetPlayerName(2);
-                    playerTopElo = formatPlayerElo(Settings.Instance.Player2Elo);
-
-                    playerBottomName = Helper.GetPlayerName(1);
-                    playerBottomElo = formatPlayerElo(Settings.Instance.Player1Elo);
-                }
-                else
-                {
-                    playerTopName = Helper.GetPlayerName(1);
-                    playerTopElo = formatPlayerElo(Settings.Instance.Player1Elo);
-
-                    playerBottomName = Helper.GetPlayerName(2);
-                    playerBottomElo = formatPlayerElo(Settings.Instance.Player2Elo);
-                }
+                otherName = Helper.GetPlayerName(2);
+                otherElo = PlayerDisplayHelper.FormatElo(Settings.Instance.Player2Elo);
             }
 
-            TextPlayerTopName.Text = playerTopName;
-            TextPlayerTopElo.Text = playerTopElo;
-            TextPlayerBottomName.Text = playerBottomName;
-            TextPlayerBottomElo.Text = playerBottomElo;
+            var d = PlayerDisplayHelper.GetPlayerDisplay(ownName, ownElo, otherName, otherElo, Chessboard.IsMirrored, isOnlineMatch && ownPieceColor == Shared.Model.Color.Black, playerInfo.GetWhite(), playerInfo.GetBlack());
 
-            if (Chessboard.IsMirrored)
-            {
-                TextPlayerInfoTop.Text = playerInfo.GetWhite();
-                TextPlayerInfoBottom.Text = playerInfo.GetBlack(); 
-            }
-            else
-            {
-                TextPlayerInfoTop.Text = playerInfo.GetBlack();
-                TextPlayerInfoBottom.Text = playerInfo.GetWhite();
-            }
+            TextPlayerTopName.Text = d.TopName;
+            TextPlayerTopElo.Text = d.TopElo;
+            TextPlayerInfoTop.Text = d.TopInfo;
+            TextPlayerBottomName.Text = d.BottomName;
+            TextPlayerBottomElo.Text = d.BottomElo;
+            TextPlayerInfoBottom.Text = d.BottomInfo;
         }
 
         private async void ButtonResign_Clicked(object sender, EventArgs e)

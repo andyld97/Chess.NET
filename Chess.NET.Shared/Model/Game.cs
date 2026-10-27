@@ -1,7 +1,6 @@
 ﻿using Chess.NET.Shared.Model.Bot;
 using Chess.NET.Shared.Model.Pieces;
-using SkiaSharp;
-using System.Reflection;
+using System.Reflection.Emit;
 
 namespace Chess.NET.Shared.Model
 {
@@ -14,8 +13,12 @@ namespace Chess.NET.Shared.Model
         private IChessBot? opponent = null;
 
         private bool hasWhiteCastled = false;
+
         private bool hasBlackCastled = false;
+
         private bool isPuzzle = false;
+
+        private bool isOnlineGame = false;
 
         #endregion
 
@@ -28,7 +31,10 @@ namespace Chess.NET.Shared.Model
         public event onPlaySound? OnPlaySound;
 
         public delegate void onGameOver(GameResult result, Color? colorWon);
-        public event onGameOver? OnGameOver;    
+        public event onGameOver? OnGameOver;
+
+        public delegate void onUpdatePlayerTime(TimeSpan playerWhiteTime, TimeSpan playerBlackTime);
+        public event onUpdatePlayerTime? OnUpdatePlayerTime;
 
         #endregion
 
@@ -49,7 +55,7 @@ namespace Chess.NET.Shared.Model
         public bool IsEnPassant(Color color, Piece piece, Position position)
         {
             if (piece.Type != PieceType.Pawn)
-                return false;            
+                return false;
 
             // Ideen für Bedinungen um EN PASSANT zu ermitteln:
             // - Letzter Zug muss ein Bauern-Zug mit 2 Schritten gewesen sein!
@@ -179,7 +185,7 @@ namespace Chess.NET.Shared.Model
                 (m.From == new Position(1, 1) && color == Color.White) ||
                 (m.From == new Position(1, 8) && color == Color.Black)
             ));
-            
+
             bool hasRightRookMoved = Moves.Any(m => m.Piece.Type == PieceType.Rook && m.Piece.Color == color &&
             (
                 (m.From == new Position(8, 1) && color == Color.White) ||
@@ -423,7 +429,7 @@ namespace Chess.NET.Shared.Model
                     : lastMove.To.Rank + 1;
 
                 enPassantSquare = new Position(file, rank);
-            }      
+            }
 
             ChessPosition currentPosition = new ChessPosition
             {
@@ -436,7 +442,7 @@ namespace Chess.NET.Shared.Model
                 EnPassantSquare = enPassantSquare
             };
 
-           positions.Add(currentPosition);  
+            positions.Add(currentPosition);
         }
 
         private string GetPiecesHashSha()
@@ -490,7 +496,7 @@ namespace Chess.NET.Shared.Model
 
         public bool Move(PendingMove? nxtMove, bool playSound = true)
         {
-            if (nxtMove == null) 
+            if (nxtMove == null)
                 return false;
 
             var piece = nxtMove.Piece;
@@ -650,6 +656,7 @@ namespace Chess.NET.Shared.Model
                     _ = DelaySoundPlay(SoundType.Checkmate);
                 }
 
+                RefreshTimeControlAfterMove();
                 return true;
             }
             else if (IsStalemate(Color.White) || IsStalemate(Color.Black))
@@ -663,6 +670,7 @@ namespace Chess.NET.Shared.Model
                 if (playSound)
                     OnPlaySound?.Invoke(SoundType.Stalemate);
 
+                RefreshTimeControlAfterMove();
                 return true;
             }
             else if (willBeCheck && playSound)
@@ -682,7 +690,9 @@ namespace Chess.NET.Shared.Model
             CheckFiftyMoveRule();
 
             // Check for threefold repition!
-            CheckThreefoldRepition();            
+            CheckThreefoldRepition();
+
+            RefreshTimeControlAfterMove();
 
             return true;
         }
@@ -704,9 +714,150 @@ namespace Chess.NET.Shared.Model
 
         #endregion
 
+        #region TimeControl 
+
+
+        #region TimeControl Variables
+
+        private bool isTimeControlInitialized = false;
+        private TimeControl timeControl;
+        private DateTime lastMoveDT = DateTime.MinValue;
+
+        private TimeSpan playerWhiteTime = TimeSpan.Zero;
+
+        public TimeSpan PlayerWhiteTime => playerWhiteTime;
+
+        public TimeSpan PlayerBlackTime => playerBlackTime;
+
+        private TimeSpan playerBlackTime = TimeSpan.Zero;
+
+        private System.Timers.Timer gameTimeControlTimer = new System.Timers.Timer() { Interval = 200 };
+
+        #endregion
+
+        private void InitializeTimeControl()
+        {
+            if (isPuzzle)
+                return;
+
+            playerWhiteTime = GetTime(timeControl);
+            playerBlackTime = GetTime(timeControl);
+
+            lastMoveDT = DateTime.Now;
+            gameTimeControlTimer.Elapsed += GameTimeControlTimer_Elapsed;
+            gameTimeControlTimer.Start();
+            isTimeControlInitialized = true;
+        }
+
+        private void GameTimeControlTimer_Elapsed(object? sender, System.Timers.ElapsedEventArgs e)
+        {
+            HandleTimeControl();
+        }
+
+        private void HandleTimeControl()
+        {
+            if (IsGameOver)
+            {
+                ResetTimeControl(true);
+                return;
+            }
+
+            TimeSpan sdw, sdb;
+
+            if (PlayersTurn == Color.White)
+            {
+                // White's turn
+                
+                sdb = playerBlackTime;
+                sdw = playerWhiteTime - (DateTime.Now - lastMoveDT);
+
+                if (sdw <= TimeSpan.Zero && !isOnlineGame)
+                {
+                    IsGameOver = true;
+                    ResetTimeControl(true);
+                    OnGameOver?.Invoke(GameResult.Timeout, Color.Black);
+                }
+            }
+            else
+            {
+                // Black's turn
+                sdw = playerWhiteTime;
+                sdb = playerBlackTime - (DateTime.Now - lastMoveDT);
+
+                if (sdb <= TimeSpan.Zero && !isOnlineGame)
+                {
+                    IsGameOver = true;
+                    ResetTimeControl(true);
+                    OnGameOver?.Invoke(GameResult.Timeout, Color.White);                    
+                }
+            }
+
+            OnUpdatePlayerTime?.Invoke(sdw, sdb);   
+        }
+
+        private void RefreshTimeControlAfterMove()
+        {
+            if (isPuzzle)
+                return;
+
+            if (!isTimeControlInitialized)
+                InitializeTimeControl();
+
+            var now = DateTime.Now;
+
+            if (PlayersTurn == Color.White)
+            {
+                // White's turn (previously black's turn)
+                playerBlackTime -= (now - lastMoveDT);
+
+                if (playerBlackTime < TimeSpan.Zero)
+                    playerBlackTime = TimeSpan.Zero;
+            }
+            else
+            {
+                // Black's turn (previously white's turn)
+                playerWhiteTime -= (now - lastMoveDT);
+
+                if (playerWhiteTime < TimeSpan.Zero)
+                    playerWhiteTime = TimeSpan.Zero;
+            }
+
+            lastMoveDT = now;
+            OnUpdatePlayerTime?.Invoke(playerWhiteTime, playerBlackTime);
+        }
+
+        private void ResetTimeControl(bool keepTime = false)
+        {
+            if (!keepTime)
+            {
+                playerWhiteTime = GetTime(timeControl);
+                playerBlackTime = GetTime(timeControl);
+            }
+
+            // Stop the timer
+            gameTimeControlTimer.Stop();
+            gameTimeControlTimer.Elapsed -= GameTimeControlTimer_Elapsed;
+
+            OnUpdatePlayerTime?.Invoke(playerWhiteTime, playerBlackTime);
+            isTimeControlInitialized = false;
+        }
+
+        private static TimeSpan GetTime(TimeControl timeControl)
+        {
+            return timeControl switch
+            {
+                TimeControl.Bullet1 => TimeSpan.FromMinutes(1),
+                TimeControl.Blitz3 => TimeSpan.FromMinutes(3),
+                TimeControl.Blitz10 => TimeSpan.FromMinutes(10),
+                _ => throw new ArgumentOutOfRangeException(nameof(timeControl), $"Not expected time control value: {timeControl}"),
+            };
+        }
+
+        #endregion
+
         #region Other
 
-        public void StartNewGame(IChessBot? opponent)
+        public void StartNewGame(IChessBot? opponent, bool isOnlineGame = false, TimeControl timeControl = TimeControl.Blitz10) // Currently fixed to 10 minutes
         {
             board.Reset();
             positions.Clear();
@@ -716,6 +867,12 @@ namespace Chess.NET.Shared.Model
             hasWhiteCastled = false;
             hasBlackCastled = false;
             this.opponent = opponent;
+            this.timeControl = timeControl;
+            this.isOnlineGame = isOnlineGame;
+
+            var time = GetTime(timeControl);
+            OnUpdatePlayerTime?.Invoke(time, time);
+            ResetTimeControl();
         }
 
         public void Resign(Color color, bool isDisconnect = false)

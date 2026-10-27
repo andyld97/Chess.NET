@@ -37,7 +37,7 @@ namespace Chess.NET.Controls.Dialogs
             {
                 GridWin.Visibility = Visibility.Collapsed;
                 GridDraw.Visibility = Visibility.Visible;
-                Width = 430;
+                Width = 630;
 
                 ImgKingWhite.Source = PieceType.King.ToBitmap(Color.White, Settings.Instance.Theme);
                 ImgKingBlack.Source = PieceType.King.ToBitmap(Color.Black, Settings.Instance.Theme);
