@@ -6,7 +6,6 @@ using Chess.NET.Shared.Model.Online;
 using Chess.NET.Shared.Netcode;
 using Microsoft.AspNetCore.SignalR.Client;
 
-
 #if ANDROID
 using A = Android;
 #endif
@@ -23,6 +22,7 @@ namespace Chess.NET.Android
             RefreshPlayerDisplay();
 
             Chessboard.Game.OnMovedPiece += Game_OnMovedPiece;
+            Chessboard.Game.OnUpdatePlayerTime += Game_OnUpdatePlayerTime;
 #if ANDROID
             MainActivity.Paused += MainActivity_Paused;
 #endif
@@ -50,6 +50,34 @@ namespace Chess.NET.Android
                     _networkClient = null;
                 }
             }
+        }
+
+        private void Game_OnUpdatePlayerTime(TimeSpan playerWhiteTime, TimeSpan playerBlackTime)
+        {
+            MainThread.BeginInvokeOnMainThread(() =>            
+            {
+                if (Chessboard.IsMirrored)
+                {
+                    TextPlayerTopTimeControl.Text = playerWhiteTime.ToString(@"mm\:ss");
+                    TextPlayerBottomTimeControl.Text = playerBlackTime.ToString(@"mm\:ss");
+                }
+                else
+                {
+                    TextPlayerTopTimeControl.Text = playerBlackTime.ToString(@"mm\:ss");
+                    TextPlayerBottomTimeControl.Text = playerWhiteTime.ToString(@"mm\:ss");
+                }
+
+                UpdatePlayerTurnColor();
+            });
+        }
+
+        private void UpdatePlayerTurnColor()
+        {
+            var whiteToMove = Chessboard.Game.PlayersTurn == Shared.Model.Color.White;
+            var topActive = whiteToMove == Chessboard.IsMirrored;
+
+            BorderTimeControlTop.SetDynamicResource(VisualElement.BackgroundProperty, topActive ? "PlayerTimeColor" : "PlayerTimeDefaultColor");
+            BorderTimeControlBottom.SetDynamicResource(VisualElement.BackgroundProperty, topActive ? "PlayerTimeDefaultColor" : "PlayerTimeColor");
         }
 
         private void Game_OnMovedPiece(MoveNotation move)
@@ -292,7 +320,7 @@ namespace Chess.NET.Android
                 otherElo = PlayerDisplayHelper.FormatElo(Settings.Instance.Player2Elo);
             }
 
-            var d = PlayerDisplayHelper.GetPlayerDisplay(ownName, ownElo, otherName, otherElo, Chessboard.IsMirrored, isOnlineMatch && ownPieceColor == Shared.Model.Color.Black, playerInfo.GetWhite(), playerInfo.GetBlack());
+            var d = PlayerDisplayHelper.GetPlayerDisplay(ownName, ownElo, otherName, otherElo, Chessboard.IsMirrored, isOnlineMatch && ownPieceColor == Shared.Model.Color.Black, playerInfo.GetWhite(), playerInfo.GetBlack(), Chessboard.Game.PlayerWhiteTime, Chessboard.Game.PlayerBlackTime);
 
             TextPlayerTopName.Text = d.TopName;
             TextPlayerTopElo.Text = d.TopElo;
@@ -300,6 +328,10 @@ namespace Chess.NET.Android
             TextPlayerBottomName.Text = d.BottomName;
             TextPlayerBottomElo.Text = d.BottomElo;
             TextPlayerInfoBottom.Text = d.BottomInfo;
+            TextPlayerTopTimeControl.Text = d.TopTime.ToString(@"mm\:ss");
+            TextPlayerBottomTimeControl.Text = d.TimeBottom.ToString(@"mm\:ss");
+
+            // TODO UpdatePlayerTurnColor();
         }
 
         private async void ButtonResign_Clicked(object sender, EventArgs e)

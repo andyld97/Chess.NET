@@ -34,19 +34,19 @@ public partial class ChessBoard : ContentView
     {
         InitializeComponent();
 
-        MainBorder.IsVisible = false;
-
-        SizeChanged += (_, _) =>
-        {
-            if ((int)Width == (int)Height)
-                MainBorder.IsVisible = true;
-
-            var size = Math.Round(Math.Min(Width, Height));
-            MainBorder.WidthRequest = size;
-            MainBorder.HeightRequest = size;
-        };
+        HorizontalOptions = LayoutOptions.Center;
+        VerticalOptions = LayoutOptions.Center;
 
         InitializeGame();
+    }
+
+    protected override Size MeasureOverride(double widthConstraint, double heightConstraint)
+    {
+        var size = Math.Floor(Math.Min(widthConstraint, heightConstraint));
+        if (double.IsInfinity(size) || size <= 0) size = 300;
+
+        base.MeasureOverride(size, size);
+        return new Size(size, size);
     }
 
     private void InitializeGame()

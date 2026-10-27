@@ -51,4 +51,7 @@
     <SolidColorBrush x:Key="Gray600Brush" Color="{StaticResource Gray600}"/>
     <SolidColorBrush x:Key="Gray900Brush" Color="{StaticResource Gray900}"/>
     <SolidColorBrush x:Key="Gray950Brush" Color="{StaticResource Gray950}"/>
+    
+    <SolidColorBrush x:Key="PlayerTimeDefaultColor" Color="#FF5C5A5A" />
+    <SolidColorBrush x:Key="PlayerTimeColor" Color="#47476b" />
 </ResourceDictionary>

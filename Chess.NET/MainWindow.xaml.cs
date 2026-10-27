@@ -135,34 +135,11 @@ namespace Chess.NET
 
         private void UpdatePlayerTurnColor()
         {
-            if (Chessboard.Game.PlayersTurn == Color.White)
-            {
-                if (Chessboard.IsMirrored)
-                {
-                    // White is on top
-                    BorderTimeControlTop.Background = (System.Windows.Media.SolidColorBrush)FindResource("PlayerTimeColor");
-                    BorderTimeControlBottom.Background = (System.Windows.Media.SolidColorBrush)FindResource("PlayerTimeDefaultColor");
-                }
-                else
-                {
-                    BorderTimeControlTop.Background = (System.Windows.Media.SolidColorBrush)FindResource("PlayerTimeDefaultColor");
-                    BorderTimeControlBottom.Background = (System.Windows.Media.SolidColorBrush)FindResource("PlayerTimeColor");
-                }
-            }
-            else
-            {
-                if (Chessboard.IsMirrored)
-                {
-                    // White is on top
-                    BorderTimeControlBottom.Background = (System.Windows.Media.SolidColorBrush)FindResource("PlayerTimeColor");
-                    BorderTimeControlTop.Background = (System.Windows.Media.SolidColorBrush)FindResource("PlayerTimeDefaultColor");
-                }
-                else
-                {
-                    BorderTimeControlBottom.Background = (System.Windows.Media.SolidColorBrush)FindResource("PlayerTimeDefaultColor");
-                    BorderTimeControlTop.Background = (System.Windows.Media.SolidColorBrush)FindResource("PlayerTimeColor");
-                }
-            }
+            var whiteToMove = Chessboard.Game.PlayersTurn == Color.White;
+            var topActive = whiteToMove == Chessboard.IsMirrored;
+
+            BorderTimeControlTop.Background = (System.Windows.Media.SolidColorBrush)FindResource(topActive ? "PlayerTimeColor" : "PlayerTimeDefaultColor");
+            BorderTimeControlBottom.Background = (System.Windows.Media.SolidColorBrush)FindResource(topActive ? "PlayerTimeDefaultColor" : "PlayerTimeColor");
         }
 
         private async void Game_OnGameOver(GameResult result, Color? colorWon)
