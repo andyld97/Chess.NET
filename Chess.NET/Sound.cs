@@ -1,6 +1,7 @@
 ﻿using Chess.NET.Model;
 using Chess.NET.Shared.Model;
 using System.Windows.Media;
+using System.Windows.Threading;
 
 namespace Chess.NET
 {
@@ -46,9 +47,12 @@ namespace Chess.NET
 
         private static void Play(MediaPlayer player)
         {
-            player.Stop();
-            player.Position = TimeSpan.Zero;
-            player.Play();
+            player.Dispatcher.Invoke(() =>
+            {
+                player.Stop();
+                player.Position = TimeSpan.Zero;
+                player.Play();
+            });
         }
     }
 }

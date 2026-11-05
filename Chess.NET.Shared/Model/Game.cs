@@ -776,6 +776,7 @@ namespace Chess.NET.Shared.Model
                     IsGameOver = true;
                     ResetTimeControl(true);
                     OnGameOver?.Invoke(GameResult.Timeout, Color.Black);
+                    OnPlaySound?.Invoke(SoundType.Checkmate);
                 }
             }
             else
@@ -788,7 +789,8 @@ namespace Chess.NET.Shared.Model
                 {
                     IsGameOver = true;
                     ResetTimeControl(true);
-                    OnGameOver?.Invoke(GameResult.Timeout, Color.White);                    
+                    OnGameOver?.Invoke(GameResult.Timeout, Color.White);
+                    OnPlaySound?.Invoke(SoundType.Checkmate);
                 }
             }
 
