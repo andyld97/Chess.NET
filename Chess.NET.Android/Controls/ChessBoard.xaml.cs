@@ -3,6 +3,7 @@ using Microsoft.Maui.Controls.Shapes;
 using Image = Microsoft.Maui.Controls.Image;
 using Chess.NET.Shared.Model.GUI;
 using Chess.NET.Shared.Model.Bot;
+
 #if ANDROID
 using A = Android;
 #endif
@@ -96,8 +97,8 @@ public partial class ChessBoard : ContentView
     {
         isOnline = false;
         playerOnlineColor = null;
+        game.ResetTimeControl(true);
     }
-
 
     private async void Game_OnPlaySound(SoundType type)
     {
@@ -121,7 +122,7 @@ public partial class ChessBoard : ContentView
                 var piece = board.GetPiece(position);
 
                 Image? img = (Image?)_squares[file - 1, rank - 1].Border.Children.FirstOrDefault();
-                img?.Source = (piece != null) ? GetImage(piece.Type, piece.Color) : null; 
+                img?.Source = (piece != null) ? GetImage(Settings.Instance.Theme, piece.Type, piece.Color) : null;
 
                 if (renderLastMoveSquares && (lastMove != null && (lastMove.From == position || lastMove.To == position)))
                 {
@@ -137,10 +138,9 @@ public partial class ChessBoard : ContentView
         }
     }
 
-    private static ImageSource GetImage(PieceType type, Shared.Model.Color color)
+    private static ImageSource GetImage(Shared.Model.Theme theme, PieceType type, Shared.Model.Color color)
     {
-        string col = color.ToString().ToLower();
-        return ImageSource.FromFile($"themes/default/{col}/{type.ToString().ToLower()}_{col}.png");
+        return ImageSource.FromFile($"{theme}_{color.ToString().ToLower()}_{type.ToString().ToLower()}.png");
     }
 
     private void InitializeSquares()

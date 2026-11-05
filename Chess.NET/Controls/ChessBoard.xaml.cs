@@ -102,6 +102,7 @@ namespace Chess.NET.Controls
         {
             isOnline = false;
             playerOnlineColor = null;
+            game.ResetTimeControl(true);
         }
 
         public void Mirror()

@@ -826,7 +826,7 @@ namespace Chess.NET.Shared.Model
             OnUpdatePlayerTime?.Invoke(playerWhiteTime, playerBlackTime);
         }
 
-        private void ResetTimeControl(bool keepTime = false)
+        public void ResetTimeControl(bool keepTime = false)
         {
             if (!keepTime)
             {

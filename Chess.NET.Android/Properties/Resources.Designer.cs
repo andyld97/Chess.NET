@@ -230,5 +230,23 @@ namespace Chess.NET.Android.Properties {
                 return ResourceManager.GetString("strStartNewGame", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Design ähnelt.
+        /// </summary>
+        public static string strTheme {
+            get {
+                return ResourceManager.GetString("strTheme", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Design: ähnelt.
+        /// </summary>
+        public static string strTheme_Title {
+            get {
+                return ResourceManager.GetString("strTheme_Title", resourceCulture);
+            }
+        }
     }
 }

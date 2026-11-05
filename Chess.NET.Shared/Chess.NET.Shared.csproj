@@ -9,7 +9,7 @@
 
 	<ItemGroup>
 		<PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="10.0.14" />
-		<PackageReference Include="SkiaSharp" Version="4.153.1" />
+		<PackageReference Include="SkiaSharp" Version="4.154.0" />
 	</ItemGroup>
 
 	<ItemGroup>

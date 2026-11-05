@@ -2,10 +2,16 @@ namespace Chess.NET.Android.Controls.Dialogs;
 
 public partial class SettingsDialog : ContentPage
 {
+    public delegate void onRefresh();
+    public event onRefresh OnRefrsh;
+
     public SettingsDialog()
     {
         InitializeComponent();
         Loaded += SettingsDialog_Loaded;
+
+        ThemePicker.ItemsSource = Enum.GetNames<Shared.Model.Theme>();
+        ThemePicker.SelectedItem = Settings.Instance.Theme.ToString();
     }
 
     private void SettingsDialog_Loaded(object? sender, EventArgs e)
@@ -18,6 +24,10 @@ public partial class SettingsDialog : ContentPage
     {
         Preferences.Set("Player1", TextPlayer1.Text);
         Preferences.Set("Player2", TextPlayer2.Text);
+        Preferences.Set("Theme", ThemePicker.SelectedItem?.ToString() ?? Chess.NET.Shared.Model.Theme.Default.ToString());
+
+        OnRefrsh?.Invoke();
+
         await Navigation.PopModalAsync();
     }
 }

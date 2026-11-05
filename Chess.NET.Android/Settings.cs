@@ -1,4 +1,6 @@
-﻿namespace Chess.NET.Android
+﻿using Chess.NET.Shared.Model;
+
+namespace Chess.NET.Android
 {
     // This is just a temporary workaround until we have a settings dialog!
     public static class Settings
@@ -13,6 +15,8 @@
             public static string Player2Name => Preferences.Get("Player2", "Player 2");
 
             public static int LastSelectedGameMode => Preferences.Get("LastSelectedGameMode", 0);
+
+            public static Theme Theme => Enum.Parse<Theme>(Preferences.Get("Theme", Theme.Default.ToString()));
         }
     }
 }

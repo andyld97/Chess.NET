@@ -12,7 +12,7 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.14" />
     <PackageReference Include="Microsoft.AspNetCore.SignalR" Version="1.2.13" />
-    <PackageReference Include="SkiaSharp.NativeAssets.Linux" Version="4.153.1" />
+    <PackageReference Include="SkiaSharp.NativeAssets.Linux" Version="4.154.0" />
     <PackageReference Include="WebhookAPI" Version="1.0.7" />
   </ItemGroup>
 

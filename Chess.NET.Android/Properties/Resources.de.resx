@@ -174,4 +174,10 @@
   <data name="strAbout" xml:space="preserve">
     <value>Über</value>
   </data>
+  <data name="strTheme_Title" xml:space="preserve">
+    <value>Theme:</value>
+  </data>
+  <data name="strTheme" xml:space="preserve">
+    <value>Theme</value>
+  </data>
 </root>

@@ -104,7 +104,7 @@ namespace Chess.NET.Android
             }
 
             ownPieceColor = null;
-            currentMatchInfo = null;  
+            currentMatchInfo = null;
 
             _networkClient = new SignalRClient();
             _networkClient.OnMatchFound += _networkClient_OnMatchFound;
@@ -331,7 +331,7 @@ namespace Chess.NET.Android
             TextPlayerTopTimeControl.Text = d.TopTime.ToString(@"mm\:ss");
             TextPlayerBottomTimeControl.Text = d.TimeBottom.ToString(@"mm\:ss");
 
-            // TODO UpdatePlayerTurnColor();
+            UpdatePlayerTurnColor();
         }
 
         private async void ButtonResign_Clicked(object sender, EventArgs e)
@@ -350,7 +350,13 @@ namespace Chess.NET.Android
         private async void MenuItemSettings_Clicked(object sender, EventArgs e)
         {
             var dialog = new SettingsDialog();
-            await Navigation.PushModalAsync(dialog);
+            dialog.OnRefrsh += Dialog_OnRefrsh;
+            await Navigation.PushModalAsync(dialog);           
+        }
+
+        private void Dialog_OnRefrsh()
+        {
+            Chessboard.RenderChessBoard(Chessboard.Game.Board);
         }
     }
 }
