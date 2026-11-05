@@ -39,8 +39,12 @@
 
     public enum TimeControl
     {
-        Bullet1, 
+        Bullet1,
         Blitz3,
-        Blitz10
+        Blitz5,
+        Rapid10,
+        Rapid15,
+        Classical30,
+        Classical60,
     }
 }

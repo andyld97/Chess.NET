@@ -71,6 +71,9 @@ namespace Chess.NET
             if (Settings.Instance.LastSelectedGameMode >= 0 && Settings.Instance.LastSelectedGameMode < CmbOpponent.Items.Count)
                 CmbOpponent.SelectedIndex = Settings.Instance.LastSelectedGameMode;
 
+            if (Settings.Instance.LastSelectedTimeControl >= 0 && Settings.Instance.LastSelectedTimeControl < CmbTimeControl.Items.Count)
+                CmbTimeControl.SelectedIndex = Settings.Instance.LastSelectedTimeControl;
+
             isInitialized = true;
             Loaded += MainWindow_Loaded;
         }
@@ -225,6 +228,8 @@ namespace Chess.NET
             if (isOnlineMatch)
                 return;
 
+            Chessboard.Reset();
+
             if (rotatedBoard)
             {
                 rotatedBoard = false;
@@ -267,11 +272,15 @@ namespace Chess.NET
             else if (CmbOpponent.SelectedIndex == 1)
                 opponent = new StupidoBot();
             else if (CmbOpponent.SelectedIndex == 2)
+            {
                 await StartOnlineMatchAsync();
+                RefreshPlayerDisplay();
+                return;
+            }
             else
                 opponent = null;
 
-            Chessboard.Restart(opponent);
+            Chessboard.Restart(opponent, Shared.Helper.ItemToTimeControl(CmbTimeControl.SelectedIndex));
             RefreshPlayerDisplay();
         }
 
@@ -311,7 +320,7 @@ namespace Chess.NET
         {
             try
             {
-                client = await _networkClient.ConnectAsync(Settings.Instance.Player1Name, Settings.Instance.Player1Elo);
+                client = await _networkClient.ConnectAsync(Settings.Instance.Player1Name, Settings.Instance.Player1Elo, Shared.Helper.ItemToTimeControl(CmbTimeControl.SelectedIndex));
                 waitingQueueDialog?.Client = client;
 
                 if (client == null)
@@ -362,7 +371,7 @@ namespace Chess.NET
                 }
 
                 currentMatchInfo = match;
-                Chessboard.Game.StartNewGame(null, true);
+                Chessboard.Game.StartNewGame(null, true, match.TimeControl);
                 Chessboard.SetOnline(ownPieceColor.Value);
                 RefreshPlayerDisplay();
             });
@@ -571,5 +580,14 @@ namespace Chess.NET
         }
 
         #endregion
+
+        private void CmbTimeControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (!isInitialized)
+                return;
+
+            Settings.Instance.LastSelectedTimeControl = CmbTimeControl.SelectedIndex;
+            Settings.Instance.Save();   
+        }
     }
 }

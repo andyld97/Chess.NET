@@ -1,4 +1,5 @@
-﻿using Chess.NET.Shared.Model.Online;
+﻿using Chess.NET.Shared.Model;
+using Chess.NET.Shared.Model.Online;
 using Microsoft.AspNetCore.SignalR.Client;
 
 namespace Chess.NET.Shared.Netcode
@@ -22,7 +23,7 @@ namespace Chess.NET.Shared.Netcode
         public event onMatchEnds? OnMatchEnds;
         #endregion
 
-        public async Task<Client?> ConnectAsync(string playerName, string playerElo)
+        public async Task<Client?> ConnectAsync(string playerName, string playerElo, TimeControl timeControl)
         {
             connection = new HubConnectionBuilder()
                 .WithUrl($"{Consts.SERVER_URL_HUB}{CLIENT_ID}")
@@ -50,7 +51,8 @@ namespace Chess.NET.Shared.Netcode
             {
                 ClientID = CLIENT_ID,
                 PlayerName = playerName,
-                PlayerElo = playerElo
+                PlayerElo = playerElo,
+                TimeControl = timeControl
             };
 
             await APIClient.JoinQueueAsync(client);

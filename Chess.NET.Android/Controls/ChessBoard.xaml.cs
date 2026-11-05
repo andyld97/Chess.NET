@@ -41,6 +41,15 @@ public partial class ChessBoard : ContentView
         InitializeGame();
     }
 
+    public void Reset()
+    {
+        game.Reset();
+        ResetOnline();
+
+        InitializeSquares();
+        RenderChessBoard(game.Board, false);
+    }
+
     protected override Size MeasureOverride(double widthConstraint, double heightConstraint)
     {
         var size = Math.Floor(Math.Min(widthConstraint, heightConstraint));
@@ -78,10 +87,10 @@ public partial class ChessBoard : ContentView
         RenderChessBoard(game.Board);
     }
 
-    public void Restart(IChessBot? opponent)
+    public void Restart(IChessBot? opponent, TimeControl timeControl = TimeControl.Rapid10)
     {
         this.opponent = opponent;
-        game.StartNewGame(opponent);
+        game.StartNewGame(opponent, isOnlineGame: false, timeControl);
         RenderChessBoard(game.Board, false);
         ClearMoveIndicators();
         isOnline = false;

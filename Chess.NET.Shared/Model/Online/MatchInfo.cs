@@ -11,5 +11,7 @@
         public Color OpponentColor { get; set; }
 
         public Color ClientColor {  get; set; }
+
+        public TimeControl TimeControl { get; set; } = TimeControl.Rapid10;
     }
 }

@@ -7,6 +7,7 @@
         xmlns:controls="clr-namespace:Chess.NET.Controls"
         mc:Ignorable="d" WindowStartupLocation="CenterScreen"
         xmlns:res="clr-namespace:Chess.NET.Properties"
+        xmlns:sharedres="clr-namespace:Chess.NET.Shared;assembly=Chess.NET.Shared"
         Title="Chess.NET" Height="768" Width="1024">
     <Window.InputBindings>
         <KeyBinding Key="Left" Command="{Binding MoveLeftCommand}" />
@@ -111,6 +112,17 @@
                         <ComboBoxItem Content="{x:Static res:Resources.strOpponent_Online}" />
                         <ComboBoxItem Content="{x:Static res:Resources.strOpponent_None}" />
                     </ComboBox>
+                    <TextBlock Text="{x:Static sharedres:Resources.strTimeControl_Title}" Margin="2,2,2,0" />
+                    <ComboBox x:Name="CmbTimeControl" SelectionChanged="CmbTimeControl_SelectionChanged" Padding="5" Margin="0,2,0,5" SelectedIndex="0">
+                        <ComboBoxItem Content="{x:Static sharedres:Resources.strTimeControl_Bullet1}" />
+                        <ComboBoxItem Content="{x:Static sharedres:Resources.strTimeControl_Blitz3}" />
+                        <ComboBoxItem Content="{x:Static sharedres:Resources.strTimeControl_Blitz5}" />
+                        <ComboBoxItem Content="{x:Static sharedres:Resources.strTimeControl_Rapid10}" />
+                        <ComboBoxItem Content="{x:Static sharedres:Resources.strTimeControl_Rapid15}" />
+                        <ComboBoxItem Content="{x:Static sharedres:Resources.strTimeControl_Classical30}" />
+                        <ComboBoxItem Content="{x:Static sharedres:Resources.strTimeControl_Classical60}" />
+                    </ComboBox>
+
                     <Button x:Name="ButtonRestart" Click="ButtonRestart_Click" Content="{x:Static res:Resources.strNewGame}" Padding="3" Margin="0" FontWeight="Bold" />
                     <Button x:Name="ButtonResign" Visibility="Collapsed" Click="ButtonResign_Click" Content="{x:Static res:Resources.strResign}" Padding="3" Margin="0,5,0,0" />
                     <Button x:Name="ButtonMirror" Content="{x:Static res:Resources.strMirrorBoard}" Click="ButtonMirror_Click" Padding="3" Margin="0,5,0,0" />

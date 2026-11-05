@@ -42,7 +42,7 @@ namespace Chess.NET.Controls
             InitializeComponent();
             InitializeSquares();
 
-            Restart(null);
+            Restart(null, TimeControl.Rapid10);
         }
 
         public void LoadPuzzle(Puzzle puzzle)
@@ -78,18 +78,30 @@ namespace Chess.NET.Controls
             isNavigationAllowed = true;
         }
 
-        public void Restart(IChessBot? opponent)
+        public void Reset()
         {
+            game.Reset();
             ResetDrag();
+            ResetOnline();
 
             InitializeSquares();
-            game.StartNewGame(opponent);
-            game.OnGameOver += Game_OnGameOver;
-            RenderChessBoard(game.Board);
+
             rotatedBorders.Clear();
-            this.opponent = opponent;
             isInNavigationMode = false;
             canMove = true;
+
+            RenderChessBoard(game.Board);
+        }
+
+        public void Restart(IChessBot? opponent, TimeControl timeControl)
+        {
+            Reset();
+
+            this.opponent = opponent;
+
+            game.StartNewGame(opponent, false, timeControl);
+            game.OnGameOver += Game_OnGameOver;
+            RenderChessBoard(game.Board);
         }
 
         public void SetOnline(Shared.Model.Color pieceColor)

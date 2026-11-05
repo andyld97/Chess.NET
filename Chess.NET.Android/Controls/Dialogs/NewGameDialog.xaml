@@ -3,12 +3,27 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Chess.NET.Android.Controls.Dialogs.NewGameDialog"
              xmlns:res="clr-namespace:Chess.NET.Android.Properties"
+             xmlns:sharedres="clr-namespace:Chess.NET.Shared;assembly=Chess.NET.Shared"
              Title="{x:Static res:Resources.strNewGame}" BackgroundColor="#80000000">    
     <Border Background="{DynamicResource BackgroundColor}" StrokeShape="RoundRectangle" StrokeThickness="2" Stroke="{DynamicResource AccentColor}" Padding="20" WidthRequest="300" HorizontalOptions="Center" VerticalOptions="Center">
         <VerticalStackLayout Spacing="10">
             <Label TextColor="{DynamicResource TextColor}" Text="{x:Static res:Resources.strStartNewGame}" FontSize="18" />
-
             <Picker x:Name="OpponentPicker" TextColor="{DynamicResource TextColor}" Title="{x:Static res:Resources.strPleaseChoose}" TitleColor="Green" />
+
+            <Label Text="{x:Static sharedres:Resources.strTimeControl_Title}" Margin="2,2,2,0" />
+            <Picker x:Name="CmbTimeControl" Margin="0,2,0,5" SelectedIndex="0">
+                <Picker.ItemsSource>
+                    <x:Array Type="{x:Type x:String}">
+                        <x:Static Member="sharedres:Resources.strTimeControl_Bullet1" />
+                        <x:Static Member="sharedres:Resources.strTimeControl_Blitz3" />
+                        <x:Static Member="sharedres:Resources.strTimeControl_Blitz5" />
+                        <x:Static Member="sharedres:Resources.strTimeControl_Rapid10" />
+                        <x:Static Member="sharedres:Resources.strTimeControl_Rapid15" />
+                        <x:Static Member="sharedres:Resources.strTimeControl_Classical30" />
+                        <x:Static Member="sharedres:Resources.strTimeControl_Classical60" />
+                    </x:Array>
+                </Picker.ItemsSource>
+            </Picker>
 
             <Button Text="{x:Static res:Resources.strOK}" BackgroundColor="{DynamicResource AccentColor}" TextColor="{DynamicResource TextColor}" Clicked="Button_Clicked" />
         </VerticalStackLayout>

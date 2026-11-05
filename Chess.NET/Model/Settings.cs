@@ -39,6 +39,8 @@ namespace Chess.NET.Model
 
         public int LastSelectedGameMode { get; set; } = 0;
 
+        public int LastSelectedTimeControl { get; set; } = 3;
+
         public bool IsOOBE { get; set; } = true;
 
         public bool AutoPromoteToQueen { get; set; } = false;

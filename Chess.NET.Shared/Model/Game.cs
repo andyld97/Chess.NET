@@ -848,7 +848,11 @@ namespace Chess.NET.Shared.Model
             {
                 TimeControl.Bullet1 => TimeSpan.FromMinutes(1),
                 TimeControl.Blitz3 => TimeSpan.FromMinutes(3),
-                TimeControl.Blitz10 => TimeSpan.FromMinutes(10),
+                TimeControl.Blitz5 => TimeSpan.FromMinutes(5),
+                TimeControl.Rapid10 => TimeSpan.FromMinutes(10),
+                TimeControl.Rapid15 => TimeSpan.FromMinutes(15),
+                TimeControl.Classical30 => TimeSpan.FromMinutes(30),
+                TimeControl.Classical60 => TimeSpan.FromMinutes(60),
                 _ => throw new ArgumentOutOfRangeException(nameof(timeControl), $"Not expected time control value: {timeControl}"),
             };
         }
@@ -857,7 +861,7 @@ namespace Chess.NET.Shared.Model
 
         #region Other
 
-        public void StartNewGame(IChessBot? opponent, bool isOnlineGame = false, TimeControl timeControl = TimeControl.Blitz10) // Currently fixed to 10 minutes
+        public void Reset()
         {
             board.Reset();
             positions.Clear();
@@ -866,6 +870,11 @@ namespace Chess.NET.Shared.Model
             Moves.Clear();
             hasWhiteCastled = false;
             hasBlackCastled = false;
+        }
+
+        public void StartNewGame(IChessBot? opponent, bool isOnlineGame = false, TimeControl timeControl = TimeControl.Rapid10)
+        {
+            Reset();
             this.opponent = opponent;
             this.timeControl = timeControl;
             this.isOnlineGame = isOnlineGame;

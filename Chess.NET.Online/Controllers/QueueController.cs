@@ -1,4 +1,5 @@
 ﻿using Chess.NET.Online.Services;
+using Chess.NET.Shared.Model;
 using Chess.NET.Shared.Model.Online;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
@@ -46,10 +47,12 @@ namespace Chess.NET.Online.Controllers
 
             if (match != null)
             {
-                _logger.LogInformation($"Found match: {match.ClientWhite.PlayerName} [WHITE] vs {match.ClientBlack.PlayerName} [BLACK]");
+                TimeControl timeControl = Determine(match.ClientWhite.TimeControl, match.ClientBlack.TimeControl);
 
-                await _webhook.PostWebHookAsync(WebhookAPI.Webhook.LogLevel.Info, $"Found match: {match.ClientWhite.PlayerName} [WHITE] vs {match.ClientBlack.PlayerName} [BLACK]", "Chess");
+                _logger.LogInformation($"Found match: {match.ClientWhite.PlayerName} [WHITE] vs {match.ClientBlack.PlayerName} [BLACK]: {timeControl}");
 
+                await _webhook.PostWebHookAsync(WebhookAPI.Webhook.LogLevel.Info, $"Found match: {match.ClientWhite.PlayerName} [WHITE] vs {match.ClientBlack.PlayerName} [BLACK]: {timeControl}", "Chess");
+   
                 MatchInfo matchInfoWhite = new MatchInfo
                 {
                     MatchId = match.MatchId,
@@ -57,6 +60,7 @@ namespace Chess.NET.Online.Controllers
                     OpponentElo = match.ClientBlack.PlayerElo,
                     OpponentColor = Shared.Model.Color.Black,
                     ClientColor = Shared.Model.Color.White,
+                    TimeControl = timeControl
                 };
 
                 MatchInfo matchInfoBlack = new MatchInfo
@@ -65,7 +69,8 @@ namespace Chess.NET.Online.Controllers
                     OpponentName = match.ClientWhite.PlayerName,
                     OpponentElo = match.ClientWhite.PlayerElo,
                     OpponentColor = Shared.Model.Color.White,
-                    ClientColor = Shared.Model.Color.Black
+                    ClientColor = Shared.Model.Color.Black,
+                    TimeControl = timeControl
                 };
 
                 await _hub.Clients.Users(match.ClientWhite.ClientID).SendAsync("MatchFound", matchInfoWhite);
@@ -91,6 +96,15 @@ namespace Chess.NET.Online.Controllers
             _matchmaking.Leave(client.ClientID, "Client left Queue");
             await _webhook.PostWebHookAsync(WebhookAPI.Webhook.LogLevel.Info, $"Client {client.PlayerName} left the queue. Queue-Count: {_matchmaking.GetQueueLength()}", "Chess");
             return Ok();
+        }
+
+        private static readonly Dictionary<TimeControl, int> Minutes = new() { [TimeControl.Bullet1] = 1, [TimeControl.Blitz3] = 3, [TimeControl.Blitz5] = 5, [TimeControl.Rapid10] = 10, [TimeControl.Rapid15] = 15, [TimeControl.Classical30] = 30, [TimeControl.Classical60] = 60 };
+
+        public static TimeControl Determine(TimeControl a, TimeControl b)
+        {
+            if (a == b) return a;
+            var target = Math.Sqrt(Minutes[a] * Minutes[b]);
+            return Minutes.MinBy(kv => Math.Abs(Math.Log(kv.Value / target))).Key;
         }
     }
 }

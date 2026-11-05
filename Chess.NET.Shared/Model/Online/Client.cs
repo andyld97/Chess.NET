@@ -7,5 +7,7 @@
         public string PlayerName { get; set; } = string.Empty;
 
         public string PlayerElo { get; set; } = string.Empty;   
+
+        public TimeControl TimeControl { get; set; } = TimeControl.Rapid10;
     }
 }

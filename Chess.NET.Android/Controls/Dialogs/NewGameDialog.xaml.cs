@@ -2,11 +2,11 @@ namespace Chess.NET.Android.Controls.Dialogs;
 
 public partial class NewGameDialog : ContentPage
 {
-    private readonly TaskCompletionSource<int> _tcs = new();
+    private readonly TaskCompletionSource<(int, int)> _tcs = new();
 
-    public Task<int> WaitForResultAsync() => _tcs.Task;
+    public Task<(int, int)> WaitForResultAsync() => _tcs.Task;
 
-    public int Result { get; private set; }
+    public (int, int) Result { get; private set; }
 
     public NewGameDialog()
 	{
@@ -17,6 +17,7 @@ public partial class NewGameDialog : ContentPage
     private void NewGameDialog_Loaded(object? sender, EventArgs e)
     {
         OpponentPicker.SelectedIndex = Settings.Instance.LastSelectedGameMode;
+        CmbTimeControl.SelectedIndex = Settings.Instance.LastSelectedTimeControl;
 
         OpponentPicker.Items.Add(Properties.Resources.strOnline);
         OpponentPicker.Items.Add(Properties.Resources.strBot);
@@ -29,6 +30,7 @@ public partial class NewGameDialog : ContentPage
 
         int selectedIndex = OpponentPicker.SelectedIndex;
         Preferences.Set("LastSelectedGameMode", selectedIndex);
-        _tcs.SetResult(selectedIndex);
+        Preferences.Set("LastSelectedTimeControl", CmbTimeControl.SelectedIndex);
+        _tcs.SetResult((selectedIndex, CmbTimeControl.SelectedIndex));
     }
 }

@@ -34,6 +34,7 @@ namespace Chess.NET.Android
             {
                 try
                 {
+                    Chessboard.ResetOnline();
                     await _networkClient.DisconnectAsync();
                 }
                 catch
@@ -94,7 +95,7 @@ namespace Chess.NET.Android
         private bool rotatedBoard = false;
         private WaitingQueueDialog waitingQueueDialog;
      
-        private async Task StartOnlineMatchAsync()
+        private async Task StartOnlineMatchAsync(TimeControl timeControl)
         {
             if (string.IsNullOrEmpty(Settings.Instance.Player1Name))
             {
@@ -116,7 +117,7 @@ namespace Chess.NET.Android
                 waitingQueueDialog = new WaitingQueueDialog();
                 waitingQueueDialog.OnWaitingQueueExited += WaitingQueueDialog_OnWaitingQueueExited;
                 await Navigation.PushModalAsync(waitingQueueDialog);
-                client = await _networkClient.ConnectAsync($"{Settings.Instance.Player1Name} (Android)", Settings.Instance.Player1Elo);
+                client = await _networkClient.ConnectAsync($"{Settings.Instance.Player1Name} (Android)", Settings.Instance.Player1Elo, timeControl);
  
                 if (client == null)
                 {
@@ -230,7 +231,7 @@ namespace Chess.NET.Android
                 }
 
                 currentMatchInfo = match;
-                Chessboard.Game.StartNewGame(null, true);
+                Chessboard.Game.StartNewGame(null, true, match.TimeControl);
                 Chessboard.RenderChessBoard(Chessboard.Game.Board, false);
                 Chessboard.SetOnline(ownPieceColor.Value);
                 RefreshPlayerDisplay();
@@ -241,10 +242,16 @@ namespace Chess.NET.Android
 
         private async void ButtonRestart_Clicked(object sender, EventArgs e)
         {
+            if (isOnlineMatch)
+                return;
+
             var dialog = new NewGameDialog();
             await Navigation.PushModalAsync(dialog);
 
             var result = await dialog.WaitForResultAsync();
+            var tc = Shared.Helper.ItemToTimeControl(result.Item2);
+
+            Chessboard.Reset();
 
             if (rotatedBoard)
             {
@@ -252,22 +259,22 @@ namespace Chess.NET.Android
                 Chessboard.Mirror();
             }
 
-            if (result == 0)
+            if (result.Item1 == 0)
             {
                 opponent = null;
-                await StartOnlineMatchAsync();
+                await StartOnlineMatchAsync(tc);
             }
             else
             {
-                if (result == 1)
+                if (result.Item1 == 1)
                 {
                     opponent = new StupidoBot();
-                    Chessboard.Restart(opponent);
+                    Chessboard.Restart(opponent, tc);
                 }
                 else
                 {
                     opponent = null;
-                    Chessboard.Restart(null);
+                    Chessboard.Restart(null, tc);
                 }
             }
 

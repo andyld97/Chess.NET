@@ -16,6 +16,8 @@ namespace Chess.NET.Android
 
             public static int LastSelectedGameMode => Preferences.Get("LastSelectedGameMode", 0);
 
+            public static int LastSelectedTimeControl => Preferences.Get("LastSelectedTimeControl", 3);
+
             public static Theme Theme => Enum.Parse<Theme>(Preferences.Get("Theme", Theme.Default.ToString()));
         }
     }
