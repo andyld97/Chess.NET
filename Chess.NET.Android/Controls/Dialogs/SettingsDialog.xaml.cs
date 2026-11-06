@@ -19,7 +19,9 @@ public partial class SettingsDialog : ContentPage
 
         CmbBackground.ItemsSource = new List<string> { Shared.Resources.strBackground_None, Shared.Resources.strBackground_Sand, Shared.Resources.strBackground_Abstract, Shared.Resources.strBackground_Abstract_Purple };
 
-        if (Settings.Instance.Background == Shared.Model.Background.Abstract)
+        if (Settings.Instance.Background == Shared.Model.Background.None)
+            CmbBackground.SelectedItem = Shared.Resources.strBackground_None;
+        else if (Settings.Instance.Background == Shared.Model.Background.Abstract)
             CmbBackground.SelectedItem = Shared.Resources.strBackground_Abstract;
         else if (Settings.Instance.Background == Shared.Model.Background.AbstractPurple)
             CmbBackground.SelectedItem = Shared.Resources.strBackground_Abstract_Purple;
