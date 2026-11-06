@@ -1,6 +1,5 @@
 ﻿using Chess.NET.Model;
 using Chess.NET.Shared.Model;
-using System.Reflection;
 using System.Windows;
 using System.Windows.Media.Imaging;
 
@@ -74,26 +73,36 @@ namespace Chess.NET
             return bi;
         }
 
-        public static BitmapImage GetBackground(Background background)
+        public static System.Windows.Media.Brush GetBackground(Background background)
         {
+            if (background == Background.None)
+            {
+                var brown = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromRgb(77, 60, 60));
+                brown.Freeze();
+                return brown;
+            }
+
             string appName = "Chess.NET";
 #if STORE
-            appName = "OpenChess";
+    appName = "OpenChess";
 #endif
             string backgroundUri = background switch
             {
-                Background.Sand =>              $"pack://application:,,,/{appName};component/resources/backgrounds/sand.jpg",
-                Background.Abstract =>          $"pack://application:,,,/{appName};component/resources/backgrounds/abstract.png",
-                Background.AbstractPurple =>    $"pack://application:,,,/{appName};component/resources/backgrounds/abstract-purple.jpg",
+                Background.Sand => $"pack://application:,,,/{appName};component/resources/backgrounds/sand.jpg",
+                Background.Abstract => $"pack://application:,,,/{appName};component/resources/backgrounds/abstract.png",
+                Background.AbstractPurple => $"pack://application:,,,/{appName};component/resources/backgrounds/abstract-purple.jpg",
                 _ => throw new ArgumentOutOfRangeException(nameof(background), background, null)
             };
 
-            BitmapImage bi = new BitmapImage { CacheOption = BitmapCacheOption.OnLoad };
+            var bi = new BitmapImage();
             bi.BeginInit();
+            bi.CacheOption = BitmapCacheOption.OnLoad;
             bi.UriSource = new Uri(backgroundUri);
             bi.EndInit();
             bi.Freeze();
-            return bi;
+            var brush = new System.Windows.Media.ImageBrush(bi) { Stretch = System.Windows.Media.Stretch.UniformToFill };
+            brush.Freeze();
+            return brush;
         }
     }
 }

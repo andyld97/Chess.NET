@@ -70,6 +70,15 @@ namespace Chess.NET.Android.Properties {
         }
         
         /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Auto-Promote to Queen ähnelt.
+        /// </summary>
+        public static string strAutoPromote {
+            get {
+                return ResourceManager.GetString("strAutoPromote", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Sucht eine lokalisierte Zeichenfolge, die Bot ähnelt.
         /// </summary>
         public static string strBot {
@@ -160,6 +169,15 @@ namespace Chess.NET.Android.Properties {
         }
         
         /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Play Sounds ähnelt.
+        /// </summary>
+        public static string strPlaySounds {
+            get {
+                return ResourceManager.GetString("strPlaySounds", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Sucht eine lokalisierte Zeichenfolge, die Please choose ähnelt.
         /// </summary>
         public static string strPleaseChoose {
@@ -183,6 +201,15 @@ namespace Chess.NET.Android.Properties {
         public static string strPleaseWait {
             get {
                 return ResourceManager.GetString("strPleaseWait", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Promotion ähnelt.
+        /// </summary>
+        public static string strPromotion {
+            get {
+                return ResourceManager.GetString("strPromotion", resourceCulture);
             }
         }
         
@@ -237,15 +264,6 @@ namespace Chess.NET.Android.Properties {
         public static string strTheme {
             get {
                 return ResourceManager.GetString("strTheme", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die Design: ähnelt.
-        /// </summary>
-        public static string strTheme_Title {
-            get {
-                return ResourceManager.GetString("strTheme_Title", resourceCulture);
             }
         }
     }

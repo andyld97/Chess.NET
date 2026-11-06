@@ -39,6 +39,7 @@ public partial class ChessBoard : ContentView
         VerticalOptions = LayoutOptions.Center;
 
         InitializeGame();
+        RefreshBackground();
     }
 
     public void Reset()
@@ -85,6 +86,26 @@ public partial class ChessBoard : ContentView
         isMirrored = !isMirrored; // toggle
         InitializeSquares();
         RenderChessBoard(game.Board);
+    }
+
+    public void RefreshBackground()
+    {
+        if (Settings.Instance.Background == Shared.Model.Background.None)
+        {
+            ImgBackground.Background = new SolidColorBrush(Microsoft.Maui.Graphics.Color.FromArgb("#4D3C3C"));
+            ImgBackground.Source = null;
+            return;
+        }
+        else
+            ImgBackground.Background = null;
+
+        ImgBackground.Source = Settings.Instance.Background switch
+        {
+            Shared.Model.Background.Sand => "sand.jpg",
+            Shared.Model.Background.Abstract => "abstractblue.png",
+            Shared.Model.Background.AbstractPurple => "abstractpurple.jpg",
+            _ => "abstractblue.png"
+        };
     }
 
     public void Restart(IChessBot? opponent, TimeControl timeControl = TimeControl.Rapid10)
@@ -264,7 +285,27 @@ public partial class ChessBoard : ContentView
 
             if (!doNotMove)
             {
-                var success = game.Move(new PendingMove(_pieceToMove, position, PieceType.Queen));
+                PieceType? promotionType = null;
+
+                if (Settings.Instance.AutoPromoteToQueen /*TODO: && !isPuzzle*/)
+                    promotionType = PieceType.Queen;
+                else if (_pieceToMove?.Type == PieceType.Pawn && (position.Rank == 1 || position.Rank == 8) && game.IsMoveValid(_pieceToMove!, position))
+                {
+                    var page = Application.Current?.Windows[0]?.Page;
+
+                    string? result = await page?.DisplayActionSheetAsync(Chess.NET.Android.Properties.Resources.strPromotion, null, null, Chess.NET.Shared.Resources.strQueen, Chess.NET.Shared.Resources.strRook, Chess.NET.Shared.Resources.strBishop, Chess.NET.Shared.Resources.strKnight);
+
+                    promotionType = result switch
+                    {
+                        _ when result == Chess.NET.Shared.Resources.strRook => PieceType.Rook,
+                        _ when result == Chess.NET.Shared.Resources.strBishop => PieceType.Bishop,
+                        _ when result == Chess.NET.Shared.Resources.strKnight => PieceType.Knight,
+                        _ => PieceType.Queen
+                    };
+                }
+
+
+                var success = game.Move(new PendingMove(_pieceToMove, position, promotionType));
                 if (success)
                 {
                     RenderChessBoard(game.Board, true);

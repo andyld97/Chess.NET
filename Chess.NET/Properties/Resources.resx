@@ -332,15 +332,6 @@
   <data name="strInsufficientCheckmatingMaterial" xml:space="preserve">
     <value>Insufficient Material!</value>
   </data>
-  <data name="strTheme" xml:space="preserve">
-    <value>Theme:</value>
-  </data>
-  <data name="strTheme_Default" xml:space="preserve">
-    <value>Standard</value>
-  </data>
-  <data name="strTheme_Comic" xml:space="preserve">
-    <value>Comic</value>
-  </data>
   <data name="strGeneral" xml:space="preserve">
     <value>General</value>
   </data>
@@ -356,18 +347,6 @@
   </data>
   <data name="strContributors" xml:space="preserve">
     <value>Contributors:</value>
-  </data>
-  <data name="strBackground" xml:space="preserve">
-    <value>Background:</value>
-  </data>
-  <data name="strBackground_Sand" xml:space="preserve">
-    <value>Sand</value>
-  </data>
-  <data name="strBackground_Abstract" xml:space="preserve">
-    <value>Abstract</value>
-  </data>
-  <data name="strBackground_Abstract_Purple" xml:space="preserve">
-    <value>Abstract (Purple)</value>
   </data>
   <data name="strPleaseSetAName" xml:space="preserve">
     <value>Please set a name (at least for Player 1) in the settings dialog!</value>

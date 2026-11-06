@@ -3,13 +3,24 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Chess.NET.Android.Controls.Dialogs.SettingsDialog"
              xmlns:res="clr-namespace:Chess.NET.Android.Properties"
+             xmlns:sharedres="clr-namespace:Chess.NET.Shared;assembly=Chess.NET.Shared"
+             xmlns:controls="clr-namespace:Chess.NET.Android.Controls"
              BackgroundColor="#80000000">
     <Border Background="{DynamicResource BackgroundColor}" StrokeShape="RoundRectangle" StrokeThickness="2" Stroke="{DynamicResource AccentColor}" Padding="20" WidthRequest="300" HorizontalOptions="Center" VerticalOptions="Center">
         <VerticalStackLayout Spacing="6">
-            
             <Label Text="{x:Static res:Resources.strSettings}" TextColor="{DynamicResource TextColor}" FontSize="18" FontAttributes="Bold" />
 
             <VerticalStackLayout Padding="4" Spacing="6" Margin="0,15,0,0" >
+                <Label Text="{x:Static sharedres:Resources.strTheme_Title}" TextColor="{DynamicResource TextColor}" FontSize="14" />
+                <Picker x:Name="ThemePicker" Title="{x:Static sharedres:Resources.strTheme}" />
+            </VerticalStackLayout>
+
+            <VerticalStackLayout Padding="4" Spacing="6">
+                <Label Text="{x:Static sharedres:Resources.strBackground}" TextColor="{DynamicResource TextColor}" FontSize="14" />
+                <Picker x:Name="CmbBackground" Title="{x:Static sharedres:Resources.strBackground}" />
+            </VerticalStackLayout>
+
+            <VerticalStackLayout Padding="4" Spacing="6">
                 <Label Text="{x:Static res:Resources.strPlayer1Name}" TextColor="{DynamicResource TextColor}" FontSize="14"/>
                 <Entry x:Name="TextPlayer1" Placeholder="{x:Static res:Resources.strPleaseEnterYourName}" TextColor="{DynamicResource TextColor}" PlaceholderColor="#6B7280" BackgroundColor="Transparent"/>
             </VerticalStackLayout>
@@ -18,11 +29,10 @@
                 <Label Text="{x:Static res:Resources.strPlayer2Name}" TextColor="{DynamicResource TextColor}" FontSize="14" />
                 <Entry x:Name="TextPlayer2" Placeholder="{x:Static res:Resources.strPleaseEnterYourName}" TextColor="{DynamicResource TextColor}" PlaceholderColor="#6B7280" BackgroundColor="Transparent"/>
             </VerticalStackLayout>
-            
-            <VerticalStackLayout Padding="4" Spacing="6">
-                <Label Text="{x:Static res:Resources.strTheme_Title}" TextColor="{DynamicResource TextColor}" FontSize="14" />
-                <Picker x:Name="ThemePicker" Title="{x:Static res:Resources.strTheme}" />
-             </VerticalStackLayout>
+
+            <controls:LabeledCheckBox x:Name="ChkAutoPromote" Text="{x:Static res:Resources.strAutoPromote}" />
+
+            <controls:LabeledCheckBox x:Name="ChkPlaySounds" Text="{x:Static res:Resources.strPlaySounds}" />
 
             <Button x:Name="ButtonOK" Text="{x:Static res:Resources.strOK}" BackgroundColor="{DynamicResource AccentColor}" TextColor="{DynamicResource TextColor}" Clicked="ButtonOK_Clicked" />
         </VerticalStackLayout>

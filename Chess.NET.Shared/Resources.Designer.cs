@@ -61,6 +61,123 @@ namespace Chess.NET.Shared {
         }
         
         /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Background: ähnelt.
+        /// </summary>
+        public static string strBackground {
+            get {
+                return ResourceManager.GetString("strBackground", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Abstract ähnelt.
+        /// </summary>
+        public static string strBackground_Abstract {
+            get {
+                return ResourceManager.GetString("strBackground_Abstract", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Abstract (Purple) ähnelt.
+        /// </summary>
+        public static string strBackground_Abstract_Purple {
+            get {
+                return ResourceManager.GetString("strBackground_Abstract_Purple", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die None ähnelt.
+        /// </summary>
+        public static string strBackground_None {
+            get {
+                return ResourceManager.GetString("strBackground_None", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Sand ähnelt.
+        /// </summary>
+        public static string strBackground_Sand {
+            get {
+                return ResourceManager.GetString("strBackground_Sand", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Bishop ähnelt.
+        /// </summary>
+        public static string strBishop {
+            get {
+                return ResourceManager.GetString("strBishop", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Knight ähnelt.
+        /// </summary>
+        public static string strKnight {
+            get {
+                return ResourceManager.GetString("strKnight", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Queen ähnelt.
+        /// </summary>
+        public static string strQueen {
+            get {
+                return ResourceManager.GetString("strQueen", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Rook ähnelt.
+        /// </summary>
+        public static string strRook {
+            get {
+                return ResourceManager.GetString("strRook", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Theme: ähnelt.
+        /// </summary>
+        public static string strTheme {
+            get {
+                return ResourceManager.GetString("strTheme", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Comic ähnelt.
+        /// </summary>
+        public static string strTheme_Comic {
+            get {
+                return ResourceManager.GetString("strTheme_Comic", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Standard ähnelt.
+        /// </summary>
+        public static string strTheme_Default {
+            get {
+                return ResourceManager.GetString("strTheme_Default", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Design: ähnelt.
+        /// </summary>
+        public static string strTheme_Title {
+            get {
+                return ResourceManager.GetString("strTheme_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Sucht eine lokalisierte Zeichenfolge, die Blitz (3 Min) ähnelt.
         /// </summary>
         public static string strTimeControl_Blitz3 {

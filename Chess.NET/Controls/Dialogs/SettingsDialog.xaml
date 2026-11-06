@@ -6,6 +6,7 @@
         xmlns:local="clr-namespace:Chess.NET.Controls.Dialogs"
         mc:Ignorable="d" WindowStartupLocation="CenterOwner"
         xmlns:res="clr-namespace:Chess.NET.Properties" ResizeMode="NoResize"
+        xmlns:sharedres="clr-namespace:Chess.NET.Shared;assembly=Chess.NET.Shared"
         Title="{x:Static res:Resources.strSettings}" Height="250" Width="400">
     <Grid Margin="5">
         <Grid.Resources>
@@ -22,17 +23,18 @@
         <TabControl Margin="2">
             <TabItem Header="{x:Static res:Resources.strGeneral}">
                 <StackPanel>
-                    <TextBlock Text="{x:Static res:Resources.strBackground}" Margin="5,2" />
+                    <TextBlock Text="{x:Static sharedres:Resources.strBackground}" Margin="5,2" />
                     <ComboBox x:Name="CmbBackground" SelectionChanged="CmbBackground_SelectionChanged" Margin="5,2">
-                        <ComboBoxItem Content="{x:Static res:Resources.strBackground_Sand}" />
-                        <ComboBoxItem Content="{x:Static res:Resources.strBackground_Abstract}" />
-                        <ComboBoxItem Content="{x:Static res:Resources.strBackground_Abstract_Purple}" />
+                        <ComboBoxItem Content="{x:Static sharedres:Resources.strBackground_None}" />
+                        <ComboBoxItem Content="{x:Static sharedres:Resources.strBackground_Sand}" />
+                        <ComboBoxItem Content="{x:Static sharedres:Resources.strBackground_Abstract}" />
+                        <ComboBoxItem Content="{x:Static sharedres:Resources.strBackground_Abstract_Purple}" />
                     </ComboBox>
 
-                    <TextBlock Text="{x:Static res:Resources.strTheme}" Margin="5,2" />
+                    <TextBlock Text="{x:Static sharedres:Resources.strTheme}" Margin="5,2" />
                     <ComboBox x:Name="CmbTheme" SelectionChanged="CmbTheme_SelectionChanged" Margin="5,2">
-                        <ComboBoxItem Content="{x:Static res:Resources.strTheme_Default}" />
-                        <ComboBoxItem Content="{x:Static res:Resources.strTheme_Comic}" />
+                        <ComboBoxItem Content="{x:Static sharedres:Resources.strTheme_Default}" />
+                        <ComboBoxItem Content="{x:Static sharedres:Resources.strTheme_Comic}" />
                     </ComboBox>
 
                     <CheckBox x:Name="ChkAutoPromote" Checked="ChkAutoPromote_Checked" Unchecked="ChkAutoPromote_Checked" Content="{x:Static res:Resources.strAutoPromote}" Margin="5,10,0,0" />

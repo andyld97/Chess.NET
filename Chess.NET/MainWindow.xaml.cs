@@ -41,7 +41,7 @@ namespace Chess.NET
         {
             InitializeComponent();
             W_INSTANCE = this;
-            imgBackground.Source = Helper.GetBackground(Settings.Instance.Background);
+            imgBackground.Background = Helper.GetBackground(Settings.Instance.Background);
 
 #if STORE
             Title = "Open Chess";
@@ -566,7 +566,7 @@ namespace Chess.NET
 
         public void Refresh()
         {
-            imgBackground.Source = Helper.GetBackground(Settings.Instance.Background);
+            imgBackground.Background = Helper.GetBackground(Settings.Instance.Background);
             Chessboard.RenderChessBoard(Chessboard.Game.Board, true);
         }
 

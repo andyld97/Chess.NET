@@ -33,7 +33,7 @@ namespace Chess.NET.Controls.Dialogs
         {
             InitializeComponent();
             DataContext = this;
-            imgBackground.Source = Helper.GetBackground(Settings.Instance.Background);
+            imgBackground.Background = Helper.GetBackground(Settings.Instance.Background);
 
             currentPuzzle = puzzle!;
             if (currentPuzzle == null)

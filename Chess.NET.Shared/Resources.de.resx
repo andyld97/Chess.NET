@@ -141,4 +141,43 @@
   <data name="strTimeControl_Classical60" xml:space="preserve">
     <value>Klassisch (60 Min)</value>
   </data>
+  <data name="strQueen" xml:space="preserve">
+    <value>Dame</value>
+  </data>
+  <data name="strRook" xml:space="preserve">
+    <value>Turm</value>
+  </data>
+  <data name="strBishop" xml:space="preserve">
+    <value>Läufer</value>
+  </data>
+  <data name="strKnight" xml:space="preserve">
+    <value>Springer</value>
+  </data>
+  <data name="strBackground" xml:space="preserve">
+    <value>Hintergrund:</value>
+  </data>
+  <data name="strBackground_Sand" xml:space="preserve">
+    <value>Sand</value>
+  </data>
+  <data name="strBackground_Abstract" xml:space="preserve">
+    <value>Abstrakt</value>
+  </data>
+  <data name="strBackground_Abstract_Purple" xml:space="preserve">
+    <value>Abstrakt (lila)</value>
+  </data>
+  <data name="strTheme" xml:space="preserve">
+    <value>Figurenstil:</value>
+  </data>
+  <data name="strTheme_Default" xml:space="preserve">
+    <value>Standard</value>
+  </data>
+  <data name="strTheme_Comic" xml:space="preserve">
+    <value>Comicstil</value>
+  </data>
+  <data name="strTheme_Title" xml:space="preserve">
+    <value>Figurenstil:</value>
+  </data>
+  <data name="strBackground_None" xml:space="preserve">
+    <value>Kein</value>
+  </data>
 </root>

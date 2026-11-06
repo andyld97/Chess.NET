@@ -364,6 +364,7 @@ namespace Chess.NET.Android
         private void Dialog_OnRefrsh()
         {
             Chessboard.RenderChessBoard(Chessboard.Game.Board);
+            Chessboard.RefreshBackground();
         }
     }
 }

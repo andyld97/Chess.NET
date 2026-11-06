@@ -5,7 +5,7 @@
 
     <Border x:Name="MainBorder" Stroke="Black" StrokeThickness="0">
         <Grid RowSpacing="0" ColumnSpacing="0">
-            <Image Source="abstractblue.png" Aspect="AspectFill" InputTransparent="True" />
+            <Image x:Name="ImgBackground" Source="abstractblue.png" Aspect="AspectFill" InputTransparent="True" />
 
             <Grid x:Name="BoardGrid" RowSpacing="0" ColumnSpacing="0">
                 <Grid.RowDefinitions>

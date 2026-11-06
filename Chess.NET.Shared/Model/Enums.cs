@@ -32,6 +32,7 @@
 
     public enum Background
     {
+        None,
         Sand,
         Abstract,
         AbstractPurple

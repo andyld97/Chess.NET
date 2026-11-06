@@ -71,9 +71,7 @@
         </Border>
 
         <Grid Grid.Row="2" Background="WhiteSmoke">
-            <Grid IsHitTestVisible="False">
-                <Image x:Name="imgBackground" Source="/resources/backgrounds/sand.jpg" Stretch="UniformToFill" />
-            </Grid>
+            <Grid IsHitTestVisible="False" x:Name="imgBackground" />
             <Viewbox Margin="10">
                 <controls:ChessBoard x:Name="Chessboard" OnMoveMadeOnline="Chessboard_OnMoveMadeOnline" />
             </Viewbox>

@@ -8,6 +8,9 @@ namespace Chess.NET.Android
 
         public static async Task Play(SoundType type)
         {
+            if (!Settings.Instance.PlaySounds)
+                return;
+
             if (audioCache.TryGetValue(type, out var player))
             {
                 player.Play();

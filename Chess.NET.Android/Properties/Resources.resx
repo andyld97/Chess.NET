@@ -174,10 +174,16 @@
   <data name="strAbout" xml:space="preserve">
     <value>About</value>
   </data>
-  <data name="strTheme_Title" xml:space="preserve">
-    <value>Design:</value>
-  </data>
   <data name="strTheme" xml:space="preserve">
     <value>Design</value>
+  </data>
+  <data name="strAutoPromote" xml:space="preserve">
+    <value>Auto-Promote to Queen</value>
+  </data>
+  <data name="strPromotion" xml:space="preserve">
+    <value>Promotion</value>
+  </data>
+  <data name="strPlaySounds" xml:space="preserve">
+    <value>Play Sounds</value>
   </data>
 </root>
