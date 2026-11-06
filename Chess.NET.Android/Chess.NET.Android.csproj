@@ -10,6 +10,7 @@
 		<SingleProject>true</SingleProject>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
+		<Copyright>Open Chess © 2026</Copyright>
 
 		<!-- Enable XAML source generation for faster build times and improved performance.
 		     This generates C# code from XAML at compile time instead of runtime inflation.
@@ -55,6 +56,7 @@
 	  <MauiImage Include="..\Chess.NET\resources\backgrounds\abstract-purple.jpg" Link="Resources\Images\backgrounds\abstractpurple.jpg" />
 	  <MauiImage Include="..\Chess.NET\resources\backgrounds\abstract.png" Link="Resources\Images\backgrounds\abstractblue.png" />
 	  <MauiImage Include="..\Chess.NET\resources\backgrounds\sand.jpg" Link="Resources\Images\backgrounds\sand.jpg" />
+	  <MauiImage Include="..\Chess.NET\resources\images\logo.png" Link="Resources\Images\logo.png" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -84,6 +86,12 @@
 
 	<ItemGroup>
 	  <MauiXaml Update="Controls\ChessBoard.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Controls\Dialogs\AboutDialog.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Controls\Dialogs\DialogHeader.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Controls\Dialogs\NewGameDialog.xaml">

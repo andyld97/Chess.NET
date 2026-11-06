@@ -9,7 +9,7 @@
         <ToolbarItem Text="{x:Static res:Resources.strRotate}" Clicked="ToolbarItem_Clicked" Order="Secondary" />
         <!--<ToolbarItem Text="Puzzles" Order="Secondary" />-->
         <ToolbarItem x:Name="MenuItemSettings" Clicked="MenuItemSettings_Clicked" Text="{x:Static res:Resources.strSettings}" Order="Secondary" />
-        <ToolbarItem Text="{x:Static res:Resources.strAbout}" Order="Secondary" />
+        <ToolbarItem x:Name="MenuItemAbout" Clicked="MenuItemAbout_Clicked" Text="{x:Static res:Resources.strAbout}" Order="Secondary" />
     </ContentPage.ToolbarItems>
 
     <ContentPage.Resources>

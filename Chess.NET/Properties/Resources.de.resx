@@ -247,12 +247,6 @@
   <data name="strRight" xml:space="preserve">
     <value>Rechts</value>
   </data>
-  <data name="strAboutLine1" xml:space="preserve">
-    <value>Programmiert von Andreas Leopold</value>
-  </data>
-  <data name="strAbout" xml:space="preserve">
-    <value>Über</value>
-  </data>
   <data name="strPuzzle" xml:space="preserve">
     <value>Rätsel</value>
   </data>
@@ -330,12 +324,6 @@
   </data>
   <data name="strPlayer" xml:space="preserve">
     <value>Spieler</value>
-  </data>
-  <data name="strLLisydra" xml:space="preserve">
-    <value>(Zeichnerin der Comic-Figuren)</value>
-  </data>
-  <data name="strContributors" xml:space="preserve">
-    <value>Mitwirkende:</value>
   </data>
   <data name="strPleaseSetAName" xml:space="preserve">
     <value>Bitte legen Sie zunächst Ihren Namen (zu mindestens für Spieler 1) in den Einstellungen fest!</value>

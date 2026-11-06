@@ -250,12 +250,6 @@
   <data name="strRight" xml:space="preserve">
     <value>Right</value>
   </data>
-  <data name="strAboutLine1" xml:space="preserve">
-    <value>Programmed by Andreas Leopold</value>
-  </data>
-  <data name="strAbout" xml:space="preserve">
-    <value>About</value>
-  </data>
   <data name="strPuzzle" xml:space="preserve">
     <value>Puzzle</value>
   </data>
@@ -341,12 +335,6 @@
   <data name="strBots" xml:space="preserve">
     <value>Bots</value>
     <comment>@Invariant</comment>
-  </data>
-  <data name="strLLisydra" xml:space="preserve">
-    <value>(Illustrator of the comic figures)</value>
-  </data>
-  <data name="strContributors" xml:space="preserve">
-    <value>Contributors:</value>
   </data>
   <data name="strPleaseSetAName" xml:space="preserve">
     <value>Please set a name (at least for Player 1) in the settings dialog!</value>

@@ -61,6 +61,24 @@ namespace Chess.NET.Shared {
         }
         
         /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die About ähnelt.
+        /// </summary>
+        public static string strAbout {
+            get {
+                return ResourceManager.GetString("strAbout", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Programmed by Andreas Leopold ähnelt.
+        /// </summary>
+        public static string strAboutLine1 {
+            get {
+                return ResourceManager.GetString("strAboutLine1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Sucht eine lokalisierte Zeichenfolge, die Background: ähnelt.
         /// </summary>
         public static string strBackground {
@@ -115,11 +133,29 @@ namespace Chess.NET.Shared {
         }
         
         /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Contributors: ähnelt.
+        /// </summary>
+        public static string strContributors {
+            get {
+                return ResourceManager.GetString("strContributors", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Sucht eine lokalisierte Zeichenfolge, die Knight ähnelt.
         /// </summary>
         public static string strKnight {
             get {
                 return ResourceManager.GetString("strKnight", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die (Illustrator of the comic figures) ähnelt.
+        /// </summary>
+        public static string strLLisydra {
+            get {
+                return ResourceManager.GetString("strLLisydra", resourceCulture);
             }
         }
         

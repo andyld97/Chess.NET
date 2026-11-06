@@ -69,4 +69,9 @@ public partial class SettingsDialog : ContentPage
 
         await Navigation.PopModalAsync();
     }
+
+    private async void DialogHeader_CloseRequested(object sender, EventArgs e)
+    {
+        await Navigation.PopModalAsync();
+    }
 }

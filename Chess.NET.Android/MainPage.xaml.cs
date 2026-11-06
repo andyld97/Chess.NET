@@ -354,6 +354,13 @@ namespace Chess.NET.Android
             }
         }
 
+
+        private async void MenuItemAbout_Clicked(object sender, EventArgs e)
+        {
+            var dialog = new AboutDialog();
+            await Navigation.PushModalAsync(dialog);
+        }
+
         private async void MenuItemSettings_Clicked(object sender, EventArgs e)
         {
             var dialog = new SettingsDialog();

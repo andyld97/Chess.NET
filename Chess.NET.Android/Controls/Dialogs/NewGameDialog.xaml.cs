@@ -33,4 +33,9 @@ public partial class NewGameDialog : ContentPage
         Preferences.Set("LastSelectedTimeControl", CmbTimeControl.SelectedIndex);
         _tcs.SetResult((selectedIndex, CmbTimeControl.SelectedIndex));
     }
+
+    private async void DialogHeader_CloseRequested(object sender, EventArgs e)
+    {
+        await Navigation.PopModalAsync();
+    }
 }

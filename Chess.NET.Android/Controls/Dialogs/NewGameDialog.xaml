@@ -2,12 +2,13 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Chess.NET.Android.Controls.Dialogs.NewGameDialog"
+             xmlns:dialogs="clr-namespace:Chess.NET.Android.Controls.Dialogs"
              xmlns:res="clr-namespace:Chess.NET.Android.Properties"
              xmlns:sharedres="clr-namespace:Chess.NET.Shared;assembly=Chess.NET.Shared"
              Title="{x:Static res:Resources.strNewGame}" BackgroundColor="#80000000">    
     <Border Background="{DynamicResource BackgroundColor}" StrokeShape="RoundRectangle" StrokeThickness="2" Stroke="{DynamicResource AccentColor}" Padding="20" WidthRequest="300" HorizontalOptions="Center" VerticalOptions="Center">
         <VerticalStackLayout Spacing="10">
-            <Label TextColor="{DynamicResource TextColor}" Text="{x:Static res:Resources.strStartNewGame}" FontSize="18" />
+            <dialogs:DialogHeader Title="{x:Static res:Resources.strStartNewGame}" CloseRequested="DialogHeader_CloseRequested"/>
             <Picker x:Name="OpponentPicker" TextColor="{DynamicResource TextColor}" Title="{x:Static res:Resources.strPleaseChoose}" TitleColor="Green" />
 
             <Label Text="{x:Static sharedres:Resources.strTimeControl_Title}" Margin="2,2,2,0" />

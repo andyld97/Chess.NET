@@ -61,24 +61,6 @@ namespace Chess.NET.Properties {
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die About ähnelt.
-        /// </summary>
-        public static string strAbout {
-            get {
-                return ResourceManager.GetString("strAbout", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die Programmed by Andreas Leopold ähnelt.
-        /// </summary>
-        public static string strAboutLine1 {
-            get {
-                return ResourceManager.GetString("strAboutLine1", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Sucht eine lokalisierte Zeichenfolge, die Auto Promote To Queen ähnelt.
         /// </summary>
         public static string strAutoPromote {
@@ -120,15 +102,6 @@ namespace Chess.NET.Properties {
         public static string strCheckmate {
             get {
                 return ResourceManager.GetString("strCheckmate", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die Contributors: ähnelt.
-        /// </summary>
-        public static string strContributors {
-            get {
-                return ResourceManager.GetString("strContributors", resourceCulture);
             }
         }
         
@@ -363,15 +336,6 @@ namespace Chess.NET.Properties {
         public static string strLeft {
             get {
                 return ResourceManager.GetString("strLeft", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die (Illustrator of the comic figures) ähnelt.
-        /// </summary>
-        public static string strLLisydra {
-            get {
-                return ResourceManager.GetString("strLLisydra", resourceCulture);
             }
         }
         

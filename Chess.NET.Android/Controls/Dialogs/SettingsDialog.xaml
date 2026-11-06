@@ -5,10 +5,11 @@
              xmlns:res="clr-namespace:Chess.NET.Android.Properties"
              xmlns:sharedres="clr-namespace:Chess.NET.Shared;assembly=Chess.NET.Shared"
              xmlns:controls="clr-namespace:Chess.NET.Android.Controls"
+             xmlns:dialogs="clr-namespace:Chess.NET.Android.Controls.Dialogs"
              BackgroundColor="#80000000">
     <Border Background="{DynamicResource BackgroundColor}" StrokeShape="RoundRectangle" StrokeThickness="2" Stroke="{DynamicResource AccentColor}" Padding="20" WidthRequest="300" HorizontalOptions="Center" VerticalOptions="Center">
         <VerticalStackLayout Spacing="6">
-            <Label Text="{x:Static res:Resources.strSettings}" TextColor="{DynamicResource TextColor}" FontSize="18" FontAttributes="Bold" />
+            <dialogs:DialogHeader Title="{x:Static res:Resources.strSettings}" CloseRequested="DialogHeader_CloseRequested" />
 
             <VerticalStackLayout Padding="4" Spacing="6" Margin="0,15,0,0" >
                 <Label Text="{x:Static sharedres:Resources.strTheme_Title}" TextColor="{DynamicResource TextColor}" FontSize="14" />

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Chess.NET.Android.Controls.Dialogs.AboutDialog"
+             xmlns:sharedres="clr-namespace:Chess.NET.Shared;assembly=Chess.NET.Shared"
+             xmlns:dialogs="clr-namespace:Chess.NET.Android.Controls.Dialogs"
+             Title="{x:Static sharedres:Resources.strAbout}" BackgroundColor="#80000000">
+    <Border Background="{DynamicResource BackgroundColor}" StrokeShape="RoundRectangle" StrokeThickness="2" Stroke="{DynamicResource AccentColor}" Padding="20" WidthRequest="300" HorizontalOptions="Center" VerticalOptions="Center">
+        <Grid Margin="5,5,5,20">
+            <VerticalStackLayout>
+                <!--<Label Text="{x:Static sharedres:Resources.strAbout}" TextColor="{DynamicResource TextColor}" FontSize="18" FontAttributes="Bold" />-->
+                <dialogs:DialogHeader Title="{x:Static sharedres:Resources.strAbout}" CloseRequested="DialogHeader_CloseRequested" />
+                <Image Source="logo.png" WidthRequest="200" Margin="0,15,0,0" />
+
+                <Label Margin="5,10,0,0" Padding="0,0,0,10" HorizontalTextAlignment="Center" HorizontalOptions="Center">
+                    <Label.FormattedText>
+                        <FormattedString>
+                            <Span x:Name="TextCopyright" Text="@copy 2026" FontAttributes="Bold" />
+                            <Span Text="&#10;" />
+                            <Span Text="{x:Static sharedres:Resources.strAboutLine1}" />
+                            <Span Text="&#10;&#10;" />
+
+                            <Span x:Name="LnkHomepage" Text="Homepage" TextColor="#3B82F6" TextDecorations="Underline">
+                                <Span.GestureRecognizers>
+                                    <TapGestureRecognizer Tapped="TapGestureRecognizer_Tapped" />
+                                </Span.GestureRecognizers>
+                            </Span>
+                            <Span Text=" | " />
+                            <Span x:Name="LnkGitHub" Text="GitHub" TextColor="#3B82F6" TextDecorations="Underline">
+                                <Span.GestureRecognizers>
+                                    <TapGestureRecognizer Tapped="TapGestureRecognizer_Tapped_1" />
+                                </Span.GestureRecognizers>
+                            </Span>
+                            <Span Text="&#10;&#10;" />
+
+                            <Span Text="{x:Static sharedres:Resources.strContributors}" FontAttributes="Bold" />
+                            <Span Text="&#10;" />
+                            <Span x:Name="LnkLisydra" Text="Lisydra" TextColor="#3B82F6" TextDecorations="Underline">
+                                <Span.GestureRecognizers>
+                                    <TapGestureRecognizer Tapped="TapGestureRecognizer_Tapped_2" />
+                                </Span.GestureRecognizers>
+                            </Span>
+                            <Span Text="{x:Static sharedres:Resources.strLLisydra}" />
+                            <Span Text="&#10;&#10;" />
+
+                            <Span x:Name="TextVersion" Text="Version 1.0.0" FontAttributes="Bold" />
+                            <Span Text="&#10;" />
+                            <Span x:Name="TextService" Text="Powered by .NET 10.0.14" />
+                        </FormattedString>
+                    </Label.FormattedText>
+                </Label>
+            </VerticalStackLayout>
+        </Grid>
+    </Border>
+</ContentPage>
