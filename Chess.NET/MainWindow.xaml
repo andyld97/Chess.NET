@@ -64,7 +64,7 @@
 
                 <TextBlock Margin="5,2,0,0" Padding="3" x:Name="TextPlayerInfoTop" Grid.Column="1" />
 
-                <Border x:Name="BorderTimeControlTop" HorizontalAlignment="Right" Grid.Column="2" Background="{DynamicResource PlayerTimeDefaultColor}" CornerRadius="6" MinWidth="100" VerticalAlignment="Center" Margin="5">
+                <Border x:Name="BorderTimeControlTop" Visibility="Hidden" HorizontalAlignment="Right" Grid.Column="2" Background="{DynamicResource PlayerTimeDefaultColor}" CornerRadius="6" MinWidth="100" VerticalAlignment="Center" Margin="5">
                     <TextBlock x:Name="TextPlayerTopTimeControl" Text="00:00" FontSize="28" FontWeight="Bold" FontFamily="Consolas" Foreground="#BBBBBB" HorizontalAlignment="Center" />
                 </Border>
             </Grid>
@@ -146,7 +146,7 @@
 
                 <TextBlock Margin="5,2,0,0" Padding="3" x:Name="TextPlayerInfoBottom" Grid.Column="1" />
 
-                <Border x:Name="BorderTimeControlBottom" HorizontalAlignment="Right" Grid.Column="2" Background="{DynamicResource PlayerTimeDefaultColor}" CornerRadius="6" MinWidth="100" VerticalAlignment="Center" Margin="5">
+                <Border x:Name="BorderTimeControlBottom" Visibility="Hidden" HorizontalAlignment="Right" Grid.Column="2" Background="{DynamicResource PlayerTimeDefaultColor}" CornerRadius="6" MinWidth="100" VerticalAlignment="Center" Margin="5">
                     <TextBlock x:Name="TextPlayerBottomTimeControl" Text="00:00" FontSize="28" FontWeight="Bold" FontFamily="Consolas" Foreground="#BBBBBB" HorizontalAlignment="Center" />
                 </Border>
             </Grid>

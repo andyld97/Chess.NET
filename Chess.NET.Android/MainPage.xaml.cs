@@ -57,6 +57,9 @@ namespace Chess.NET.Android
         {
             MainThread.BeginInvokeOnMainThread(() =>            
             {
+                BorderTimeControlTop.IsVisible = true;
+                BorderTimeControlBottom.IsVisible = true;
+
                 if (Chessboard.IsMirrored)
                 {
                     TextPlayerTopTimeControl.Text = playerWhiteTime.ToString(@"mm\:ss");
@@ -249,7 +252,7 @@ namespace Chess.NET.Android
             await Navigation.PushModalAsync(dialog);
 
             var result = await dialog.WaitForResultAsync();
-            var tc = Shared.Helper.ItemToTimeControl(result.Item2);
+            var tc = (Shared.Model.TimeControl)result.Item2;
 
             Chessboard.Reset();
 

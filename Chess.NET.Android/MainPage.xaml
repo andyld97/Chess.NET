@@ -42,7 +42,7 @@
 
             <Label Grid.Column="1" Padding="4" x:Name="TextPlayerInfoTop" />
 
-            <Border x:Name="BorderTimeControlTop" Grid.Column="2" HorizontalOptions="End" VerticalOptions="Center" Background="{DynamicResource PlayerTimeDefaultColor}" StrokeShape="RoundRectangle 6" StrokeThickness="0" MinimumWidthRequest="100" Margin="5">
+            <Border x:Name="BorderTimeControlTop" IsVisible="False" Grid.Column="2" HorizontalOptions="End" VerticalOptions="Center" Background="{DynamicResource PlayerTimeDefaultColor}" StrokeShape="RoundRectangle 6" StrokeThickness="0" MinimumWidthRequest="100" Margin="5">
                 <Label x:Name="TextPlayerTopTimeControl" Text="00:00" FontSize="28" FontAttributes="Bold" FontFamily="monospace" TextColor="#BBBBBB" HorizontalOptions="Center" />
             </Border>
         </Grid>
@@ -69,7 +69,7 @@
 
                 <Label Grid.Column="1" Padding="4" x:Name="TextPlayerInfoBottom" />
 
-                <Border x:Name="BorderTimeControlBottom" Grid.Column="2" HorizontalOptions="End" VerticalOptions="Center" Background="{DynamicResource PlayerTimeDefaultColor}" StrokeShape="RoundRectangle 6" StrokeThickness="0" MinimumWidthRequest="100" Margin="5">
+                <Border x:Name="BorderTimeControlBottom" IsVisible="False" Grid.Column="2" HorizontalOptions="End" VerticalOptions="Center" Background="{DynamicResource PlayerTimeDefaultColor}" StrokeShape="RoundRectangle 6" StrokeThickness="0" MinimumWidthRequest="100" Margin="5">
                     <Label x:Name="TextPlayerBottomTimeControl" Text="00:00" FontSize="28" FontAttributes="Bold" FontFamily="monospace" TextColor="#BBBBBB" HorizontalOptions="Center" />
                 </Border>
             </Grid>

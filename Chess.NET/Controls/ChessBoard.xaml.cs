@@ -42,7 +42,7 @@ namespace Chess.NET.Controls
             InitializeComponent();
             InitializeSquares();
 
-            Restart(null, TimeControl.Rapid10);
+            Restart(null, (Shared.Model.TimeControl)Settings.Instance.LastSelectedTimeControl);
         }
 
         public void LoadPuzzle(Puzzle puzzle)
@@ -115,6 +115,7 @@ namespace Chess.NET.Controls
             isOnline = false;
             playerOnlineColor = null;
             game.ResetTimeControl(true);
+            ResetDrag();
         }
 
         public void Mirror()

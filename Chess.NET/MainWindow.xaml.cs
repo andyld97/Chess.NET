@@ -121,6 +121,9 @@ namespace Chess.NET
         {
             Application.Current?.Dispatcher?.Invoke(() =>
             {
+                BorderTimeControlTop.Visibility = Visibility.Visible;
+                BorderTimeControlBottom.Visibility = Visibility.Visible;
+
                 if (Chessboard.IsMirrored)
                 {
                     TextPlayerTopTimeControl.Text = playerWhiteTime.ToString(@"mm\:ss");
@@ -280,7 +283,7 @@ namespace Chess.NET
             else
                 opponent = null;
 
-            Chessboard.Restart(opponent, Shared.Helper.ItemToTimeControl(CmbTimeControl.SelectedIndex));
+            Chessboard.Restart(opponent, (Shared.Model.TimeControl)CmbTimeControl.SelectedIndex);
             RefreshPlayerDisplay();
         }
 
@@ -320,7 +323,7 @@ namespace Chess.NET
         {
             try
             {
-                client = await _networkClient.ConnectAsync(Settings.Instance.Player1Name, Settings.Instance.Player1Elo, Shared.Helper.ItemToTimeControl(CmbTimeControl.SelectedIndex));
+                client = await _networkClient.ConnectAsync(Settings.Instance.Player1Name, Settings.Instance.Player1Elo, (Shared.Model.TimeControl)CmbTimeControl.SelectedIndex);
                 waitingQueueDialog?.Client = client;
 
                 if (client == null)

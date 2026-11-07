@@ -12,12 +12,6 @@ namespace Chess.NET.Shared
             return Color.White;
         }
 
-        public static TimeControl ItemToTimeControl(int selectedIndex)
-        {
-            List<TimeControl> values = [TimeControl.Bullet1, TimeControl.Blitz3, TimeControl.Blitz5, TimeControl.Rapid10, TimeControl.Rapid15, TimeControl.Classical30, TimeControl.Classical60];
-            return values[selectedIndex];
-        }
-
         public static char ToUciChar(this PieceType type) => type switch
         {
             PieceType.Queen => 'q',

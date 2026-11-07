@@ -67,7 +67,7 @@ public partial class ChessBoard : ContentView
         game = new Game();
         game.OnPlaySound += Game_OnPlaySound;
         game.OnGameOver += Game_OnGameOver;
-        game.StartNewGame(null);
+        game.StartNewGame(null, false, (Shared.Model.TimeControl)Settings.Instance.LastSelectedTimeControl);
         RenderChessBoard(game.Board, false);        
     }
 
