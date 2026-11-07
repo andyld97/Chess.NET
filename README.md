@@ -15,12 +15,10 @@ It includes (almost) full game rules, a WPF-based GUI, custom bot logic, and eve
 
 ![Chess.NET Screenshot](Assets/screenshot.png)
 
-### Missing Features
-- Time Control is now fixed at 10 min (selection dialog is missing currently)
-
 ### Features
 - Play against bots (e.g Stockfish oder Stupiod) or even online (if there are any other players)
 - Drag & Drop pieces
+- Time Control
 - You can play puzzles (currently there are only two)
 - Settings for your name, elo (Player 1 and Player 2) or bot settings (difficutly)
 - GUI is localized in DE/EN
