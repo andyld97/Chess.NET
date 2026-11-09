@@ -47,7 +47,7 @@ namespace Chess.NET.Online.Services
             try
             {
                 var game = new Game();
-                game.StartNewGame(null);
+                game.StartNewGame(null, false, match.TimeControl);
                 game.OnMovedPiece += async delegate (MoveNotation move)
                 {
                     // Notify clients

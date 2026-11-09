@@ -152,7 +152,7 @@ namespace Chess.NET.Android
         {
             MainThread.BeginInvokeOnMainThread(async () =>
             {
-                // TODO Chessboard.DisablePieces();
+                Chessboard.DisablePieces();
                 ButtonResign.IsVisible = false;
 
                 string playerWon = string.Empty;
@@ -167,25 +167,25 @@ namespace Chess.NET.Android
                 Chessboard.ResetOnline();
                 await _networkClient.DisconnectAsync();
 
-               await Task.Delay(50).ContinueWith(t =>
-               {
-                   MainThread.BeginInvokeOnMainThread(async () =>
-                   {
-                       // Only consider sounds that are normally not played using the Game-Class
-                       if (matchEnd.Result == GameResult.Disconnected || matchEnd.Result == GameResult.Resign || matchEnd.Result == GameResult.Timeout)
-                          await Sound.Play(SoundType.Checkmate);
+                await Task.Delay(50).ContinueWith(t =>
+                {
+                    MainThread.BeginInvokeOnMainThread(async () =>
+                    {
+                        // Only consider sounds that are normally not played using the Game-Class
+                        if (matchEnd.Result == GameResult.Disconnected || matchEnd.Result == GameResult.Resign || matchEnd.Result == GameResult.Timeout)
+                            await Sound.Play(SoundType.Checkmate);
 
 #if ANDROID
-                       A.Widget.Toast.MakeText(A.App.Application.Context, $"Game Over: {matchEnd.Result}. Won: {(matchEnd.ColorWins == null ? "-" : matchEnd.ColorWins.ToString())}", A.Widget.ToastLength.Long).Show();
+                        A.Widget.Toast.MakeText(A.App.Application.Context, $"Game Over: {matchEnd.Result}. Won: {(matchEnd.ColorWins == null ? "-" : matchEnd.ColorWins.ToString())}", A.Widget.ToastLength.Long).Show();
 #endif
 
-                       // TODO
-                       /*GameOverDialog gameOverDialog = new GameOverDialog(matchEnd.Result, matchEnd.ColorWins, playerWon) { Owner = this };
-                       gameOverDialog.ShowDialog();*/
+                        // TODO
+                        /*GameOverDialog gameOverDialog = new GameOverDialog(matchEnd.Result, matchEnd.ColorWins, playerWon) { Owner = this };
+                        gameOverDialog.ShowDialog();*/
 
-                       isOnlineMatch = false;
-                   });
-               });
+                        isOnlineMatch = false;
+                    });
+                });
 
             });
         }
@@ -237,6 +237,7 @@ namespace Chess.NET.Android
                 Chessboard.Game.StartNewGame(null, true, match.TimeControl);
                 Chessboard.RenderChessBoard(Chessboard.Game.Board, false);
                 Chessboard.SetOnline(ownPieceColor.Value);
+                Chessboard.EnablePieces();
                 RefreshPlayerDisplay();
             });
         }
@@ -281,6 +282,7 @@ namespace Chess.NET.Android
                 }
             }
 
+            Chessboard.EnablePieces();
             RefreshPlayerDisplay();
         }
 

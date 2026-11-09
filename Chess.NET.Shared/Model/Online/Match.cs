@@ -6,6 +6,8 @@ namespace Chess.NET.Shared.Model.Online
     {
         public string MatchId { get; set; } = string.Empty;
 
+        public TimeControl TimeControl { get; set; }
+
         [JsonIgnore] // a client only should know it's own client id due to security restrictions
         public Client ClientWhite { get; set; } = null!;
 

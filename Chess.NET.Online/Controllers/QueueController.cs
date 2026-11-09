@@ -47,20 +47,20 @@ namespace Chess.NET.Online.Controllers
 
             if (match != null)
             {
-                TimeControl timeControl = Determine(match.ClientWhite.TimeControl, match.ClientBlack.TimeControl);
+                match.TimeControl = Determine(match.ClientWhite.TimeControl, match.ClientBlack.TimeControl);
 
-                _logger.LogInformation($"Found match: {match.ClientWhite.PlayerName} [WHITE] vs {match.ClientBlack.PlayerName} [BLACK]: {timeControl}");
+                _logger.LogInformation($"Found match: {match.ClientWhite.PlayerName} [WHITE] vs {match.ClientBlack.PlayerName} [BLACK]: {match.TimeControl}");
 
-                await _webhook.PostWebHookAsync(WebhookAPI.Webhook.LogLevel.Info, $"Found match: {match.ClientWhite.PlayerName} [WHITE] vs {match.ClientBlack.PlayerName} [BLACK]: {timeControl}", "Chess");
+                await _webhook.PostWebHookAsync(WebhookAPI.Webhook.LogLevel.Info, $"Found match: {match.ClientWhite.PlayerName} [WHITE] vs {match.ClientBlack.PlayerName} [BLACK]: {match.TimeControl}", "Chess");
    
                 MatchInfo matchInfoWhite = new MatchInfo
                 {
                     MatchId = match.MatchId,
                     OpponentName = match.ClientBlack.PlayerName,
                     OpponentElo = match.ClientBlack.PlayerElo,
-                    OpponentColor = Shared.Model.Color.Black,
-                    ClientColor = Shared.Model.Color.White,
-                    TimeControl = timeControl
+                    OpponentColor = Color.Black,
+                    ClientColor = Color.White,
+                    TimeControl = match.TimeControl,
                 };
 
                 MatchInfo matchInfoBlack = new MatchInfo
@@ -68,9 +68,9 @@ namespace Chess.NET.Online.Controllers
                     MatchId = match.MatchId,
                     OpponentName = match.ClientWhite.PlayerName,
                     OpponentElo = match.ClientWhite.PlayerElo,
-                    OpponentColor = Shared.Model.Color.White,
-                    ClientColor = Shared.Model.Color.Black,
-                    TimeControl = timeControl
+                    OpponentColor = Color.White,
+                    ClientColor = Color.Black,
+                    TimeControl = match.TimeControl,
                 };
 
                 await _hub.Clients.Users(match.ClientWhite.ClientID).SendAsync("MatchFound", matchInfoWhite);

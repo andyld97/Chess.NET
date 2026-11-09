@@ -130,6 +130,18 @@ public partial class ChessBoard : ContentView
         game.ResetTimeControl(true);
     }
 
+    public void DisablePieces()
+    {
+        ClearMoveIndicators();
+        ignoreTapping = true;
+    }
+
+
+    public void EnablePieces()
+    {
+        ignoreTapping = false;
+    }
+
     private async void Game_OnPlaySound(SoundType type)
     {
         await Sound.Play(type);
