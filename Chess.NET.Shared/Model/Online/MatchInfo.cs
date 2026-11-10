@@ -13,7 +13,5 @@
         public Color ClientColor {  get; set; }
 
         public TimeControl TimeControl { get; set; } = TimeControl.Rapid10;
-
-        public DateTime StartTimestamp { get; set; }
     }
 }
