@@ -3,8 +3,6 @@
 **Chess.NET** is a modern chess game in **C# / .NET 10**, built completely from scratch.  
 It includes (almost) full game rules, a WPF-based GUI, custom bot logic, and even the ability to **play against Stockfish** via UCI.
 
-> ⚠️ **ATTENTION**  This game isn't finished yet and it's still very rudimental!
-
 <a href="https://apps.microsoft.com/detail/9pfhww5dh8wg" target="_self" >
 	<img src="https://get.microsoft.com/images/en-us%20dark.svg" width="200"/>
 </a>
