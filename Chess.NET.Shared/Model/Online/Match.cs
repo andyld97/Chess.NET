@@ -8,6 +8,8 @@ namespace Chess.NET.Shared.Model.Online
 
         public TimeControl TimeControl { get; set; }
 
+        public DateTime StartTimestamp { get; set; }
+
         [JsonIgnore] // a client only should know it's own client id due to security restrictions
         public Client ClientWhite { get; set; } = null!;
 

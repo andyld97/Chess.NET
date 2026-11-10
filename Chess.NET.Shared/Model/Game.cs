@@ -756,6 +756,8 @@ namespace Chess.NET.Shared.Model
 
         private void HandleTimeControl()
         {
+            var now = DateTime.Now;
+
             if (IsGameOver)
             {
                 ResetTimeControl(true);
@@ -769,28 +771,39 @@ namespace Chess.NET.Shared.Model
                 // White's turn
                 
                 sdb = playerBlackTime;
-                sdw = playerWhiteTime - (DateTime.Now - lastMoveDT);
+                sdw = playerWhiteTime - (now - lastMoveDT);
 
-                if (sdw <= TimeSpan.Zero && !isOnlineGame)
+                if (sdw <= TimeSpan.Zero)
                 {
-                    IsGameOver = true;
+                    playerWhiteTime = sdw = TimeSpan.Zero;
+
                     ResetTimeControl(true);
-                    OnGameOver?.Invoke(GameResult.Timeout, Color.Black);
-                    OnPlaySound?.Invoke(SoundType.Checkmate);
+
+                    if (!isOnlineGame)
+                    {
+                        IsGameOver = true;
+                        OnGameOver?.Invoke(GameResult.Timeout, Color.Black);
+                        OnPlaySound?.Invoke(SoundType.Checkmate);
+                    }
                 }
             }
             else
             {
                 // Black's turn
                 sdw = playerWhiteTime;
-                sdb = playerBlackTime - (DateTime.Now - lastMoveDT);
+                sdb = playerBlackTime - (now - lastMoveDT);
 
-                if (sdb <= TimeSpan.Zero && !isOnlineGame)
+                if (sdb <= TimeSpan.Zero)
                 {
-                    IsGameOver = true;
+                    playerBlackTime = sdb = TimeSpan.Zero;
                     ResetTimeControl(true);
-                    OnGameOver?.Invoke(GameResult.Timeout, Color.White);
-                    OnPlaySound?.Invoke(SoundType.Checkmate);
+
+                    if (!isOnlineGame)
+                    {
+                        IsGameOver = true;
+                        OnGameOver?.Invoke(GameResult.Timeout, Color.White);
+                        OnPlaySound?.Invoke(SoundType.Checkmate);
+                    }
                 }
             }
 
