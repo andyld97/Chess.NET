@@ -720,6 +720,9 @@ namespace Chess.NET.Shared.Model
         #region TimeControl Variables
 
         private bool isTimeControlInitialized = false;
+
+        private object sync = new object();
+
         private TimeControl timeControl;
         private DateTime lastMoveDT = DateTime.MinValue;
 
@@ -751,12 +754,18 @@ namespace Chess.NET.Shared.Model
 
         private void GameTimeControlTimer_Elapsed(object? sender, System.Timers.ElapsedEventArgs e)
         {
-            HandleTimeControl();
+            lock (sync)
+            {
+                HandleTimeControl();
+            }
         }
 
         private void HandleTimeControl()
         {
             var now = DateTime.Now;
+
+            if (!isTimeControlInitialized)
+                return;
 
             if (IsGameOver)
             {
@@ -776,7 +785,6 @@ namespace Chess.NET.Shared.Model
                 if (sdw <= TimeSpan.Zero)
                 {
                     playerWhiteTime = sdw = TimeSpan.Zero;
-
                     ResetTimeControl(true);
 
                     if (!isOnlineGame)
@@ -843,18 +851,29 @@ namespace Chess.NET.Shared.Model
 
         public void ResetTimeControl(bool keepTime = false)
         {
-            if (!keepTime)
+            lock (sync)
             {
-                playerWhiteTime = GetTime(timeControl);
-                playerBlackTime = GetTime(timeControl);
+                if (!keepTime)
+                {
+                    playerWhiteTime = GetTime(timeControl);
+                    playerBlackTime = GetTime(timeControl);
+                }
+                else if (isTimeControlInitialized)
+                {
+                    var elapsed = DateTime.Now - lastMoveDT;
+
+                    if (PlayersTurn == Color.White)
+                        playerWhiteTime = TimeSpan.FromTicks(Math.Max(0, (playerWhiteTime - elapsed).Ticks));
+                    else
+                        playerBlackTime = TimeSpan.FromTicks(Math.Max(0, (playerBlackTime - elapsed).Ticks));
+                }
+
+                gameTimeControlTimer.Stop();
+                gameTimeControlTimer.Elapsed -= GameTimeControlTimer_Elapsed;
+
+                isTimeControlInitialized = false;
+                OnUpdatePlayerTime?.Invoke(playerWhiteTime, playerBlackTime);
             }
-
-            // Stop the timer
-            gameTimeControlTimer.Stop();
-            gameTimeControlTimer.Elapsed -= GameTimeControlTimer_Elapsed;
-
-            OnUpdatePlayerTime?.Invoke(playerWhiteTime, playerBlackTime);
-            isTimeControlInitialized = false;
         }
 
         private static TimeSpan GetTime(TimeControl timeControl)

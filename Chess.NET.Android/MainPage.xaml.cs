@@ -26,6 +26,8 @@ namespace Chess.NET.Android
 #if ANDROID
             MainActivity.Paused += MainActivity_Paused;
 #endif
+
+            DeviceDisplay.Current.KeepScreenOn = true;
         }
 
         private async void MainActivity_Paused()
@@ -34,7 +36,7 @@ namespace Chess.NET.Android
             {
                 try
                 {
-                    Chessboard.ResetOnline();
+                    Chessboard.Reset();
                     await _networkClient.DisconnectAsync();
                 }
                 catch
@@ -49,6 +51,7 @@ namespace Chess.NET.Android
                     client = null;
                     ownPieceColor = null;
                     _networkClient = null;
+                    isOnlineMatch = false;
                 }
             }
         }
