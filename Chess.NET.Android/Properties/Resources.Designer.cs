@@ -241,7 +241,7 @@ namespace Chess.NET.Android.Properties {
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die Start Game ähnelt.
+        ///   Sucht eine lokalisierte Zeichenfolge, die New Game ähnelt.
         /// </summary>
         public static string strStartGame {
             get {

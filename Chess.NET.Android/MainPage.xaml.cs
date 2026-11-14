@@ -26,7 +26,11 @@ namespace Chess.NET.Android
 #if ANDROID
             MainActivity.Paused += MainActivity_Paused;
 #endif
+        }
 
+        protected override void OnAppearing()
+        {
+            base.OnAppearing();
             DeviceDisplay.Current.KeepScreenOn = true;
         }
 
@@ -117,6 +121,7 @@ namespace Chess.NET.Android
             _networkClient.OnMatchFound += _networkClient_OnMatchFound;
             _networkClient.OnMoveMade += _networkClient_OnMoveMade;
             _networkClient.OnMatchEnds += _networkClient_OnMatchEnds;
+            _networkClient.OnMatchTimeUpdate += _networkClient_OnMatchTimeUpdate;
 
             try
             {
@@ -136,6 +141,14 @@ namespace Chess.NET.Android
                 // TODO
                 // MessageBox.Show(string.Format(Properties.Resources.strFailedToConnectToServer, ex.Message), Properties.Resources.strError, MessageBoxButton.OK, MessageBoxImage.Error);
             }
+        }
+
+        private void _networkClient_OnMatchTimeUpdate(MatchTimeUpdate matchTimeUpdate)
+        {
+            Chessboard.Game.PlayerWhiteTime = matchTimeUpdate.PlayerWhiteTime;
+            Chessboard.Game.PlayerBlackTime = matchTimeUpdate.PlayerBlackTime;
+
+            Game_OnUpdatePlayerTime(matchTimeUpdate.PlayerWhiteTime, matchTimeUpdate.PlayerBlackTime);
         }
 
         private async void WaitingQueueDialog_OnWaitingQueueExited()

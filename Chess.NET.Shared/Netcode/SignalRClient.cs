@@ -21,6 +21,9 @@ namespace Chess.NET.Shared.Netcode
 
         public delegate void onMatchEnds(MatchEnd matchEnd);
         public event onMatchEnds? OnMatchEnds;
+
+        public delegate void onMatchTimeUpdate(MatchTimeUpdate matchTimeUpdate);
+        public event onMatchTimeUpdate? OnMatchTimeUpdate;
         #endregion
 
         public async Task<Client?> ConnectAsync(string playerName, string playerElo, TimeControl timeControl)
@@ -43,6 +46,11 @@ namespace Chess.NET.Shared.Netcode
             connection.On<MatchEnd>("GameOver", async payload =>
             {
                 OnMatchEnds?.Invoke(payload);
+            });
+
+            connection.On<MatchTimeUpdate>("UpdatePlayerTime", async payload =>
+            {
+                OnMatchTimeUpdate?.Invoke(payload);
             });
 
             await connection.StartAsync();

@@ -160,7 +160,7 @@
     <value>Searching for opponent ...</value>
   </data>
   <data name="strStartGame" xml:space="preserve">
-    <value>Start Game</value>
+    <value>New Game</value>
   </data>
   <data name="strResign" xml:space="preserve">
     <value>Resign</value>

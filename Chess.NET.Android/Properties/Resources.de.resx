@@ -154,7 +154,7 @@
     <value>Gegner wird gesucht ...</value>
   </data>
   <data name="strStartGame" xml:space="preserve">
-    <value>Spiel starten</value>
+    <value>Neues Spiel</value>
   </data>
   <data name="strResign" xml:space="preserve">
     <value>Aufgeben</value>

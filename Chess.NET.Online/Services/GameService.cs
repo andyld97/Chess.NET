@@ -31,8 +31,7 @@ namespace Chess.NET.Online.Services
 
         public Match? GetMatch(string matchId)
         {
-            var match = matches.FirstOrDefault(m => m.MatchId == matchId);
-            return match;
+            return matches.FirstOrDefault(m => m.MatchId == matchId);
         }
 
         public Match? GetMatchByClientId(string clientId)
@@ -56,6 +55,11 @@ namespace Chess.NET.Online.Services
                 game.OnGameOver += async delegate (GameResult result, Color? colorWon)
                 {
                     await EndMatchAsync(match.MatchId, result, colorWon);
+                };
+
+                game.OnUpdatePlayerTime += async delegate (TimeSpan playerWhiteTime, TimeSpan playerBlackTime)
+                {
+                    await _hub.Clients.Users([match.ClientWhite.ClientID, match.ClientBlack.ClientID]).SendAsync("UpdatePlayerTime", new MatchTimeUpdate() { PlayerWhiteTime = playerWhiteTime, PlayerBlackTime = playerBlackTime });
                 };
 
                 match.Game = game;

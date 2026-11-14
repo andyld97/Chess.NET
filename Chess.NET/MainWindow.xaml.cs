@@ -34,8 +34,6 @@ namespace Chess.NET
 
         #endregion
 
-        // TODO: Highlight welcher Spieler gerade dran ist!
-
         #region Ctor
         public MainWindow()
         {
@@ -313,10 +311,19 @@ namespace Chess.NET
             _networkClient.OnMatchFound += NetworkClient_OnMatchFound;
             _networkClient.OnMoveMade += NetworkClient_OnMoveMade;
             _networkClient.OnMatchEnds += NetworkClient_OnMatchEnds;
+            _networkClient.OnMatchTimeUpdate += _networkClient_OnMatchTimeUpdate;
 
             waitingQueueDialog = new WaitingQueueDialog() { Owner = this };
             waitingQueueDialog.Loaded += WaitingQueueDialog_Loaded;
             waitingQueueDialog.ShowDialog();  
+        }
+
+        private void _networkClient_OnMatchTimeUpdate(MatchTimeUpdate matchTimeUpdate)
+        {
+            Chessboard.Game.PlayerWhiteTime = matchTimeUpdate.PlayerWhiteTime;
+            Chessboard.Game.PlayerBlackTime = matchTimeUpdate.PlayerBlackTime;
+
+            Game_OnUpdatePlayerTime(matchTimeUpdate.PlayerWhiteTime, matchTimeUpdate.PlayerBlackTime);
         }
 
         private async void WaitingQueueDialog_Loaded(object sender, RoutedEventArgs e)

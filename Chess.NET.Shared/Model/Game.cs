@@ -728,9 +728,17 @@ namespace Chess.NET.Shared.Model
 
         private TimeSpan playerWhiteTime = TimeSpan.Zero;
 
-        public TimeSpan PlayerWhiteTime => playerWhiteTime;
+        public TimeSpan PlayerWhiteTime
+        {
+            get => playerWhiteTime;
+            set => playerWhiteTime = value;
+        }
 
-        public TimeSpan PlayerBlackTime => playerBlackTime;
+        public TimeSpan PlayerBlackTime
+        {
+            get => playerBlackTime;
+            set => playerBlackTime = value;
+        }   
 
         private TimeSpan playerBlackTime = TimeSpan.Zero;
 
@@ -740,6 +748,9 @@ namespace Chess.NET.Shared.Model
 
         private void InitializeTimeControl()
         {
+            if (isOnlineGame)
+                return; // Timecontrol is handled by the server for online games
+
             if (isPuzzle)
                 return;
 
@@ -820,7 +831,7 @@ namespace Chess.NET.Shared.Model
 
         private void RefreshTimeControlAfterMove()
         {
-            if (isPuzzle)
+            if (isPuzzle || isOnlineGame)
                 return;
 
             if (!isTimeControlInitialized)
@@ -858,7 +869,7 @@ namespace Chess.NET.Shared.Model
                     playerWhiteTime = GetTime(timeControl);
                     playerBlackTime = GetTime(timeControl);
                 }
-                else if (isTimeControlInitialized)
+                else if (isTimeControlInitialized && !isOnlineGame)
                 {
                     var elapsed = DateTime.Now - lastMoveDT;
 
