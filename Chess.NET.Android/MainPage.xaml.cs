@@ -176,7 +176,6 @@ namespace Chess.NET.Android
                 else if (matchEnd.ColorWins.HasValue)
                     playerWon = currentMatchInfo?.OpponentName ?? string.Empty;
 
-                currentMatchInfo = null;
                 ButtonRestart.IsEnabled = true;
                 Chessboard.ResetOnline();
                 if (_networkClient != null)
@@ -199,6 +198,7 @@ namespace Chess.NET.Android
 
                         var dialog = new GameOverDialog(matchEnd.Result, matchEnd.ColorWins, playerWon);
                         isOnlineMatch = false;
+                        currentMatchInfo = null;
                         await Navigation.PushModalAsync(dialog);
                     });
                 });
