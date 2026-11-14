@@ -449,7 +449,7 @@ namespace Chess.NET
             {            
                 // TODO: Wenn Move vom Server nicht akzeptiert wurde, ihn wieder lokal rückgängig machen!
              
-                MessageBox.Show(string.Format(Properties.Resources.strFailedToMove, ex.Message), Shared.Resources.strError, MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(string.Format(Shared.Resources.strFailedToMove, ex.Message), Shared.Resources.strError, MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -462,7 +462,7 @@ namespace Chess.NET
             }
             catch (Exception ex)
             {
-                MessageBox.Show(string.Format(Properties.Resources.strFailedToResign, ex.Message), Shared.Resources.strError, MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(string.Format(Shared.Resources.strFailedToResign, ex.Message), Shared.Resources.strError, MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
