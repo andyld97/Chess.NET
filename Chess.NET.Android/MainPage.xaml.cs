@@ -191,18 +191,18 @@ namespace Chess.NET.Android
                         if (matchEnd.Result == GameResult.Disconnected || matchEnd.Result == GameResult.Resign || matchEnd.Result == GameResult.Timeout)
                             await Sound.Play(SoundType.Checkmate);
 
-#if ANDROID
-                        A.Widget.Toast.MakeText(A.App.Application.Context, $"Game Over: {matchEnd.Result}. Won: {(matchEnd.ColorWins == null ? "-" : matchEnd.ColorWins.ToString())}", A.Widget.ToastLength.Long).Show();
-#endif
+                        string playerWon = string.Empty;
 
-                        // TODO
-                        /*GameOverDialog gameOverDialog = new GameOverDialog(matchEnd.Result, matchEnd.ColorWins, playerWon) { Owner = this };
-                        gameOverDialog.ShowDialog();*/
+                        if (matchEnd.ColorWins.HasValue && matchEnd.ColorWins == ownPieceColor)
+                            playerWon = Settings.Instance.Player1Name;
+                        else if (matchEnd.ColorWins.HasValue)
+                            playerWon = currentMatchInfo?.OpponentName ?? string.Empty;
 
+                        var dialog = new GameOverDialog(matchEnd.Result, matchEnd.ColorWins, playerWon);
                         isOnlineMatch = false;
+                        await Navigation.PushModalAsync(dialog);
                     });
                 });
-
             });
         }
 

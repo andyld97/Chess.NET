@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+        xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+        x:Class="Chess.NET.Android.Controls.Dialogs.GameOverDialog"
+        xmlns:dialogs="clr-namespace:Chess.NET.Android.Controls.Dialogs"
+        xmlns:res="clr-namespace:Chess.NET.Android.Properties"
+        xmlns:sharedres="clr-namespace:Chess.NET.Shared;assembly=Chess.NET.Shared" BackgroundColor="#80000000"
+        Title="{x:Static sharedres:Resources.strGameOver}">
+    <Border Background="{DynamicResource BackgroundColor}" StrokeShape="RoundRectangle" StrokeThickness="2" Stroke="{DynamicResource AccentColor}" Padding="20" WidthRequest="300" HorizontalOptions="Center" VerticalOptions="Center">
+        <VerticalStackLayout Spacing="10">
+            <dialogs:DialogHeader Title="{x:Static sharedres:Resources.strGameOver}" CloseRequested="DialogHeader_CloseRequested" />
+
+            <VerticalStackLayout x:Name="GridWin" IsVisible="False" Spacing="16" Margin="0,10,0,0">
+                <Image x:Name="ImgKing" HeightRequest="96" HorizontalOptions="Center" />
+
+                <Label HorizontalTextAlignment="Center" FontSize="20">
+                    <Label.FormattedText>
+                        <FormattedString>
+                            <Span x:Name="TextPlayer" Text="Player" FontAttributes="Bold" />
+                            <Span Text=" " />
+                            <Span Text="{x:Static sharedres:Resources.strPlayerWinsWith}" />
+                            <Span Text=" " />
+                            <Span x:Name="TextColor" Text="White" FontAttributes="Bold" />
+                            <Span Text=" " />
+                            <Span Text="{x:Static sharedres:Resources.strPlayerWinsDueTo}" />
+                        </FormattedString>
+                    </Label.FormattedText>
+                </Label>
+
+                <Label x:Name="TextWinReason" Text="checkmate!" FontAttributes="Bold" FontSize="20" HorizontalTextAlignment="Center" TextColor="{AppThemeBinding Light=#535353, Dark=#B0B0B0}" />
+            </VerticalStackLayout>
+
+            <VerticalStackLayout x:Name="GridDraw" IsVisible="False" Spacing="16" Margin="0,10,0,0">
+                <HorizontalStackLayout Spacing="10" HorizontalOptions="Center">
+                    <Image x:Name="ImgKingWhite" HeightRequest="80" />
+                    <Image x:Name="ImgKingBlack" HeightRequest="80" />
+                </HorizontalStackLayout>
+
+                <Label HorizontalTextAlignment="Center" FontSize="20">
+                    <Label.FormattedText>
+                        <FormattedString>
+                            <Span Text="{x:Static sharedres:Resources.strDraw}" FontAttributes="Bold" />
+                            <Span Text=" " />
+                            <Span Text="{x:Static sharedres:Resources.strPlayerWinsDueTo}" />
+                        </FormattedString>
+                    </Label.FormattedText>
+                </Label>
+
+                <Label x:Name="TextDrawReason" Text="Stalemate!" FontAttributes="Bold" FontSize="20" HorizontalTextAlignment="Center" TextColor="{AppThemeBinding Light=#535353, Dark=#B0B0B0}" />
+            </VerticalStackLayout>
+        </VerticalStackLayout>
+    </Border>
+</ContentPage>

@@ -20,13 +20,13 @@ namespace Chess.NET.Controls.Dialogs
 
                 switch (gameResult)
                 {
-                    case GameResult.Checkmate:      TextWinReason.Text = Properties.Resources.strCheckmate; break;
-                    case GameResult.Resign:         TextWinReason.Text = Properties.Resources.strResignation; break;
-                    case GameResult.Disconnected:   TextWinReason.Text = Properties.Resources.strDisconnect; break;
-                    case GameResult.Timeout:        TextWinReason.Text = Properties.Resources.strTimeout; break;
+                    case GameResult.Checkmate:      TextWinReason.Text = Chess.NET.Shared.Resources.strCheckmate; break;
+                    case GameResult.Resign:         TextWinReason.Text = Chess.NET.Shared.Resources.strResignation; break;
+                    case GameResult.Disconnected:   TextWinReason.Text = Chess.NET.Shared.Resources.strDisconnect; break;
+                    case GameResult.Timeout:        TextWinReason.Text = Chess.NET.Shared.Resources.strTimeout; break;
                 }
 
-                TextColor.Text = colorWon == Color.Black ? Properties.Resources.strBlack : Properties.Resources.strWhite;
+                TextColor.Text = colorWon == Color.Black ? Chess.NET.Shared.Resources.strBlack : Chess.NET.Shared.Resources.strWhite;
                 if (!System.Globalization.CultureInfo.CurrentCulture.TwoLetterISOLanguageName.Equals("de", StringComparison.CurrentCultureIgnoreCase))
                     TextColor.Text = TextColor.Text.ToLower();
 
@@ -44,10 +44,10 @@ namespace Chess.NET.Controls.Dialogs
 
                 switch (gameResult)
                 {
-                    case GameResult.Stalemate:                          TextDrawReason.Text = Properties.Resources.strStalemate; break;
-                    case GameResult.ThreefoldReptition:                 TextDrawReason.Text = Properties.Resources.strThreefoldRepition; break;
-                    case GameResult.FiftyMoveRule:                      TextDrawReason.Text = Properties.Resources.strFiftyMoveRule; break;
-                    case GameResult.InsufficentCheckmatingMaterial:     TextDrawReason.Text = Properties.Resources.strInsufficientCheckmatingMaterial; break;
+                    case GameResult.Stalemate:                          TextDrawReason.Text = Chess.NET.Shared.Resources.strStalemate; break;
+                    case GameResult.ThreefoldReptition:                 TextDrawReason.Text = Chess.NET.Shared.Resources.strThreefoldRepition; break;
+                    case GameResult.FiftyMoveRule:                      TextDrawReason.Text = Chess.NET.Shared.Resources.strFiftyMoveRule; break;
+                    case GameResult.InsufficentCheckmatingMaterial:     TextDrawReason.Text = Chess.NET.Shared.Resources.strInsufficientCheckmatingMaterial; break;
                 }
             }
         }

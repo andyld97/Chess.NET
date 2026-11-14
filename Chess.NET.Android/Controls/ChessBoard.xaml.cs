@@ -3,10 +3,7 @@ using Microsoft.Maui.Controls.Shapes;
 using Image = Microsoft.Maui.Controls.Image;
 using Chess.NET.Shared.Model.GUI;
 using Chess.NET.Shared.Model.Bot;
-
-#if ANDROID
-using A = Android;
-#endif
+using Chess.NET.Android.Controls.Dialogs;
 
 namespace Chess.NET.Android.Controls;
 
@@ -71,14 +68,30 @@ public partial class ChessBoard : ContentView
         RenderChessBoard(game.Board, false);        
     }
 
-    private void Game_OnGameOver(GameResult result, Shared.Model.Color? colorWon)
+    private async void Game_OnGameOver(GameResult result, Shared.Model.Color? colorWon)
     {
         if (isOnline)
             return;
 
-#if ANDROID
-        A.Widget.Toast.MakeText(A.App.Application.Context, $"Game Over: {result}. Won: {(colorWon == null ? "-" : colorWon.ToString())}", A.Widget.ToastLength.Long).Show();
-#endif
+        string playerName = string.Empty;
+        if (colorWon != null)
+        {
+            if (colorWon == Shared.Model.Color.White)
+                playerName = Settings.Instance.Player1Name;
+            else
+            {
+                if (opponent is null)
+                    playerName = Settings.Instance.Player2Name;
+                else
+                    playerName = $"{opponent.Name} (Bot)";
+            }
+        }
+
+        MainThread.BeginInvokeOnMainThread(async () =>
+        {
+            var dialog = new GameOverDialog(result, colorWon, playerWon: playerName);
+            await Navigation.PushModalAsync(dialog);
+        });
     }
 
     public void Mirror()
@@ -164,7 +177,7 @@ public partial class ChessBoard : ContentView
                 var piece = board.GetPiece(position);
 
                 Image? img = (Image?)_squares[file - 1, rank - 1].Border.Children.FirstOrDefault();
-                img?.Source = (piece != null) ? GetImage(Settings.Instance.Theme, piece.Type, piece.Color) : null;
+                img?.Source = (piece != null) ? Helper.GetImage(Settings.Instance.Theme, piece.Type, piece.Color) : null;
 
                 if (renderLastMoveSquares && (lastMove != null && (lastMove.From == position || lastMove.To == position)))
                 {
@@ -178,11 +191,6 @@ public partial class ChessBoard : ContentView
                 }
             }
         }
-    }
-
-    private static ImageSource GetImage(Shared.Model.Theme theme, PieceType type, Shared.Model.Color color)
-    {
-        return ImageSource.FromFile($"{theme}_{color.ToString().ToLower()}_{type.ToString().ToLower()}.png");
     }
 
     private void InitializeSquares()

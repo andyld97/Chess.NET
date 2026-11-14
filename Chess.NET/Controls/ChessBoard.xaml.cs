@@ -453,8 +453,7 @@ namespace Chess.NET.Controls
             }
         }
 
-
-        private void Game_OnGameOver(GameResult result, Shared.Model.Color? colorWon)
+        public void Game_OnGameOver(GameResult result, Shared.Model.Color? colorWon)
         {
             if (isPuzzle)
                 return;

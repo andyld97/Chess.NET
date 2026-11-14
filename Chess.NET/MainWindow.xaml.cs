@@ -406,6 +406,7 @@ namespace Chess.NET
             {
                 Chessboard.DisablePieces();
                 Chessboard.ResetOnline();
+                Chessboard.Game_OnGameOver(matchEnd.Result, matchEnd.ColorWins);
                 ButtonResign.Visibility = Visibility.Collapsed;
 
                 string playerWon = string.Empty;

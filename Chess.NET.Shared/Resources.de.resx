@@ -192,4 +192,58 @@
   <data name="strAbout" xml:space="preserve">
     <value>Über</value>
   </data>
+  <data name="strGameOver_Win" xml:space="preserve">
+    <value>Spiel gewonnen!</value>
+  </data>
+  <data name="strGameOver_WinMessage" xml:space="preserve">
+    <value>{0} hat das Spiel durch schachmatt gewonnen!</value>
+  </data>
+  <data name="strGameOver_Stalemate" xml:space="preserve">
+    <value>Spiel unentschieden!</value>
+  </data>
+  <data name="strGameOver_StalemateText" xml:space="preserve">
+    <value>Das Spiel ist unentschieden, kein legaler Zug möglich (stalemate)!</value>
+  </data>
+  <data name="strGameOver" xml:space="preserve">
+    <value>Spielende</value>
+  </data>
+  <data name="strPlayerWinsWith" xml:space="preserve">
+    <value>gewinnt mit</value>
+  </data>
+  <data name="strPlayerWinsDueTo" xml:space="preserve">
+    <value>durch</value>
+  </data>
+  <data name="strDraw" xml:space="preserve">
+    <value>Remis</value>
+  </data>
+  <data name="strResignation" xml:space="preserve">
+    <value>Aufgabe!</value>
+  </data>
+  <data name="strDisconnect" xml:space="preserve">
+    <value>Verbindungsabbruch!</value>
+  </data>
+  <data name="strCheckmate" xml:space="preserve">
+    <value>Schachmatt!</value>
+  </data>
+  <data name="strTimeout" xml:space="preserve">
+    <value>Zeitüberschreitung!</value>
+  </data>
+  <data name="strStalemate" xml:space="preserve">
+    <value>Patt!</value>
+  </data>
+  <data name="strThreefoldRepition" xml:space="preserve">
+    <value>Dreifachwiederholung!</value>
+  </data>
+  <data name="strFiftyMoveRule" xml:space="preserve">
+    <value>50-Züge-Regel!</value>
+  </data>
+  <data name="strInsufficientCheckmatingMaterial" xml:space="preserve">
+    <value>Materialmangel!</value>
+  </data>
+  <data name="strWhite" xml:space="preserve">
+    <value>Weiß</value>
+  </data>
+  <data name="strBlack" xml:space="preserve">
+    <value>Schwarz</value>
+  </data>
 </root>

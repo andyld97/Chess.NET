@@ -1,4 +1,6 @@
-﻿namespace Chess.NET.Android
+﻿using Chess.NET.Shared.Model;
+
+namespace Chess.NET.Android
 {
     public static class Helper
     {
@@ -21,5 +23,11 @@
 
             return Properties.Resources.strPlayer1;
         }
+
+        public static ImageSource GetImage(Shared.Model.Theme theme, PieceType type, Shared.Model.Color color)
+        {
+            return ImageSource.FromFile($"{theme}_{color.ToString().ToLower()}_{type.ToString().ToLower()}.png");
+        }
+
     }
 }
