@@ -103,14 +103,13 @@ namespace Chess.NET.Android
         private MatchInfo? currentMatchInfo = null;
         private bool isOnlineMatch = false;
         private bool rotatedBoard = false;
-        private WaitingQueueDialog waitingQueueDialog;
+        private WaitingQueueDialog? waitingQueueDialog = null;
      
         private async Task StartOnlineMatchAsync(TimeControl timeControl)
         {
-            if (string.IsNullOrEmpty(Settings.Instance.Player1Name))
+            if (string.IsNullOrEmpty(Settings.Instance.Player1Name) || Settings.Instance.Player1Name == Properties.Resources.strPlayer1)
             {
-                // TODO
-                // MessageBox.Show(Properties.Resources.strPleaseSetAName, Properties.Resources.strError, MessageBoxButton.OK, MessageBoxImage.Error);
+                await DialogHelper.ShowErrorAsync(Shared.Resources.strPleaseSetAName, Shared.Resources.strError);
                 return;
             }
 
@@ -138,8 +137,7 @@ namespace Chess.NET.Android
             }
             catch (Exception ex)
             {
-                // TODO
-                // MessageBox.Show(string.Format(Properties.Resources.strFailedToConnectToServer, ex.Message), Properties.Resources.strError, MessageBoxButton.OK, MessageBoxImage.Error);
+                await DialogHelper.ShowErrorAsync(string.Format(Shared.Resources.strFailedToConnectToServer, ex.Message), Shared.Resources.strError);
             }
         }
 
@@ -181,7 +179,8 @@ namespace Chess.NET.Android
                 currentMatchInfo = null;
                 ButtonRestart.IsEnabled = true;
                 Chessboard.ResetOnline();
-                await _networkClient.DisconnectAsync();
+                if (_networkClient != null)
+                    await _networkClient.DisconnectAsync();
 
                 await Task.Delay(50).ContinueWith(t =>
                 {
@@ -320,8 +319,7 @@ namespace Chess.NET.Android
             catch (Exception ex)
             {
                 // TODO: Wenn Move vom Server nicht akzeptiert wurde, ihn wieder lokal rückgängig machen!
-
-                //MessageBox.Show(string.Format(Properties.Resources.strFailedToMove, ex.Message), Properties.Resources.strError, MessageBoxButton.OK, MessageBoxImage.Error);
+                await DialogHelper.ShowErrorAsync(string.Format(Shared.Resources.strFailedToMove, ex.Message), Shared.Resources.strError);
             }
         }
 
@@ -371,10 +369,9 @@ namespace Chess.NET.Android
             }
             catch (Exception ex)
             {
-                // TODO MessageBox.Show(string.Format(Properties.Resources.strFailedToResign, ex.Message), Properties.Resources.strError, MessageBoxButton.OK, MessageBoxImage.Error);
+                await DialogHelper.ShowErrorAsync(string.Format(Shared.Resources.strFailedToResign, ex.Message), Shared.Resources.strError);
             }
         }
-
 
         private async void MenuItemAbout_Clicked(object sender, EventArgs e)
         {

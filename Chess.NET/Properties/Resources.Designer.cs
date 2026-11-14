@@ -133,24 +133,6 @@ namespace Chess.NET.Properties {
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die Error ähnelt.
-        /// </summary>
-        public static string strError {
-            get {
-                return ResourceManager.GetString("strError", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die Failed to connect to chess server: {0} ähnelt.
-        /// </summary>
-        public static string strFailedToConnectToServer {
-            get {
-                return ResourceManager.GetString("strFailedToConnectToServer", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Sucht eine lokalisierte Zeichenfolge, die Failed to load settings! ähnelt.
         /// </summary>
         public static string strFailedToLoadSettings {
@@ -160,29 +142,11 @@ namespace Chess.NET.Properties {
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die Failed to make move or server did not accept this move: {0} ähnelt.
-        /// </summary>
-        public static string strFailedToMove {
-            get {
-                return ResourceManager.GetString("strFailedToMove", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Sucht eine lokalisierte Zeichenfolge, die Failed to open hyperlink {0}: {1} ähnelt.
         /// </summary>
         public static string strFailedToOpenHyperlink {
             get {
                 return ResourceManager.GetString("strFailedToOpenHyperlink", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die Failed to resign: {0} ähnelt.
-        /// </summary>
-        public static string strFailedToResign {
-            get {
-                return ResourceManager.GetString("strFailedToResign", resourceCulture);
             }
         }
         
@@ -399,15 +363,6 @@ namespace Chess.NET.Properties {
         public static string strPlaySounds {
             get {
                 return ResourceManager.GetString("strPlaySounds", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die Please set a name (at least for Player 1) in the settings dialog! ähnelt.
-        /// </summary>
-        public static string strPleaseSetAName {
-            get {
-                return ResourceManager.GetString("strPleaseSetAName", resourceCulture);
             }
         }
         

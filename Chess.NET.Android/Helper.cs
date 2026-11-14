@@ -28,6 +28,12 @@ namespace Chess.NET.Android
         {
             return ImageSource.FromFile($"{theme}_{color.ToString().ToLower()}_{type.ToString().ToLower()}.png");
         }
+    }
 
+    public static class DialogHelper
+    {
+        private static Page? CurrentPage => Application.Current?.Windows.FirstOrDefault()?.Page;
+
+        public static Task ShowErrorAsync(string message, string title) => MainThread.InvokeOnMainThreadAsync(() => CurrentPage?.DisplayAlertAsync(title, message, "OK") ?? Task.CompletedTask);
     }
 }

@@ -166,9 +166,6 @@
   <data name="strFailedToLoadSettings" xml:space="preserve">
     <value>Fehler beim Laden der Einstellungen!</value>
   </data>
-  <data name="strError" xml:space="preserve">
-    <value>Kritischer Fehler</value>
-  </data>
   <data name="strFailedToSaveSettings" xml:space="preserve">
     <value>Fehler beim Speichern der Einstellungen!</value>
   </data>
@@ -256,22 +253,10 @@
   <data name="strWaiting_Content" xml:space="preserve">
     <value>Gegner wird gesucht ...</value>
   </data>
-  <data name="strFailedToResign" xml:space="preserve">
-    <value>Beim Aufgeben ist ein Fehler aufgetreten: {0}</value>
-  </data>
-  <data name="strFailedToConnectToServer" xml:space="preserve">
-    <value>Fehler beim Verbinden mit dem Schach-Server: {0}</value>
-  </data>
-  <data name="strFailedToMove" xml:space="preserve">
-    <value>Der Zug konnte nicht ausgeführt werden oder wurde vom Server nicht akzeptiert: {0}</value>
-  </data>
   <data name="strGeneral" xml:space="preserve">
     <value>Allgemein</value>
   </data>
   <data name="strPlayer" xml:space="preserve">
     <value>Spieler</value>
-  </data>
-  <data name="strPleaseSetAName" xml:space="preserve">
-    <value>Bitte legen Sie zunächst Ihren Namen (zu mindestens für Spieler 1) in den Einstellungen fest!</value>
   </data>
 </root>

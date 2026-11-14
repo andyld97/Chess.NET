@@ -166,9 +166,6 @@
   <data name="strFailedToLoadSettings" xml:space="preserve">
     <value>Failed to load settings!</value>
   </data>
-  <data name="strError" xml:space="preserve">
-    <value>Error</value>
-  </data>
   <data name="strFailedToSaveSettings" xml:space="preserve">
     <value>Failed to save settings!</value>
   </data>
@@ -263,15 +260,6 @@
   <data name="strWaiting_Content" xml:space="preserve">
     <value>Searching for a match ...</value>
   </data>
-  <data name="strFailedToResign" xml:space="preserve">
-    <value>Failed to resign: {0}</value>
-  </data>
-  <data name="strFailedToConnectToServer" xml:space="preserve">
-    <value>Failed to connect to chess server: {0}</value>
-  </data>
-  <data name="strFailedToMove" xml:space="preserve">
-    <value>Failed to make move or server did not accept this move: {0}</value>
-  </data>
   <data name="strGeneral" xml:space="preserve">
     <value>General</value>
   </data>
@@ -281,8 +269,5 @@
   <data name="strBots" xml:space="preserve">
     <value>Bots</value>
     <comment>@Invariant</comment>
-  </data>
-  <data name="strPleaseSetAName" xml:space="preserve">
-    <value>Please set a name (at least for Player 1) in the settings dialog!</value>
   </data>
 </root>

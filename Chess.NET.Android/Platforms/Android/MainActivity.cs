@@ -43,20 +43,20 @@ namespace Chess.NET.Android
             this.activity = activity;
         }
 
-        public WindowInsetsCompat OnApplyWindowInsets(A.Views.View v, WindowInsetsCompat insets)
+        public WindowInsetsCompat OnApplyWindowInsets(A.Views.View? v, WindowInsetsCompat? insets)
         {
-            var statusBarInsets = insets.GetInsets(WindowInsetsCompat.Type.StatusBars());
-            var statusBarHeight = statusBarInsets.Top;
+            var statusBarInsets = insets!.GetInsets(WindowInsetsCompat.Type.StatusBars());
+            var statusBarHeight = statusBarInsets?.Top;
 
-            v.SetPadding(0, statusBarHeight, 0, 0);
+            v?.SetPadding(0, statusBarHeight!.Value, 0, 0);
+            v?.Background = new ColorDrawable(new A.Graphics.Color(activity.Resources!.GetColor(Resource.Color.colorPrimaryDark, null)));
 
-            v.Background = new ColorDrawable(new A.Graphics.Color(activity.Resources.GetColor(Resource.Color.colorPrimaryDark, null)));
             return insets;
         }
 
         public static void SetStatusBarBackground(Activity activity)
         {
-            var decorView = activity.Window.DecorView;
+            var decorView = activity.Window!.DecorView;
 
             // Listener setzen
             ViewCompat.SetOnApplyWindowInsetsListener(decorView, new StatusBarInsetsListener(activity));
@@ -64,7 +64,7 @@ namespace Chess.NET.Android
 
             // Optional: Statusleisten-Icons anpassen
             var controller = WindowCompat.GetInsetsController(activity.Window, decorView);
-            controller.AppearanceLightStatusBars = false; // false = weiße Icons
+            controller?.AppearanceLightStatusBars = false; // false = weiße Icons
         }
     }
 }

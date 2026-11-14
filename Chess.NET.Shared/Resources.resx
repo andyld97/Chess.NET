@@ -226,4 +226,19 @@
   <data name="strBlack" xml:space="preserve">
     <value>Black</value>
   </data>
+  <data name="strFailedToConnectToServer" xml:space="preserve">
+    <value>Failed to connect to chess server: {0}</value>
+  </data>
+  <data name="strError" xml:space="preserve">
+    <value>Error</value>
+  </data>
+  <data name="strPleaseSetAName" xml:space="preserve">
+    <value>Please set a name (at least for Player 1) in the settings dialog!</value>
+  </data>
+  <data name="strFailedToMove" xml:space="preserve">
+    <value>Failed to make move or server did not accept this move: {0}</value>
+  </data>
+  <data name="strFailedToResign" xml:space="preserve">
+    <value>Failed to resign: {0}</value>
+  </data>
 </root>

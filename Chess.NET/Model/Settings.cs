@@ -61,7 +61,7 @@ namespace Chess.NET.Model
             }
             catch (Exception e)
             {
-                MessageBox.Show($"{Properties.Resources.strFailedToLoadSettings}{Environment.NewLine}{Environment.NewLine}{e.Message}", Properties.Resources.strError, MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show($"{Properties.Resources.strFailedToLoadSettings}{Environment.NewLine}{Environment.NewLine}{e.Message}", Shared.Resources.strError, MessageBoxButton.OK, MessageBoxImage.Error);
             }
 
             return new Settings();
@@ -76,7 +76,7 @@ namespace Chess.NET.Model
             }
             catch (Exception e)
             {
-                MessageBox.Show($"{Properties.Resources.strFailedToSaveSettings}{Environment.NewLine}{Environment.NewLine}{e.Message}", Properties.Resources.strError, MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show($"{Properties.Resources.strFailedToSaveSettings}{Environment.NewLine}{Environment.NewLine}{e.Message}", Shared.Resources.strError, MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
     }

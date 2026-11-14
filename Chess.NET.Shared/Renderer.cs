@@ -83,8 +83,8 @@ namespace Chess.NET.Shared
             float nameBaseline = yOffset + font.Size;
             float eloBaseline = nameBaseline + font.Size + 4;
 
-            canvas.DrawText(TruncateText(playerName, font, paint, width - (2 * margin)), new SKPoint(2 * margin, nameBaseline), font, paint);
-            canvas.DrawText(TruncateText($"Elo: {playerElo}", font, paint, width - (2 * margin)), new SKPoint(2 * margin, eloBaseline), font, paint);
+            canvas.DrawText(TruncateText(playerName, font, paint, width - (2 * margin)), new SKPoint(2 * margin, nameBaseline), SKTextAlign.Left, font, paint);
+            canvas.DrawText(TruncateText($"Elo: {playerElo}", font, paint, width - (2 * margin)), new SKPoint(2 * margin, eloBaseline), SKTextAlign.Left, font, paint);
         }
 
         private void DrawBoard(SKCanvas canvas, int yOffset)

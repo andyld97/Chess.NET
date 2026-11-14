@@ -246,4 +246,19 @@
   <data name="strBlack" xml:space="preserve">
     <value>Schwarz</value>
   </data>
+  <data name="strFailedToConnectToServer" xml:space="preserve">
+    <value>Fehler beim Verbinden mit dem Schach-Server: {0}</value>
+  </data>
+  <data name="strError" xml:space="preserve">
+    <value>Kritischer Fehler</value>
+  </data>
+  <data name="strPleaseSetAName" xml:space="preserve">
+    <value>Bitte legen Sie zunächst Ihren Namen (zu mindestens für Spieler 1) in den Einstellungen fest!</value>
+  </data>
+  <data name="strFailedToMove" xml:space="preserve">
+    <value>Der Zug konnte nicht ausgeführt werden oder wurde vom Server nicht akzeptiert: {0}</value>
+  </data>
+  <data name="strFailedToResign" xml:space="preserve">
+    <value>Beim Aufgeben ist ein Fehler aufgetreten: {0}</value>
+  </data>
 </root>

@@ -35,7 +35,7 @@ namespace Chess.NET
             }
             catch (Exception ex)
             {
-                MessageBox.Show(string.Format(Properties.Resources.strFailedToOpenHyperlink, url, ex.Message), Properties.Resources.strError, MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(string.Format(Properties.Resources.strFailedToOpenHyperlink, url, ex.Message), Shared.Resources.strError, MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 

@@ -178,6 +178,42 @@ namespace Chess.NET.Shared {
         }
         
         /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Error ähnelt.
+        /// </summary>
+        public static string strError {
+            get {
+                return ResourceManager.GetString("strError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Failed to connect to chess server: {0} ähnelt.
+        /// </summary>
+        public static string strFailedToConnectToServer {
+            get {
+                return ResourceManager.GetString("strFailedToConnectToServer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Failed to make move or server did not accept this move: {0} ähnelt.
+        /// </summary>
+        public static string strFailedToMove {
+            get {
+                return ResourceManager.GetString("strFailedToMove", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Failed to resign: {0} ähnelt.
+        /// </summary>
+        public static string strFailedToResign {
+            get {
+                return ResourceManager.GetString("strFailedToResign", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Sucht eine lokalisierte Zeichenfolge, die 50-Move Rule! ähnelt.
         /// </summary>
         public static string strFiftyMoveRule {
@@ -273,6 +309,15 @@ namespace Chess.NET.Shared {
         public static string strPlayerWinsWith {
             get {
                 return ResourceManager.GetString("strPlayerWinsWith", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Please set a name (at least for Player 1) in the settings dialog! ähnelt.
+        /// </summary>
+        public static string strPleaseSetAName {
+            get {
+                return ResourceManager.GetString("strPleaseSetAName", resourceCulture);
             }
         }
         

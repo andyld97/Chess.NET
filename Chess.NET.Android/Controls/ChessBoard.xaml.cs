@@ -313,7 +313,7 @@ public partial class ChessBoard : ContentView
                 {
                     var page = Application.Current?.Windows[0]?.Page;
 
-                    string? result = await page?.DisplayActionSheetAsync(Chess.NET.Android.Properties.Resources.strPromotion, null, null, Chess.NET.Shared.Resources.strQueen, Chess.NET.Shared.Resources.strRook, Chess.NET.Shared.Resources.strBishop, Chess.NET.Shared.Resources.strKnight);
+                    string? result = await page!.DisplayActionSheetAsync(Chess.NET.Android.Properties.Resources.strPromotion, null, null, Chess.NET.Shared.Resources.strQueen, Chess.NET.Shared.Resources.strRook, Chess.NET.Shared.Resources.strBishop, Chess.NET.Shared.Resources.strKnight);
 
                     promotionType = result switch
                     {
@@ -325,7 +325,7 @@ public partial class ChessBoard : ContentView
                 }
 
 
-                var success = game.Move(new PendingMove(_pieceToMove, position, promotionType));
+                var success = game.Move(new PendingMove(_pieceToMove!, position, promotionType));
                 if (success)
                 {
                     RenderChessBoard(game.Board, true);

@@ -245,7 +245,7 @@ namespace Chess.NET
             {
                 if (!System.IO.File.Exists(Settings.Instance.StockfishPath))
                 {
-                    MessageBox.Show(Properties.Resources.strStockfishNotFound, Properties.Resources.strError, MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show(Properties.Resources.strStockfishNotFound, Shared.Resources.strError, MessageBoxButton.OK, MessageBoxImage.Error);
                     return;
                 }
 
@@ -299,7 +299,7 @@ namespace Chess.NET
         {
             if (string.IsNullOrEmpty(Settings.Instance.Player1Name))
             {
-                MessageBox.Show(Properties.Resources.strPleaseSetAName, Properties.Resources.strError, MessageBoxButton.OK, MessageBoxImage.Error); 
+                MessageBox.Show(Shared.Resources.strPleaseSetAName, Shared.Resources.strError, MessageBoxButton.OK, MessageBoxImage.Error); 
                 return;
             }
 
@@ -343,7 +343,7 @@ namespace Chess.NET
             }
             catch (Exception ex)
             {
-                MessageBox.Show(string.Format(Properties.Resources.strFailedToConnectToServer, ex.Message), Properties.Resources.strError, MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(string.Format(Shared.Resources.strFailedToConnectToServer, ex.Message), Shared.Resources.strError, MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -449,7 +449,7 @@ namespace Chess.NET
             {            
                 // TODO: Wenn Move vom Server nicht akzeptiert wurde, ihn wieder lokal rückgängig machen!
              
-                MessageBox.Show(string.Format(Properties.Resources.strFailedToMove, ex.Message), Properties.Resources.strError, MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(string.Format(Properties.Resources.strFailedToMove, ex.Message), Shared.Resources.strError, MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -462,7 +462,7 @@ namespace Chess.NET
             }
             catch (Exception ex)
             {
-                MessageBox.Show(string.Format(Properties.Resources.strFailedToResign, ex.Message), Properties.Resources.strError, MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(string.Format(Properties.Resources.strFailedToResign, ex.Message), Shared.Resources.strError, MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
