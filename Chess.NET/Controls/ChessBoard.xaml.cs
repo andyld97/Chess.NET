@@ -4,6 +4,7 @@ using Chess.NET.Shared;
 using Chess.NET.Shared.Model;
 using Chess.NET.Shared.Model.Bot;
 using Chess.NET.Shared.Model.GUI;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -18,7 +19,7 @@ namespace Chess.NET.Controls
         private readonly BoardSquare<Border>[,] _squares = new BoardSquare<Border>[8, 8];
         private readonly Game game = new Game();
 
-        private readonly List<Border> rotatedBorders = [];
+        private readonly List<Image> rotatedImages = [];
 
         private IChessBot? opponent = null;
         private Puzzle? currentPuzzle = null;
@@ -86,7 +87,7 @@ namespace Chess.NET.Controls
 
             InitializeSquares();
 
-            rotatedBorders.Clear();
+            rotatedImages.Clear();
             isInNavigationMode = false;
             canMove = true;
 
@@ -163,7 +164,7 @@ namespace Chess.NET.Controls
             }
 
             var square = (Border)sender;
-            var image = (Image)square.Child;
+            var image = (Image)((Grid)square.Child).Children[0];
 
             if (clickCounter > 0)
             {
@@ -321,8 +322,8 @@ namespace Chess.NET.Controls
             if (!isNavigationAllowed)
                 return null!;
 
-            rotatedBorders.ForEach(p => p.RenderTransform = null);
-            rotatedBorders.Clear();
+            rotatedImages.ForEach(p => p.RenderTransform = null);
+            rotatedImages.Clear();
 
             Game gm = new Game();
             gm.StartNewGame(null);
@@ -399,7 +400,7 @@ namespace Chess.NET.Controls
                     if (_pieceToMove != null && position == _pieceToMove.Position)
                         continue;
 
-                    Image img = (Image)_squares[file - 1, rank - 1].Border.Child;
+                    Image img = (Image)(_squares[file - 1, rank - 1].Border.Child as Grid)!.Children[0];
 
                     var piece = board.GetPiece(position);
                     img.Source = (piece != null) ? piece.Type.ToBitmap(piece.Color, Settings.Instance.Theme) : null;
@@ -441,12 +442,35 @@ namespace Chess.NET.Controls
                     Grid.SetRow(square, 8 - rank);
 
                     var image = new Image() { Margin = new System.Windows.Thickness(10), HorizontalAlignment = System.Windows.HorizontalAlignment.Center, VerticalAlignment = System.Windows.VerticalAlignment.Center };
+                    Grid grid = new Grid();
                     RenderOptions.SetBitmapScalingMode(image, BitmapScalingMode.Fant);
-                    square.Child = image;
+                    square.Child = grid;
+                    grid.Children.Add(image);
                     square.Tag = new Position(file, rank);
                     square.MouseDown += Square_MouseDown;
                     square.MouseMove += Square_MouseMove;
                     BoardGrid.Children.Add(square);
+
+                    if (file == 1 || (IsMirrored && file == 8))
+                    {
+                        TextBlock txtRankLabel = new TextBlock
+                        {
+                            Text = (IsMirrored ? 9 - rank : rank).ToString() ,
+                            Style = (Style)FindResource("RankLabelStyle")
+                        };
+                        grid.Children.Add(txtRankLabel);
+                    }
+
+                    if (rank == 1)
+                    {
+                        TextBlock txtFileLabel = new TextBlock
+                        {
+                            Text = ((char)('a' + file - 1)).ToString(),
+                            Style = (Style)FindResource("FileLabelStyle")
+                        };
+
+                        grid.Children.Add(txtFileLabel);
+                    }
 
                     _squares[file - 1, rank - 1] = new BoardSquare<Border>(file, rank, square);
                 }
@@ -458,7 +482,7 @@ namespace Chess.NET.Controls
             if (isPuzzle)
                 return;
 
-            rotatedBorders.Clear();
+            rotatedImages.Clear();
 
             Dispatcher?.Invoke(() =>
             {
@@ -469,14 +493,14 @@ namespace Chess.NET.Controls
                     if (king == null)
                         return;
 
-                    var border = FindBorder(king.Position);
+                    var border = FindImage(king.Position);
 
                     if (border != null)
                     {
                         border.RenderTransformOrigin = new Point(0.5, 0.5);
                         border.RenderTransform = new RotateTransform(180);
 
-                        rotatedBorders.Add(border);
+                        rotatedImages.Add(border);
                     }
                     return;
                 }
@@ -487,35 +511,39 @@ namespace Chess.NET.Controls
                 if (kingWhite == null || kingBlack == null)
                     return;
 
-                var borderKingWite = FindBorder(kingWhite.Position);
+                var borderKingWite = FindImage(kingWhite.Position);
 
                 if (borderKingWite != null)
                 {
                     borderKingWite.RenderTransformOrigin = new Point(0.5, 0.5);
                     borderKingWite.RenderTransform = new RotateTransform(180);
 
-                    rotatedBorders.Add(borderKingWite);
+                    rotatedImages.Add(borderKingWite);
                 }
 
-                var borderKingBlack = FindBorder(kingBlack.Position);
+                var borderKingBlack = FindImage(kingBlack.Position);
 
                 if (borderKingBlack != null)
                 {
                     borderKingBlack.RenderTransformOrigin = new Point(0.5, 0.5);
                     borderKingBlack.RenderTransform = new RotateTransform(180);
 
-                    rotatedBorders.Add(borderKingBlack);
+                    rotatedImages.Add(borderKingBlack);
                 }
             });
         }
 
-        private Border? FindBorder(Position p)
+        private Image? FindImage(Position p)
         {
             var search = p;
             if (IsMirrored)
                 search = search.Mirror();
 
-            return _squares.Cast<BoardSquare<Border>>().Select(s => s.Border).FirstOrDefault(b => b.Tag is Position pos && pos == search);
+            var border =  _squares.Cast<BoardSquare<Border>>().Select(s => s.Border).FirstOrDefault(b => b.Tag is Position pos && pos == search);
+
+            return (border.Child as Grid)!.Children[0] as Image;
+
+
         }
         #endregion
     }
