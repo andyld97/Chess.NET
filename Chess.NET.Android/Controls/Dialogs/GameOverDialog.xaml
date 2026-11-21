@@ -12,7 +12,9 @@
             <dialogs:DialogHeader Title="{x:Static sharedres:Resources.strGameOver}" CloseRequested="DialogHeader_CloseRequested" />
 
             <VerticalStackLayout x:Name="GridWin" IsVisible="False" Spacing="16" Margin="0,10,0,0">
-                <Image x:Name="ImgKing" HeightRequest="96" HorizontalOptions="Center" />
+                <Border BackgroundColor="#E8E8E8" StrokeThickness="0" StrokeShape="RoundRectangle 16" Padding="12,8" HorizontalOptions="Center">
+                    <Image x:Name="ImgKing" HeightRequest="80" />
+                </Border>
 
                 <Label HorizontalTextAlignment="Center" FontSize="20">
                     <Label.FormattedText>
@@ -32,10 +34,12 @@
             </VerticalStackLayout>
 
             <VerticalStackLayout x:Name="GridDraw" IsVisible="False" Spacing="16" Margin="0,10,0,0">
-                <HorizontalStackLayout Spacing="10" HorizontalOptions="Center">
-                    <Image x:Name="ImgKingWhite" HeightRequest="80" />
-                    <Image x:Name="ImgKingBlack" HeightRequest="80" />
-                </HorizontalStackLayout>
+                <Border BackgroundColor="#E8E8E8" StrokeThickness="0" StrokeShape="RoundRectangle 16" Padding="12,8" HorizontalOptions="Center">
+                    <HorizontalStackLayout Spacing="10">
+                        <Image x:Name="ImgKingWhite" HeightRequest="80" />
+                        <Image x:Name="ImgKingBlack" HeightRequest="80" />
+                    </HorizontalStackLayout>
+                </Border>
 
                 <Label HorizontalTextAlignment="Center" FontSize="20">
                     <Label.FormattedText>
