@@ -458,22 +458,26 @@ namespace Chess.NET.Controls
             if (isPuzzle)
                 return;
 
+            rotatedBorders.Clear();
+
             Dispatcher?.Invoke(() =>
             {
                 // Rotate king(s)
-                if (colorWon != null && (result == GameResult.Checkmate || result == GameResult.Resign))
+                if (colorWon != null && (result == GameResult.Checkmate || result == GameResult.Resign || result == GameResult.Timeout || result == GameResult.Disconnected))
                 {
                     var king = game.Board.Pieces.FirstOrDefault(p => p.Type == PieceType.King && p.Color == colorWon.Value.InvertColor());
                     if (king == null)
                         return;
 
-                    var kingSquare = _squares[king.Position.File - 1, king.Position.Rank - 1];
-                    var border = kingSquare.Border;
+                    var border = FindBorder(king.Position);
 
-                    border.RenderTransformOrigin = new Point(0.5, 0.5);
-                    border.RenderTransform = new RotateTransform(180);
+                    if (border != null)
+                    {
+                        border.RenderTransformOrigin = new Point(0.5, 0.5);
+                        border.RenderTransform = new RotateTransform(180);
 
-                    rotatedBorders.Add(border);
+                        rotatedBorders.Add(border);
+                    }
                     return;
                 }
 
@@ -483,25 +487,36 @@ namespace Chess.NET.Controls
                 if (kingWhite == null || kingBlack == null)
                     return;
 
-                var kingSquareWhite = _squares[kingWhite.Position.File - 1, kingWhite.Position.Rank - 1];
-                var borderKingWite = kingSquareWhite.Border;
+                var borderKingWite = FindBorder(kingWhite.Position);
 
-                borderKingWite.RenderTransformOrigin = new Point(0.5, 0.5);
-                borderKingWite.RenderTransform = new RotateTransform(180);
+                if (borderKingWite != null)
+                {
+                    borderKingWite.RenderTransformOrigin = new Point(0.5, 0.5);
+                    borderKingWite.RenderTransform = new RotateTransform(180);
 
+                    rotatedBorders.Add(borderKingWite);
+                }
 
-                var kingSquareBlack = _squares[kingBlack.Position.File - 1, kingBlack.Position.Rank - 1];
-                var borderKingBlack = kingSquareBlack.Border;
+                var borderKingBlack = FindBorder(kingBlack.Position);
 
-                borderKingBlack.RenderTransformOrigin = new Point(0.5, 0.5);
-                borderKingBlack.RenderTransform = new RotateTransform(180);
+                if (borderKingBlack != null)
+                {
+                    borderKingBlack.RenderTransformOrigin = new Point(0.5, 0.5);
+                    borderKingBlack.RenderTransform = new RotateTransform(180);
 
-                rotatedBorders.Add(borderKingWite);
-                rotatedBorders.Add(borderKingBlack);
+                    rotatedBorders.Add(borderKingBlack);
+                }
             });
         }
 
+        private Border? FindBorder(Position p)
+        {
+            var search = p;
+            if (IsMirrored)
+                search = search.Mirror();
 
+            return _squares.Cast<BoardSquare<Border>>().Select(s => s.Border).FirstOrDefault(b => b.Tag is Position pos && pos == search);
+        }
         #endregion
     }
 }
